@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+server/.env
+
+# Kiro IDE
+.kiro/
+
+# MCP Server
+crawl4ai-mcp-server/

@@ -1,8 +1,7 @@
+/* 移除默认的 root 限制，让页面可以全屏 */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .logo {

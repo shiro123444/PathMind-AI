@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
-import Loader from '../components/ui/Loader'
+import { Button, Divider } from '@heroui/react'
 
 // OAuth Icons
 const GoogleIcon = () => (
@@ -20,20 +19,29 @@ const GithubIcon = () => (
   </svg>
 )
 
-const ArrowIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="m6 17 5-5-5-5" />
-    <path d="m13 17 5-5-5-5" />
-  </svg>
-)
-
 export default function LoginPage() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  const validateEmail = (value: string) => {
+    if (!value) {
+      setEmailError('请输入邮箱地址')
+      return false
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      setEmailError('请输入有效的邮箱地址')
+      return false
+    }
+    setEmailError('')
+    return true
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validateEmail(email)) return
+    
     setIsLoading(true)
     await new Promise((resolve) => setTimeout(resolve, 1500))
     setIsLoading(false)
@@ -46,262 +54,147 @@ export default function LoginPage() {
   }
 
   return (
-    <PageContainer>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <FormCard>
-          <FormHeader>
-            <h1>Welcome</h1>
-            <span>sign in to continue your journey</span>
-          </FormHeader>
+    <div className="min-h-screen flex">
+      {/* 左侧 - 装饰区域 */}
+      <div className="hidden lg:flex lg:w-1/2 bg-black relative overflow-hidden">
+        {/* 渐变背景 */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-purple-500/20 blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-blue-500/20 blur-3xl" />
+        </div>
+        
+        {/* 内容 */}
+        <div className="relative z-10 flex flex-col justify-center px-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-5xl font-black text-white mb-6 leading-tight">
+              发现你的<br />
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                AI 学习之路
+              </span>
+            </h1>
+            <p className="text-gray-400 text-lg max-w-md">
+              通过 MBTI 性格测试了解自己，获取个性化的 AI 职业推荐和学习路径
+            </p>
+          </motion.div>
+          
+          {/* 统计数据 */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-16 flex gap-12"
+          >
+            {[
+              { value: '50K+', label: '活跃学生' },
+              { value: '95%', label: '满意度' },
+            ].map((stat, i) => (
+              <div key={i}>
+                <p className="text-3xl font-bold text-white">{stat.value}</p>
+                <p className="text-gray-500 text-sm">{stat.label}</p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
 
-          <OAuthButton onClick={() => handleOAuth('google')}>
-            <GoogleIcon />
-            Continue with Google
-          </OAuthButton>
+      {/* 右侧 - 登录表单 */}
+      <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
+        >
+          {/* Logo */}
+          <Link to="/" className="inline-block mb-8">
+            <span className="text-2xl font-black text-gray-900">AI Path</span>
+          </Link>
 
-          <OAuthButton onClick={() => handleOAuth('github')}>
-            <GithubIcon />
-            Continue with Github
-          </OAuthButton>
+          {/* Header */}
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">欢迎回来</h2>
+            <p className="text-gray-600">登录以继续你的学习之旅</p>
+          </div>
 
-          <Separator>
-            <div />
-            <span>OR</span>
-            <div />
-          </Separator>
+          {/* OAuth Buttons */}
+          <div className="space-y-3 mb-6">
+            <Button
+              fullWidth
+              size="lg"
+              variant="bordered"
+              className="border-2 border-gray-200 font-semibold hover:bg-gray-100 transition-colors h-12"
+              startContent={<GoogleIcon />}
+              onPress={() => handleOAuth('google')}
+            >
+              使用 Google 登录
+            </Button>
 
-          <form onSubmit={handleSubmit}>
-            <StyledInput
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <Button
+              fullWidth
+              size="lg"
+              variant="bordered"
+              className="border-2 border-gray-200 font-semibold hover:bg-gray-100 transition-colors h-12"
+              startContent={<GithubIcon />}
+              onPress={() => handleOAuth('github')}
+            >
+              使用 Github 登录
+            </Button>
+          </div>
 
-            <SubmitButton type="submit" disabled={isLoading}>
-              {isLoading ? (
-                <Loader size={24} color="#323232" />
-              ) : (
-                <>
-                  Continue
-                  <ArrowIcon />
-                </>
+          {/* Divider */}
+          <div className="flex items-center gap-4 mb-6">
+            <Divider className="flex-1" />
+            <span className="text-gray-400 text-sm">或</span>
+            <Divider className="flex-1" />
+          </div>
+
+          {/* Email Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                邮箱地址
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (emailError) validateEmail(e.target.value)
+                }}
+                placeholder="your@email.com"
+                className={`w-full px-4 py-3 rounded-xl border-2 ${
+                  emailError ? 'border-red-300' : 'border-gray-200'
+                } focus:border-black focus:outline-none transition-colors`}
+              />
+              {emailError && (
+                <p className="text-red-500 text-sm mt-1">{emailError}</p>
               )}
-            </SubmitButton>
+            </div>
+
+            <Button
+              type="submit"
+              fullWidth
+              size="lg"
+              isLoading={isLoading}
+              className="bg-black text-white font-semibold h-12"
+            >
+              {isLoading ? '登录中...' : '继续 →'}
+            </Button>
           </form>
 
-          <FooterText>
-            Don't have an account? <a href="#">Sign up</a>
-          </FooterText>
-        </FormCard>
-      </motion.div>
-    </PageContainer>
+          {/* Footer */}
+          <p className="text-center text-sm text-gray-600 mt-8">
+            还没有账户？{' '}
+            <Link to="/mbti-test" className="text-black font-semibold hover:underline">
+              开始测试
+            </Link>
+          </p>
+        </motion.div>
+      </div>
+    </div>
   )
 }
-
-const PageContainer = styled.div`
-  min-height: 80vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 2rem;
-`
-
-const FormCard = styled.div`
-  --background: #f5f5f5;
-  --input-focus: #2d8cf0;
-  --font-color: #323232;
-  --font-color-sub: #666;
-  --bg-color: #fff;
-  --main-color: #323232;
-  
-  padding: 32px;
-  background: var(--background);
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 16px;
-  border-radius: 12px;
-  border: 2px solid var(--main-color);
-  box-shadow: 6px 6px 0 var(--main-color);
-  width: 100%;
-  max-width: 360px;
-  position: relative;
-  z-index: 10;
-`
-
-const FormHeader = styled.div`
-  margin-bottom: 8px;
-  
-  h1 {
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--font-color);
-    margin: 0 0 4px 0;
-  }
-  
-  span {
-    font-size: 15px;
-    color: var(--font-color-sub);
-    font-weight: 500;
-  }
-`
-
-const OAuthButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 20px;
-  width: 100%;
-  border-radius: 8px;
-  border: 2px solid var(--main-color);
-  background-color: var(--bg-color);
-  box-shadow: 4px 4px 0 var(--main-color);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--font-color);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0;
-    background-color: #212121;
-    z-index: -1;
-    transition: all 0.2s ease;
-  }
-
-  &:hover {
-    color: #e8e8e8;
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 var(--main-color);
-    
-    &::before {
-      width: 100%;
-    }
-  }
-  
-  &:active {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 var(--main-color);
-  }
-`
-
-const Separator = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 8px 0;
-
-  div {
-    flex: 1;
-    height: 2px;
-    border-radius: 2px;
-    background-color: #ccc;
-  }
-
-  span {
-    color: var(--font-color-sub);
-    font-weight: 600;
-    font-size: 13px;
-  }
-`
-
-const StyledInput = styled.input`
-  width: 100%;
-  height: 48px;
-  border-radius: 8px;
-  border: 2px solid var(--main-color);
-  background-color: var(--bg-color);
-  box-shadow: 4px 4px 0 var(--main-color);
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--font-color);
-  padding: 0 16px;
-  outline: none;
-  transition: all 0.2s ease;
-  margin-bottom: 16px;
-
-  &::placeholder {
-    color: #999;
-  }
-
-  &:focus {
-    border-color: var(--input-focus);
-    box-shadow: 4px 4px 0 var(--input-focus);
-  }
-`
-
-const SubmitButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 20px;
-  width: 100%;
-  border-radius: 8px;
-  border: 2px solid var(--main-color);
-  background-color: var(--main-color);
-  box-shadow: 4px 4px 0 #1a1a1a;
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover:not(:disabled) {
-    transform: translate(-2px, -2px);
-    box-shadow: 6px 6px 0 #1a1a1a;
-  }
-  
-  &:active:not(:disabled) {
-    transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0 #1a1a1a;
-  }
-  
-  &:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-  }
-  
-  svg {
-    transition: transform 0.2s ease;
-  }
-  
-  &:hover:not(:disabled) svg {
-    transform: translateX(4px);
-  }
-`
-
-const FooterText = styled.p`
-  text-align: center;
-  font-size: 14px;
-  color: var(--font-color-sub);
-  margin-top: 8px;
-  
-  a {
-    color: var(--font-color);
-    font-weight: 600;
-    text-decoration: none;
-    
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`

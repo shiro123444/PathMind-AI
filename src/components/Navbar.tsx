@@ -1,365 +1,365 @@
-import { Link, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import styled from 'styled-components'
-import { useState } from 'react'
+import { Button } from '@heroui/react'
 
-// 简化的导航 - 只保留核心入口
+// 导航链接配置
 const navLinks = [
-  { path: '/', label: '首页' },
-  { path: '/dashboard', label: '个人中心' },
-  { path: '/graph', label: '知识图谱' },
+  { path: '/', label: '首页', icon: '🏠' },
+  { path: '/dashboard', label: '个人中心', icon: '👤' },
+  { path: '/graph', label: '知识图谱', icon: '🔗' },
 ]
 
-export default function Navbar() {
-  const location = useLocation()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+// 移动端菜单项
+const mobileMenuItems = [
+  { path: '/', label: '首页', icon: '🏠' },
+  { path: '/dashboard', label: '个人中心', icon: '👤' },
+  { path: '/mbti-test', label: 'MBTI 测试', icon: '🧠' },
+  { path: '/careers', label: '职业推荐', icon: '🎯' },
+  { path: '/learning-path', label: '学习路径', icon: '📚' },
+  { path: '/ai-advisor', label: 'AI 助手', icon: '🤖' },
+  { path: '/graph', label: '知识图谱', icon: '🔗' },
+]
 
+// Logo 组件 - 简洁设计
+function Logo() {
   return (
-    <NavWrapper
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    <motion.div 
+      className="w-10 h-10 flex items-center justify-center bg-black rounded-xl"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
     >
-      <NavContainer>
-        {/* Logo */}
-        <Logo to="/">
-          <LogoIcon>
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </LogoIcon>
-          <LogoText>
-            <span className="brand">EduProfile</span>
-            <span className="tagline">学生画像平台</span>
-          </LogoText>
-        </Logo>
-
-        {/* Center Navigation */}
-        <NavCenter>
-          {navLinks.map((link) => {
-            const isActive = location.pathname === link.path
-            return (
-              <NavItem key={link.path}>
-                <NavLink to={link.path} $isActive={isActive}>
-                  <span className="label">{link.label}</span>
-                  {isActive && (
-                    <ActiveDot
-                      layoutId="nav-dot"
-                      transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                    />
-                  )}
-                </NavLink>
-              </NavItem>
-            )
-          })}
-        </NavCenter>
-
-        {/* Right Actions */}
-        <NavActions>
-          <ActionLink to="/login">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span>登录</span>
-          </ActionLink>
-          <PrimaryButton to="/dashboard">
-            开始使用
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </PrimaryButton>
-        </NavActions>
-
-        {/* Mobile Menu Button */}
-        <MobileMenuButton onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          <span className={mobileMenuOpen ? 'open' : ''} />
-        </MobileMenuButton>
-      </NavContainer>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <MobileMenu
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-          >
-            {navLinks.map((link) => (
-              <MobileNavLink 
-                key={link.path} 
-                to={link.path}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {link.label}
-              </MobileNavLink>
-            ))}
-            <MobileDivider />
-            <MobileNavLink to="/login" onClick={() => setMobileMenuOpen(false)}>
-              登录 / 注册
-            </MobileNavLink>
-          </MobileMenu>
-        )}
-      </AnimatePresence>
-    </NavWrapper>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-5 h-5 text-white"
+      >
+        <path
+          d="M12 2L2 7L12 12L22 7L12 2Z"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M2 17L12 22L22 17"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M2 12L12 17L22 12"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </motion.div>
   )
 }
 
-const NavWrapper = styled(motion.nav)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  padding: 12px 20px;
-`
+// 磁性导航链接组件
+function MagneticNavLink({ 
+  path, 
+  label, 
+  isActive, 
+  index 
+}: { 
+  path: string
+  label: string
+  isActive: boolean
+  index: number
+}) {
+  const [isHovered, setIsHovered] = useState(false)
 
-const NavContainer = styled.div`
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 14px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
-`
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.5 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      className="relative"
+    >
+      <RouterLink
+        to={path}
+        className={`relative px-4 py-2 text-sm font-medium transition-colors block ${
+          isActive ? 'text-black' : 'text-gray-600 hover:text-black'
+        }`}
+      >
+        {/* 悬停背景动画 */}
+        <AnimatePresence>
+          {isHovered && !isActive && (
+            <motion.span
+              className="absolute inset-0 bg-gray-100 rounded-full -z-10"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            />
+          )}
+        </AnimatePresence>
+        
+        {/* 激活状态指示器 */}
+        {isActive && (
+          <motion.span
+            className="absolute inset-0 bg-black rounded-full -z-10"
+            layoutId="activeNavIndicator"
+            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+          />
+        )}
+        
+        <span className={isActive ? 'text-white' : ''}>
+          {label}
+        </span>
+      </RouterLink>
+    </motion.div>
+  )
+}
 
-const Logo = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  color: #1a1a1a;
-`
 
-const LogoIcon = styled.div`
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #1a1a1a;
-  border-radius: 10px;
-  color: white;
-  
-  svg {
-    width: 18px;
-    height: 18px;
-  }
-`
+// 汉堡菜单按钮动画
+function HamburgerButton({ 
+  isOpen, 
+  onClick 
+}: { 
+  isOpen: boolean
+  onClick: () => void 
+}) {
+  return (
+    <motion.button
+      onClick={onClick}
+      className="w-10 h-10 flex flex-col items-center justify-center gap-1.5 sm:hidden"
+      whileTap={{ scale: 0.9 }}
+      aria-label={isOpen ? '关闭菜单' : '打开菜单'}
+    >
+      <motion.span
+        className="w-6 h-0.5 bg-black rounded-full block"
+        animate={{
+          rotate: isOpen ? 45 : 0,
+          y: isOpen ? 8 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+      />
+      <motion.span
+        className="w-6 h-0.5 bg-black rounded-full block"
+        animate={{
+          opacity: isOpen ? 0 : 1,
+          x: isOpen ? 20 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+      />
+      <motion.span
+        className="w-6 h-0.5 bg-black rounded-full block"
+        animate={{
+          rotate: isOpen ? -45 : 0,
+          y: isOpen ? -8 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+      />
+    </motion.button>
+  )
+}
 
-const LogoText = styled.div`
-  display: flex;
-  flex-direction: column;
-  
-  .brand {
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    line-height: 1.1;
-  }
-  
-  .tagline {
-    font-size: 10px;
-    color: #888;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-  }
-  
-  @media (max-width: 640px) {
-    .tagline {
-      display: none;
+export default function Navbar() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  // 监听滚动
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20)
     }
-  }
-`
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-const NavCenter = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
-`
+  // 关闭菜单当路由变化
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [location.pathname])
 
-const NavItem = styled.div`
-  position: relative;
-`
+  const isActive = (path: string) => location.pathname === path
 
-const NavLink = styled(Link)<{ $isActive: boolean }>`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding: 8px 20px;
-  text-decoration: none;
-  color: ${props => props.$isActive ? '#1a1a1a' : '#666'};
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.2s ease;
-  
-  &:hover {
-    color: #1a1a1a;
-  }
-`
+  return (
+    <>
+      <motion.nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          scrolled 
+            ? 'bg-white/90 backdrop-blur-xl shadow-lg' 
+            : 'bg-white/70 backdrop-blur-md'
+        }`}
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="flex items-center justify-between h-16">
+            {/* 左侧：Logo */}
+            <motion.div 
+              className="flex items-center gap-3 cursor-pointer"
+              onClick={() => navigate('/')}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Logo />
+              <div className="flex flex-col">
+                <motion.span 
+                  className="font-bold text-base leading-tight"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  EduProfile
+                </motion.span>
+                <motion.span 
+                  className="text-[10px] text-gray-500 font-medium hidden sm:block"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  学生画像平台
+                </motion.span>
+              </div>
+            </motion.div>
 
-const ActiveDot = styled(motion.div)`
-  width: 4px;
-  height: 4px;
-  background: #1a1a1a;
-  border-radius: 50%;
-`
+            {/* 中间：导航链接 - 带胶囊滑动效果 */}
+            <div className="hidden sm:flex items-center gap-1 bg-gray-100/80 rounded-full p-1">
+              {navLinks.map((link, index) => (
+                <MagneticNavLink
+                  key={link.path}
+                  path={link.path}
+                  label={link.label}
+                  isActive={isActive(link.path)}
+                  index={index}
+                />
+              ))}
+            </div>
 
-const NavActions = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  
-  @media (max-width: 768px) {
-    display: none;
-  }
-`
+            {/* 右侧：操作按钮 */}
+            <div className="flex items-center gap-3">
+              <motion.div
+                className="hidden lg:block"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <RouterLink
+                  to="/login"
+                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center gap-2"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  登录
+                </RouterLink>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5, type: 'spring', stiffness: 200 }}
+              >
+                <Button
+                  as={RouterLink}
+                  to="/dashboard"
+                  size="sm"
+                  className="font-semibold bg-black text-white hover:bg-gray-800 rounded-full px-5"
+                  endContent={
+                    <motion.svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      animate={{ x: [0, 4, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </motion.svg>
+                  }
+                >
+                  开始使用
+                </Button>
+              </motion.div>
 
-const ActionLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  text-decoration: none;
-  color: #666;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    color: #1a1a1a;
-    background: rgba(0, 0, 0, 0.04);
-  }
-`
+              {/* 移动端菜单按钮 */}
+              <HamburgerButton isOpen={isMenuOpen} onClick={() => setIsMenuOpen(!isMenuOpen)} />
+            </div>
+          </div>
+        </div>
+      </motion.nav>
 
-const PrimaryButton = styled(Link)`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 16px;
-  text-decoration: none;
-  color: #fff;
-  background: #1a1a1a;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: #333;
-    transform: translateY(-1px);
-  }
-`
-
-const MobileMenuButton = styled.button`
-  display: none;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: none;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  
-  @media (max-width: 768px) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  span {
-    display: block;
-    width: 18px;
-    height: 2px;
-    background: #1a1a1a;
-    border-radius: 1px;
-    position: relative;
-    transition: all 0.2s ease;
-    
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      width: 18px;
-      height: 2px;
-      background: #1a1a1a;
-      border-radius: 1px;
-      left: 0;
-      transition: all 0.2s ease;
-    }
-    
-    &::before {
-      top: -6px;
-    }
-    
-    &::after {
-      top: 6px;
-    }
-    
-    &.open {
-      background: transparent;
-      
-      &::before {
-        top: 0;
-        transform: rotate(45deg);
-      }
-      
-      &::after {
-        top: 0;
-        transform: rotate(-45deg);
-      }
-    }
-  }
-`
-
-const MobileMenu = styled(motion.div)`
-  display: none;
-  flex-direction: column;
-  margin-top: 8px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 14px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  
-  @media (max-width: 768px) {
-    display: flex;
-  }
-`
-
-const MobileNavLink = styled(Link)`
-  padding: 12px 16px;
-  text-decoration: none;
-  color: #1a1a1a;
-  font-size: 15px;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: background 0.2s ease;
-  
-  &:hover {
-    background: rgba(0, 0, 0, 0.04);
-  }
-`
-
-const MobileDivider = styled.div`
-  height: 1px;
-  background: rgba(0, 0, 0, 0.08);
-  margin: 8px 0;
-`
+      {/* 移动端全屏菜单 */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40 bg-white pt-20"
+            initial={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 40px) 32px)' }}
+            animate={{ opacity: 1, clipPath: 'circle(150% at calc(100% - 40px) 32px)' }}
+            exit={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 40px) 32px)' }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="px-6 py-8">
+              {mobileMenuItems.map((item, index) => (
+                <motion.div
+                  key={item.path}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                >
+                  <RouterLink
+                    to={item.path}
+                    className={`flex items-center gap-4 py-4 text-xl font-medium border-b border-gray-100 ${
+                      isActive(item.path) ? 'text-black' : 'text-gray-600'
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <motion.span 
+                      className="text-2xl"
+                      whileHover={{ scale: 1.2, rotate: 10 }}
+                    >
+                      {item.icon}
+                    </motion.span>
+                    <span>{item.label}</span>
+                    {isActive(item.path) && (
+                      <motion.div
+                        className="ml-auto w-2 h-2 bg-black rounded-full"
+                        layoutId="mobileActiveIndicator"
+                      />
+                    )}
+                  </RouterLink>
+                </motion.div>
+              ))}
+              
+              <motion.div
+                className="mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Button
+                  as={RouterLink}
+                  to="/login"
+                  fullWidth
+                  size="lg"
+                  variant="bordered"
+                  className="font-semibold border-2 border-black rounded-full"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  登录 / 注册
+                </Button>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}

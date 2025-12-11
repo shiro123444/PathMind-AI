@@ -1,123 +1,73 @@
 import { useSearchParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import {
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  ResponsiveContainer,
+  Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
 } from 'recharts'
 
-const mbtiDescriptions: Record<
-  string,
-  { name: string; description: string; careers: string[] }
-> = {
+const mbtiDescriptions: Record<string, { name: string; description: string; careers: string[]; strengths: string[] }> = {
   INTJ: {
     name: '建筑师',
-    description:
-      '富有想象力和战略性的思想家，一切皆在计划之中。独立、有决断力，对自己的想法和能力很有信心。',
-    careers: ['科学家', '工程师', '投资分析师', '项目经理', '软件架构师'],
+    description: '富有想象力和战略性的思想家，一切皆在计划之中。独立、有决断力，对自己的想法和能力很有信心。',
+    careers: ['AI 研究员', '算法工程师', '数据科学家', '系统架构师', '技术顾问'],
+    strengths: ['战略思维', '独立自主', '逻辑分析', '追求卓越'],
   },
   INTP: {
     name: '逻辑学家',
-    description:
-      '具有创造力的发明家，对知识有着不可抑制的渴望。喜欢分析和解决复杂的问题。',
-    careers: ['研究员', '数据科学家', '哲学家', '软件开发', '数学家'],
+    description: '具有创造力的发明家，对知识有着不可抑制的渴望。喜欢分析和解决复杂的问题。',
+    careers: ['研究员', '数据科学家', '软件开发', '数学家', 'AI 工程师'],
+    strengths: ['逻辑思维', '创新能力', '问题解决', '知识渴求'],
   },
   ENTJ: {
     name: '指挥官',
-    description:
-      '大胆、富有想象力且意志强大的领导者，总能找到方法，或者创造方法。',
-    careers: ['企业高管', '律师', '企业家', '咨询顾问', '政治家'],
+    description: '大胆、富有想象力且意志强大的领导者，总能找到方法，或者创造方法。',
+    careers: ['技术总监', 'AI 产品经理', '创业者', '咨询顾问', '项目经理'],
+    strengths: ['领导能力', '决策果断', '目标导向', '高效执行'],
   },
   ENTP: {
     name: '辩论家',
-    description:
-      '聪明好奇的思想者，不会放过任何智力上的挑战。喜欢辩论和发现新的可能性。',
-    careers: ['创业者', '营销经理', '产品经理', '记者', '演员'],
+    description: '聪明好奇的思想者，不会放过任何智力上的挑战。喜欢辩论和发现新的可能性。',
+    careers: ['产品经理', '创业者', 'AI 顾问', '技术布道师', '解决方案架构师'],
+    strengths: ['创新思维', '适应能力', '沟通技巧', '挑战精神'],
   },
   INFJ: {
     name: '提倡者',
-    description:
-      '安静而神秘，同时又非常鼓舞人心，是理想主义者。致力于帮助他人实现潜能。',
-    careers: ['心理咨询师', '作家', '教师', '社工', '人力资源'],
+    description: '安静而神秘，同时又非常鼓舞人心，是理想主义者。致力于帮助他人实现潜能。',
+    careers: ['UX 研究员', 'AI 伦理专家', '教育技术专家', '用户体验设计师'],
+    strengths: ['洞察力', '同理心', '创造力', '坚持理想'],
   },
   INFP: {
     name: '调停者',
-    description:
-      '诗意、善良的利他主义者，总是热情地为善举提供帮助。富有创造力和想象力。',
-    careers: ['作家', '艺术家', '心理治疗师', '图书管理员', '社会工作者'],
+    description: '诗意、善良的利他主义者，总是热情地为善举提供帮助。富有创造力和想象力。',
+    careers: ['内容创作者', 'AI 艺术家', '用户研究员', '技术写作'],
+    strengths: ['创造力', '同理心', '适应性', '理想主义'],
   },
   ENFJ: {
     name: '主人公',
-    description:
-      '富有魅力且鼓舞人心的领导者，有着迷人的魅力。善于激励他人，关心他人的成长。',
-    careers: ['教师', '培训师', '人力资源经理', '销售经理', '政治家'],
+    description: '富有魅力且鼓舞人心的领导者，有着迷人的魅力。善于激励他人，关心他人的成长。',
+    careers: ['技术培训师', 'AI 产品经理', '团队领导', '开发者关系'],
+    strengths: ['领导魅力', '沟通能力', '团队协作', '激励他人'],
   },
   ENFP: {
     name: '竞选者',
-    description:
-      '热情、有创造力、善于社交的自由灵魂，总能找到微笑的理由。充满热情和新想法。',
-    careers: ['记者', '演员', '顾问', '营销专员', '公关'],
+    description: '热情、有创造力、善于社交的自由灵魂，总能找到微笑的理由。充满热情和新想法。',
+    careers: ['产品设计师', '技术布道师', '创意总监', '社区经理'],
+    strengths: ['创造力', '热情', '适应性', '人际交往'],
   },
-  ISTJ: {
-    name: '物流师',
-    description:
-      '安静而实际，对可靠性和实用性有着强烈的偏好。勤奋、可靠、有责任心。',
-    careers: ['会计', '审计师', '军官', '项目经理', '数据分析师'],
-  },
-  ISFJ: {
-    name: '守卫者',
-    description:
-      '非常尽职尽责的保护者，随时准备保护他们爱的人。温暖、细心、有奉献精神。',
-    careers: ['护士', '行政助理', '教师', '客户服务', '社工'],
-  },
-  ESTJ: {
-    name: '总经理',
-    description:
-      '出色的管理者，善于管理事务和人员。注重秩序、传统和安全。',
-    careers: ['银行经理', '法官', '项目经理', '军官', '销售经理'],
-  },
-  ESFJ: {
-    name: '执政官',
-    description:
-      '极有同情心、善于社交、受欢迎的人，总是热心帮助他人。重视和谐与合作。',
-    careers: ['护士', '教师', '销售', '活动策划', '人力资源'],
-  },
-  ISTP: {
-    name: '鉴赏家',
-    description:
-      '大胆而实际的实验者，善于使用各种工具。喜欢动手解决问题。',
-    careers: ['工程师', '技术员', '飞行员', '警察', '运动员'],
-  },
-  ISFP: {
-    name: '探险家',
-    description:
-      '灵活而有魅力的艺术家，随时准备探索和体验新事物。温和、敏感、有帮助。',
-    careers: ['艺术家', '音乐家', '设计师', '兽医', '厨师'],
-  },
-  ESTP: {
-    name: '企业家',
-    description:
-      '聪明、精力充沛、善于感知的人，真正享受冒险的生活。行动力强，注重实际。',
-    careers: ['销售', '企业家', '运动员', '演员', '消防员'],
-  },
-  ESFP: {
-    name: '表演者',
-    description:
-      '自发的、精力充沛的表演者，生活在他们周围永远不会无聊。热爱生活，乐于分享。',
-    careers: ['演员', '活动策划', '销售', '导游', '公关'],
-  },
+  ISTJ: { name: '物流师', description: '安静而实际，对可靠性和实用性有着强烈的偏好。', careers: ['数据分析师', '质量工程师', '系统管理员'], strengths: ['可靠性', '组织能力', '注重细节', '责任心'] },
+  ISFJ: { name: '守卫者', description: '非常尽职尽责的保护者，随时准备保护他们爱的人。', careers: ['技术支持', '文档工程师', '测试工程师'], strengths: ['可靠性', '耐心', '细心', '奉献精神'] },
+  ESTJ: { name: '总经理', description: '出色的管理者，善于管理事务和人员。', careers: ['项目经理', '技术经理', '运维主管'], strengths: ['组织能力', '领导力', '执行力', '责任心'] },
+  ESFJ: { name: '执政官', description: '极有同情心、善于社交、受欢迎的人。', careers: ['客户成功经理', '技术培训', '团队协调'], strengths: ['社交能力', '同理心', '组织能力', '合作精神'] },
+  ISTP: { name: '鉴赏家', description: '大胆而实际的实验者，善于使用各种工具。', careers: ['DevOps 工程师', '安全工程师', '硬件工程师'], strengths: ['动手能力', '问题解决', '适应性', '冷静'] },
+  ISFP: { name: '探险家', description: '灵活而有魅力的艺术家，随时准备探索和体验新事物。', careers: ['UI 设计师', '前端开发', '创意技术'], strengths: ['创造力', '审美', '适应性', '同理心'] },
+  ESTP: { name: '企业家', description: '聪明、精力充沛、善于感知的人，真正享受冒险的生活。', careers: ['技术销售', '创业者', '产品运营'], strengths: ['行动力', '适应性', '社交能力', '问题解决'] },
+  ESFP: { name: '表演者', description: '自发的、精力充沛的表演者，生活在他们周围永远不会无聊。', careers: ['技术演讲', '社区运营', '用户增长'], strengths: ['热情', '社交能力', '适应性', '乐观'] },
 }
 
 export default function ResultsPage() {
   const [searchParams] = useSearchParams()
   const mbtiType = searchParams.get('type') || 'INTJ'
-
   const typeInfo = mbtiDescriptions[mbtiType] || mbtiDescriptions.INTJ
 
-  // Generate radar chart data
   const dimensions = [
     { name: '外向 E', value: mbtiType.includes('E') ? 75 : 25 },
     { name: '直觉 N', value: mbtiType.includes('N') ? 70 : 30 },
@@ -126,170 +76,182 @@ export default function ResultsPage() {
   ]
 
   const dimensionBars = [
-    {
-      left: { label: '内向 (I)', value: mbtiType.includes('I') ? 65 : 35 },
-      right: { label: '外向 (E)', value: mbtiType.includes('E') ? 65 : 35 },
-    },
-    {
-      left: { label: '实感 (S)', value: mbtiType.includes('S') ? 60 : 40 },
-      right: { label: '直觉 (N)', value: mbtiType.includes('N') ? 60 : 40 },
-    },
-    {
-      left: { label: '思考 (T)', value: mbtiType.includes('T') ? 70 : 30 },
-      right: { label: '情感 (F)', value: mbtiType.includes('F') ? 70 : 30 },
-    },
-    {
-      left: { label: '判断 (J)', value: mbtiType.includes('J') ? 55 : 45 },
-      right: { label: '知觉 (P)', value: mbtiType.includes('P') ? 55 : 45 },
-    },
+    { left: { label: '内向 (I)', value: mbtiType.includes('I') ? 65 : 35 }, right: { label: '外向 (E)', value: mbtiType.includes('E') ? 65 : 35 } },
+    { left: { label: '实感 (S)', value: mbtiType.includes('S') ? 60 : 40 }, right: { label: '直觉 (N)', value: mbtiType.includes('N') ? 60 : 40 } },
+    { left: { label: '思考 (T)', value: mbtiType.includes('T') ? 70 : 30 }, right: { label: '情感 (F)', value: mbtiType.includes('F') ? 70 : 30 } },
+    { left: { label: '判断 (J)', value: mbtiType.includes('J') ? 55 : 45 }, right: { label: '知觉 (P)', value: mbtiType.includes('P') ? 55 : 45 } },
   ]
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 md:px-8 py-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
-      >
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4">
+      <div className="max-w-5xl mx-auto">
+        {/* Hero Section */}
         <motion.div
-          initial={{ scale: 0.5, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-          className="inline-block mb-6"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
         >
-          <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center shadow-2xl">
-            <span className="text-4xl font-bold text-white">{mbtiType}</span>
-          </div>
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            className="inline-block mb-6"
+          >
+            <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shadow-2xl">
+              <span className="text-4xl font-black text-white">{mbtiType}</span>
+            </div>
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-4xl md:text-5xl font-black text-gray-900 mb-4"
+          >
+            你是 "{typeInfo.name}" 型人格
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-lg text-gray-600 max-w-2xl mx-auto"
+          >
+            {typeInfo.description}
+          </motion.p>
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
-        >
-          你是 "{typeInfo.name}" 型人格
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        {/* Strengths */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-lg text-gray-600 max-w-2xl mx-auto"
+          className="flex flex-wrap justify-center gap-3 mb-12"
         >
-          {typeInfo.description}
-        </motion.p>
-      </motion.div>
-
-      {/* Charts Section */}
-      <div className="grid md:grid-cols-2 gap-8 mb-12">
-        {/* Radar Chart */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.6 }}
-          className="glass rounded-3xl p-6"
-        >
-          <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">
-            性格维度雷达图
-          </h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <RadarChart data={dimensions}>
-              <PolarGrid stroke="#e5e5e5" />
-              <PolarAngleAxis dataKey="name" tick={{ fill: '#666', fontSize: 12 }} />
-              <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
-              <Radar
-                name="维度"
-                dataKey="value"
-                stroke="#000"
-                fill="#000"
-                fillOpacity={0.2}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
-        </motion.div>
-
-        {/* Dimension Bars */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.7 }}
-          className="glass rounded-3xl p-6"
-        >
-          <h3 className="text-lg font-bold text-gray-900 mb-6 text-center">
-            维度分布
-          </h3>
-          <div className="space-y-6">
-            {dimensionBars.map((dim, index) => (
-              <div key={index}>
-                <div className="flex justify-between text-sm mb-2">
-                  <span className="text-gray-600">{dim.left.label}</span>
-                  <span className="text-gray-600">{dim.right.label}</span>
-                </div>
-                <div className="h-3 bg-gray-200 rounded-full overflow-hidden flex">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${dim.left.value}%` }}
-                    transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                    className="h-full bg-black rounded-l-full"
-                  />
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${dim.right.value}%` }}
-                    transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                    className="h-full bg-gray-400 rounded-r-full"
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
-
-      {/* Career Suggestions */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9 }}
-        className="glass rounded-3xl p-8 mb-8"
-      >
-        <h3 className="text-xl font-bold text-gray-900 mb-6">推荐职业方向</h3>
-        <div className="flex flex-wrap gap-3">
-          {typeInfo.careers.map((career, index) => (
+          {typeInfo.strengths.map((strength, index) => (
             <motion.span
-              key={career}
+              key={strength}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1 + index * 0.1 }}
-              className="px-4 py-2 bg-black text-white rounded-full text-sm font-medium"
+              transition={{ delay: 0.6 + index * 0.1 }}
+              className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 shadow-sm"
             >
-              {career}
+              ✨ {strength}
             </motion.span>
           ))}
-        </div>
-      </motion.div>
+        </motion.div>
 
-      {/* Actions */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="flex flex-col sm:flex-row gap-4 justify-center"
-      >
-        <Link
-          to="/mbti-test"
-          className="px-8 py-3 glass rounded-full font-medium text-gray-700 hover:bg-white/80 transition-colors text-center"
+        {/* Charts Grid */}
+        <div className="grid md:grid-cols-2 gap-6 mb-12">
+          {/* Radar Chart */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.6 }}
+            className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100"
+          >
+            <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">性格维度雷达图</h3>
+            <ResponsiveContainer width="100%" height={280}>
+              <RadarChart data={dimensions}>
+                <PolarGrid stroke="#e5e5e5" />
+                <PolarAngleAxis dataKey="name" tick={{ fill: '#666', fontSize: 12 }} />
+                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
+                <Radar name="维度" dataKey="value" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.3} />
+              </RadarChart>
+            </ResponsiveContainer>
+          </motion.div>
+
+          {/* Dimension Bars */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.7 }}
+            className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100"
+          >
+            <h3 className="text-lg font-bold text-gray-900 mb-6 text-center">维度分布</h3>
+            <div className="space-y-6">
+              {dimensionBars.map((dim, index) => (
+                <div key={index}>
+                  <div className="flex justify-between text-sm mb-2">
+                    <span className={dim.left.value > dim.right.value ? 'font-bold text-gray-900' : 'text-gray-500'}>{dim.left.label}</span>
+                    <span className={dim.right.value > dim.left.value ? 'font-bold text-gray-900' : 'text-gray-500'}>{dim.right.label}</span>
+                  </div>
+                  <div className="h-3 bg-gray-100 rounded-full overflow-hidden flex">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${dim.left.value}%` }}
+                      transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                      className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-l-full"
+                    />
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${dim.right.value}%` }}
+                      transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                      className="h-full bg-gray-300 rounded-r-full"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Career Suggestions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+          className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-8 mb-8 text-white"
         >
-          重新测试
-        </Link>
-        <Link
-          to="/dashboard"
-          className="px-8 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 transition-colors text-center"
+          <h3 className="text-2xl font-bold mb-6">🎯 推荐 AI 职业方向</h3>
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {typeInfo.careers.map((career, index) => (
+              <motion.div
+                key={career}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1 + index * 0.1 }}
+                className="bg-white/10 backdrop-blur rounded-2xl p-4 hover:bg-white/20 transition-colors"
+              >
+                <span className="font-medium">{career}</span>
+              </motion.div>
+            ))}
+          </div>
+          <Link
+            to={`/careers?type=${mbtiType}`}
+            className="inline-flex items-center gap-2 mt-6 text-white/80 hover:text-white transition-colors"
+          >
+            查看详细职业分析 →
+          </Link>
+        </motion.div>
+
+        {/* Actions */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center"
         >
-          返回仪表盘
-        </Link>
-      </motion.div>
+          <Link
+            to="/learning-path"
+            className="px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-colors text-center"
+          >
+            📚 查看学习路径
+          </Link>
+          <Link
+            to="/ai-advisor"
+            className="px-8 py-4 bg-white border-2 border-gray-200 text-gray-900 rounded-full font-semibold hover:border-gray-300 hover:shadow-lg transition-all text-center"
+          >
+            💬 咨询 AI 助手
+          </Link>
+          <Link
+            to="/mbti-test"
+            className="px-8 py-4 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition-colors text-center"
+          >
+            🔄 重新测试
+          </Link>
+        </motion.div>
+      </div>
     </div>
   )
 }
