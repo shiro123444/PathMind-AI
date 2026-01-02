@@ -1,83 +1,205 @@
-import { useState } from 'react'
+/**
+ * MBTI 测试页面 - 重新设计版
+ * 
+ * 特色：
+ * - Claude 风格左右分栏布局
+ * - 多种测试类型选择
+ * - 多种题目类型支持
+ * - 进度保存和恢复
+ * - 统一的专业蓝灰色配色
+ */
+
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button, Progress } from '@heroui/react'
 import { mbtiApi } from '../services/api'
+import { 
+  TestSelector, 
+  BinaryQuestion, 
+  ScaleQuestion, 
+  ScenarioQuestion, 
+  RankingQuestion,
+  TestProgressSidebar,
+} from '../components/mbti'
+import { testCategories, getTestCategory } from '../data/testCategories'
+import { getQuestionsByCategory } from '../data/questions'
+import type { 
+  Question, 
+  Answer, 
+  TestProgress,
+  BinaryQuestion as BinaryQuestionType,
+  ScaleQuestion as ScaleQuestionType,
+  ScenarioQuestion as ScenarioQuestionType,
+  RankingQuestion as RankingQuestionType,
+  BinaryAnswer,
+  MBTIValue,
+} from '../types/mbti'
+import { neutral, primary } from '../theme/colors'
+import { BreathingOrb } from '../components/animations'
 
-const questions = [
-  { id: 1, question: '在社交场合中，你通常：', options: [
-    { text: '主动与他人交谈，享受社交', dimension: 'E' },
-    { text: '等待他人来找你交谈', dimension: 'I' },
-  ]},
-  { id: 2, question: '当你需要做决定时，你更倾向于：', options: [
-    { text: '依靠逻辑和客观分析', dimension: 'T' },
-    { text: '考虑他人感受和价值观', dimension: 'F' },
-  ]},
-  { id: 3, question: '在处理信息时，你更关注：', options: [
-    { text: '具体的事实和细节', dimension: 'S' },
-    { text: '整体的模式和可能性', dimension: 'N' },
-  ]},
-  { id: 4, question: '你更喜欢的生活方式是：', options: [
-    { text: '有计划、有组织的', dimension: 'J' },
-    { text: '灵活、随性的', dimension: 'P' },
-  ]},
-  { id: 5, question: '在团队项目中，你通常：', options: [
-    { text: '喜欢领导和协调团队', dimension: 'E' },
-    { text: '更喜欢独立完成自己的部分', dimension: 'I' },
-  ]},
-  { id: 6, question: '面对冲突时，你倾向于：', options: [
-    { text: '直接面对，寻求解决方案', dimension: 'T' },
-    { text: '先考虑如何维护关系', dimension: 'F' },
-  ]},
-  { id: 7, question: '学习新事物时，你更喜欢：', options: [
-    { text: '按部就班，从基础开始', dimension: 'S' },
-    { text: '直接跳到感兴趣的部分', dimension: 'N' },
-  ]},
-  { id: 8, question: '对于截止日期，你通常：', options: [
-    { text: '提前完成任务', dimension: 'J' },
-    { text: '在最后时刻完成', dimension: 'P' },
-  ]},
-  { id: 9, question: '周末休息时，你更倾向于：', options: [
-    { text: '和朋友出去聚会、社交', dimension: 'E' },
-    { text: '独处或只和亲密的人在一起', dimension: 'I' },
-  ]},
-  { id: 10, question: '在学习或工作中，你更重视：', options: [
-    { text: '掌握实用的技能和方法', dimension: 'S' },
-    { text: '理解背后的原理和理论', dimension: 'N' },
-  ]},
-  { id: 11, question: '当朋友向你倾诉烦恼时，你通常：', options: [
-    { text: '帮他分析问题，提供解决方案', dimension: 'T' },
-    { text: '表示理解和支持，倾听他的感受', dimension: 'F' },
-  ]},
-  { id: 12, question: '对于旅行，你更喜欢：', options: [
-    { text: '提前详细规划行程', dimension: 'J' },
-    { text: '到了再说，随机应变', dimension: 'P' },
-  ]},
-]
+// localStorage key
+const PROGRESS_KEY_PREFIX = 'mbti_progress_'
+
+// 获取保存的进度
+function getSavedProgress(): TestProgress | null {
+  for (const cat of testCategories) {
+    const saved = localStorage.getItem(`${PROGRESS_KEY_PREFIX}${cat.id}`)
+    if (saved) {
+      try {
+        return JSON.parse(saved)
+      } catch {
+        continue
+      }
+    }
+  }
+  return null
+}
+
+// 保存进度
+function saveProgress(progress: TestProgress) {
+  localStorage.setItem(
+    `${PROGRESS_KEY_PREFIX}${progress.testCategoryId}`,
+    JSON.stringify(progress)
+  )
+}
+
+// 清除进度
+function clearProgress(categoryId: string) {
+  localStorage.removeItem(`${PROGRESS_KEY_PREFIX}${categoryId}`)
+}
 
 export default function MBTITestPage() {
   const navigate = useNavigate()
-  const [currentQuestion, setCurrentQuestion] = useState(0)
-  const [answers, setAnswers] = useState<Record<number, string>>({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // 状态
+  const [phase, setPhase] = useState<'select' | 'name' | 'test'>('select')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [studentName, setStudentName] = useState('')
-  const [showNameInput, setShowNameInput] = useState(true)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [answers, setAnswers] = useState<Record<string, Answer>>({})
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [startTime, setStartTime] = useState<Date>(new Date())
+  const [savedProgress, setSavedProgress] = useState<TestProgress | null>(null)
 
-  const progress = ((currentQuestion + 1) / questions.length) * 100
-  const question = questions[currentQuestion]
+  // 加载保存的进度
+  useEffect(() => {
+    const progress = getSavedProgress()
+    setSavedProgress(progress)
+  }, [])
 
-  const handleAnswer = (dimension: string) => {
-    setAnswers((prev) => ({ ...prev, [currentQuestion]: dimension }))
-    if (currentQuestion < questions.length - 1) {
-      setTimeout(() => setCurrentQuestion((prev) => prev + 1), 300)
+  // 选择测试类型
+  const handleSelectTest = (categoryId: string) => {
+    const existingProgress = localStorage.getItem(`${PROGRESS_KEY_PREFIX}${categoryId}`)
+    
+    if (existingProgress) {
+      // 有未完成的测试，询问是否继续
+      const progress: TestProgress = JSON.parse(existingProgress)
+      setSelectedCategory(categoryId)
+      setQuestions(getQuestionsByCategory(categoryId))
+      setCurrentIndex(progress.currentQuestionIndex)
+      setAnswers(progress.answers)
+      setStartTime(new Date(progress.startedAt))
+      setPhase('test')
+    } else {
+      setSelectedCategory(categoryId)
+      setQuestions(getQuestionsByCategory(categoryId))
+      setPhase('name')
     }
   }
 
-  const calculateMBTI = () => {
-    const counts = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 }
-    Object.values(answers).forEach((dim) => {
-      counts[dim as keyof typeof counts]++
+  // 开始测试
+  const handleStartTest = () => {
+    if (!selectedCategory) return
+    setStartTime(new Date())
+    setPhase('test')
+    
+    // 保存初始进度
+    saveProgress({
+      testCategoryId: selectedCategory,
+      currentQuestionIndex: 0,
+      answers: {},
+      startedAt: new Date().toISOString(),
+      lastUpdatedAt: new Date().toISOString(),
     })
+  }
+
+  // 回答问题
+  const handleAnswer = useCallback((answer: Answer) => {
+    setAnswers(prev => {
+      const newAnswers = { ...prev, [answer.questionId]: answer }
+      
+      // 保存进度
+      if (selectedCategory) {
+        saveProgress({
+          testCategoryId: selectedCategory,
+          currentQuestionIndex: currentIndex,
+          answers: newAnswers,
+          startedAt: startTime.toISOString(),
+          lastUpdatedAt: new Date().toISOString(),
+        })
+      }
+      
+      return newAnswers
+    })
+
+    // 自动跳转到下一题（仅对二选一题型）
+    if (answer.type === 'binary' && currentIndex < questions.length - 1) {
+      setTimeout(() => setCurrentIndex(prev => prev + 1), 300)
+    }
+  }, [selectedCategory, currentIndex, startTime, questions.length])
+
+  // 上一题
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1)
+    }
+  }
+
+  // 下一题
+  const handleNext = () => {
+    if (currentIndex < questions.length - 1) {
+      setCurrentIndex(prev => prev + 1)
+    }
+  }
+
+  // 计算 MBTI 结果
+  const calculateMBTI = () => {
+    const counts: Record<MBTIValue, number> = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 }
+    
+    Object.values(answers).forEach(answer => {
+      if (answer.type === 'binary') {
+        counts[answer.selectedValue]++
+      } else if (answer.type === 'scale') {
+        const question = questions.find(q => q.id === answer.questionId) as ScaleQuestionType
+        if (question) {
+          const midPoint = Math.ceil(question.scaleSize / 2)
+          if (answer.value < midPoint) {
+            counts[question.leftValue] += (midPoint - answer.value)
+          } else if (answer.value > midPoint) {
+            counts[question.rightValue] += (answer.value - midPoint)
+          }
+        }
+      } else if (answer.type === 'scenario') {
+        const question = questions.find(q => q.id === answer.questionId) as ScenarioQuestionType
+        if (question) {
+          const selected = question.options[answer.selectedIndex]
+          counts[selected.value] += selected.weight
+        }
+      } else if (answer.type === 'ranking') {
+        const question = questions.find(q => q.id === answer.questionId) as RankingQuestionType
+        if (question) {
+          answer.order.forEach((itemId, index) => {
+            const item = question.items.find(i => i.id === itemId)
+            if (item) {
+              // 排名越靠前权重越高
+              counts[item.value as MBTIValue] += (question.items.length - index)
+            }
+          })
+        }
+      }
+    })
+
     return [
       counts.E >= counts.I ? 'E' : 'I',
       counts.S >= counts.N ? 'S' : 'N',
@@ -86,6 +208,7 @@ export default function MBTITestPage() {
     ].join('')
   }
 
+  // 提交测试
   const handleSubmit = async () => {
     if (Object.keys(answers).length < questions.length) {
       alert('请回答所有问题')
@@ -94,16 +217,32 @@ export default function MBTITestPage() {
 
     setIsSubmitting(true)
     const mbtiType = calculateMBTI()
-    const formattedAnswers = Object.entries(answers).map(([questionId, dimension]) => ({
-      questionId: parseInt(questionId) + 1,
-      answer: questions[parseInt(questionId)].options[0].dimension === dimension ? 'A' : 'B' as 'A' | 'B',
-    }))
+
+    // 转换答案格式（兼容旧 API）
+    const formattedAnswers = Object.entries(answers).map(([questionId, answer]) => {
+      if (answer.type === 'binary') {
+        const question = questions.find(q => q.id === questionId) as BinaryQuestionType
+        return {
+          questionId: parseInt(questionId.replace(/\D/g, '')) || 1,
+          answer: question?.options[0].value === (answer as BinaryAnswer).selectedValue ? 'A' : 'B' as 'A' | 'B',
+        }
+      }
+      return {
+        questionId: parseInt(questionId.replace(/\D/g, '')) || 1,
+        answer: 'A' as 'A' | 'B',
+      }
+    })
 
     try {
       const result = await mbtiApi.submit({
         studentName: studentName || '匿名学生',
         answers: formattedAnswers,
       })
+
+      // 清除进度
+      if (selectedCategory) {
+        clearProgress(selectedCategory)
+      }
 
       if (result.success && result.data) {
         localStorage.setItem('studentId', result.data.studentId)
@@ -135,204 +274,351 @@ export default function MBTITestPage() {
     }
   }
 
-  // 姓名输入界面
-  if (showNameInput) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-lg"
-        >
-          <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12">
-            {/* 装饰 */}
-            <div className="flex justify-center mb-8">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                <span className="text-4xl">🧠</span>
-              </div>
+  // 渲染题目组件
+  const renderQuestion = (question: Question) => {
+    const answer = answers[question.id]
+    
+    switch (question.type) {
+      case 'binary':
+        return (
+          <BinaryQuestion
+            question={question}
+            answer={answer as BinaryAnswer | undefined}
+            onAnswer={handleAnswer}
+          />
+        )
+      case 'scale':
+        return (
+          <ScaleQuestion
+            question={question}
+            answer={answer as any}
+            onAnswer={handleAnswer}
+          />
+        )
+      case 'scenario':
+        return (
+          <ScenarioQuestion
+            question={question}
+            answer={answer as any}
+            onAnswer={handleAnswer}
+          />
+        )
+      case 'ranking':
+        return (
+          <RankingQuestion
+            question={question}
+            answer={answer as any}
+            onAnswer={handleAnswer}
+          />
+        )
+      default:
+        return null
+    }
+  }
+
+  const currentQuestion = questions[currentIndex]
+  const category = selectedCategory ? getTestCategory(selectedCategory) : null
+  const progress = (currentIndex + 1) / questions.length * 100
+
+  return (
+    <div 
+      className="min-h-screen relative"
+      style={{ 
+        background: `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, rgba(241,245,249,0.5) 100%)` 
+      }}
+    >
+      {/* 背景呼吸光晕 */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <BreathingOrb 
+          color="rgba(226,232,240,0.3)"
+          size={600}
+          position={{ top: '-15%', right: '-10%' }}
+          phaseOffset={0}
+        />
+        <BreathingOrb 
+          color="rgba(241,245,249,0.25)"
+          size={500}
+          position={{ bottom: '-10%', left: '20%' }}
+          phaseOffset={0.5}
+        />
+      </div>
+
+      <AnimatePresence mode="wait">
+        {/* 测试选择阶段 */}
+        {phase === 'select' && (
+          <motion.div
+            key="select"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, filter: 'blur(10px)' }}
+            transition={{ duration: 0.4 }}
+          >
+            <TestSelector 
+              onSelectTest={handleSelectTest}
+              savedProgress={savedProgress}
+            />
+          </motion.div>
+        )}
+
+        {/* 姓名输入阶段 */}
+        {phase === 'name' && (
+          <motion.div
+            key="name"
+            initial={{ opacity: 0, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, filter: 'blur(10px)' }}
+            transition={{ duration: 0.4 }}
+            className="min-h-screen flex items-center justify-center p-6"
+          >
+            <div className="w-full max-w-md">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="p-8 rounded-3xl"
+                style={{
+                  background: 'rgba(255,255,255,0.8)',
+                  backdropFilter: 'blur(20px)',
+                  border: `1px solid ${neutral[200]}`,
+                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.08)',
+                }}
+              >
+                {/* 返回按钮 */}
+                <button
+                  onClick={() => setPhase('select')}
+                  className="flex items-center gap-2 mb-6 transition-colors"
+                  style={{ color: neutral[500] }}
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                  </svg>
+                  返回选择
+                </button>
+
+                {/* 图标 */}
+                <div className="flex justify-center mb-6">
+                  <div 
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${primary[500]} 0%, ${primary[700]} 100%)`,
+                      boxShadow: `0 8px 24px ${primary[500]}40`,
+                    }}
+                  >
+                    <span className="text-3xl">{category?.icon}</span>
+                  </div>
+                </div>
+
+                <h1 
+                  className="text-2xl font-black text-center mb-2"
+                  style={{ color: neutral[900] }}
+                >
+                  {category?.name}
+                </h1>
+                <p 
+                  className="text-center mb-8"
+                  style={{ color: neutral[600] }}
+                >
+                  {category?.questionCount} 题 · 约 {category?.estimatedMinutes} 分钟
+                </p>
+
+                <div className="space-y-6">
+                  <div>
+                    <label 
+                      className="block text-sm font-medium mb-2"
+                      style={{ color: neutral[600] }}
+                    >
+                      你的名字（可选）
+                    </label>
+                    <input
+                      type="text"
+                      value={studentName}
+                      onChange={(e) => setStudentName(e.target.value)}
+                      placeholder="请输入你的名字"
+                      className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
+                      style={{ 
+                        background: neutral[50],
+                        borderColor: neutral[200],
+                        color: neutral[900],
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleStartTest}
+                    className="w-full py-4 rounded-xl font-semibold text-white transition-all hover:scale-[1.02]"
+                    style={{ 
+                      background: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)`,
+                      boxShadow: `0 4px 12px ${primary[500]}30`,
+                    }}
+                  >
+                    开始测试 →
+                  </button>
+                </div>
+              </motion.div>
             </div>
+          </motion.div>
+        )}
 
-            <h1 className="text-3xl font-black text-gray-900 text-center mb-2">
-              MBTI 性格测试
-            </h1>
-            <p className="text-gray-600 text-center mb-8">
-              了解你的性格类型，获取个性化的 AI 学习建议
-            </p>
+        {/* 测试进行阶段 */}
+        {phase === 'test' && currentQuestion && (
+          <motion.div
+            key="test"
+            initial={{ opacity: 0, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, filter: 'blur(10px)' }}
+            transition={{ duration: 0.4 }}
+            className="min-h-screen py-8 px-6 md:px-12"
+          >
+            <div className="max-w-6xl mx-auto">
+              {/* 顶部导航 */}
+              <div className="flex items-center justify-between mb-6">
+                <Link 
+                  to="/dashboard" 
+                  className="flex items-center gap-2 transition-colors"
+                  style={{ color: neutral[500] }}
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  退出测试
+                </Link>
+                <span 
+                  className="text-sm font-medium"
+                  style={{ color: neutral[600] }}
+                >
+                  {currentIndex + 1} / {questions.length}
+                </span>
+              </div>
 
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  你的名字（可选）
-                </label>
-                <input
-                  type="text"
-                  value={studentName}
-                  onChange={(e) => setStudentName(e.target.value)}
-                  placeholder="请输入你的名字"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:outline-none transition-colors"
+              {/* 进度条 */}
+              <div 
+                className="h-1 rounded-full mb-8 overflow-hidden"
+                style={{ background: neutral[200] }}
+              >
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ background: `linear-gradient(90deg, ${primary[500]} 0%, ${primary[700]} 100%)` }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.3 }}
                 />
               </div>
 
-              <Button
-                fullWidth
-                size="lg"
-                className="bg-black text-white font-semibold h-14 text-base"
-                onPress={() => setShowNameInput(false)}
-              >
-                开始测试 →
-              </Button>
-            </div>
+              {/* 主内容区 - 左右分栏 */}
+              <div className="grid lg:grid-cols-3 gap-8">
+                {/* 左侧：题目区域 */}
+                <div className="lg:col-span-2">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentQuestion.id}
+                      initial={{ opacity: 0, x: 30, filter: 'blur(8px)' }}
+                      animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+                      exit={{ opacity: 0, x: -30, filter: 'blur(8px)' }}
+                      transition={{ duration: 0.3 }}
+                      className="p-8 rounded-3xl"
+                      style={{
+                        background: 'rgba(255,255,255,0.8)',
+                        backdropFilter: 'blur(20px)',
+                        border: `1px solid ${neutral[200]}`,
+                      }}
+                    >
+                      {/* 题目类型标签 */}
+                      <div className="flex items-center gap-2 mb-6">
+                        <span 
+                          className="text-xs px-2 py-1 rounded-full"
+                          style={{ 
+                            background: `${primary[500]}15`,
+                            color: primary[600],
+                          }}
+                        >
+                          问题 {currentIndex + 1}
+                        </span>
+                        <span 
+                          className="text-xs"
+                          style={{ color: neutral[400] }}
+                        >
+                          {currentQuestion.dimension === 'EI' && '外向/内向'}
+                          {currentQuestion.dimension === 'SN' && '感觉/直觉'}
+                          {currentQuestion.dimension === 'TF' && '思考/情感'}
+                          {currentQuestion.dimension === 'JP' && '判断/感知'}
+                        </span>
+                      </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-100">
-              <div className="flex items-center justify-center gap-6 text-sm text-gray-500">
-                <span className="flex items-center gap-2">
-                  <span>📝</span> {questions.length} 道问题
-                </span>
-                <span className="flex items-center gap-2">
-                  <span>⏱️</span> 约 3-5 分钟
-                </span>
+                      {/* 题目内容 */}
+                      {renderQuestion(currentQuestion)}
+
+                      {/* 导航按钮 */}
+                      <div className="flex justify-between items-center mt-8 pt-6 border-t" style={{ borderColor: neutral[200] }}>
+                        <button
+                          disabled={currentIndex === 0}
+                          onClick={handlePrev}
+                          className="px-4 py-2 rounded-xl font-medium transition-colors disabled:opacity-50"
+                          style={{ color: neutral[600] }}
+                        >
+                          ← 上一题
+                        </button>
+
+                        {currentIndex === questions.length - 1 ? (
+                          <button
+                            disabled={isSubmitting || Object.keys(answers).length < questions.length}
+                            onClick={handleSubmit}
+                            className="px-8 py-3 rounded-xl font-semibold text-white transition-all disabled:opacity-50"
+                            style={{ 
+                              background: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)`,
+                            }}
+                          >
+                            {isSubmitting ? '提交中...' : '提交测试 →'}
+                          </button>
+                        ) : (
+                          <button
+                            disabled={!answers[currentQuestion.id]}
+                            onClick={handleNext}
+                            className="px-4 py-2 rounded-xl font-medium transition-colors disabled:opacity-50"
+                            style={{ color: neutral[600] }}
+                          >
+                            下一题 →
+                          </button>
+                        )}
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+
+                  {/* 题目导航点 */}
+                  <div className="flex justify-center gap-1.5 mt-6 flex-wrap">
+                    {questions.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentIndex(index)}
+                        className="h-2 rounded-full transition-all duration-200"
+                        style={{
+                          width: index === currentIndex ? 24 : 8,
+                          background: index === currentIndex 
+                            ? primary[600]
+                            : answers[questions[index].id] 
+                              ? primary[300]
+                              : neutral[300],
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* 右侧：进度侧边栏 */}
+                <div className="hidden lg:block">
+                  <TestProgressSidebar
+                    currentIndex={currentIndex}
+                    totalQuestions={questions.length}
+                    answers={answers}
+                    questions={questions}
+                    estimatedMinutes={category?.estimatedMinutes || 20}
+                    startTime={startTime}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-
-          <p className="text-center text-gray-500 text-sm mt-6">
-            <Link to="/" className="hover:text-gray-900 transition-colors">
-              ← 返回首页
-            </Link>
-          </p>
-        </motion.div>
-      </div>
-    )
-  }
-
-  // 测试界面
-  return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        {/* Progress Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-between mb-4">
-            <Link to="/" className="text-gray-500 hover:text-gray-900 transition-colors">
-              ← 退出
-            </Link>
-            <span className="text-sm font-medium text-gray-600">
-              {currentQuestion + 1} / {questions.length}
-            </span>
-          </div>
-          <Progress
-            value={progress}
-            size="sm"
-            radius="full"
-            classNames={{
-              indicator: 'bg-gradient-to-r from-purple-500 to-pink-500',
-              track: 'bg-gray-200',
-            }}
-          />
-        </motion.div>
-
-        {/* Question Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentQuestion}
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white rounded-3xl shadow-lg p-8 md:p-12 mb-8"
-          >
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-8 text-center leading-relaxed">
-              {question.question}
-            </h2>
-
-            <div className="space-y-4">
-              {question.options.map((option, index) => {
-                const isSelected = answers[currentQuestion] === option.dimension
-                return (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleAnswer(option.dimension)}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`
-                      w-full p-5 rounded-2xl text-left transition-all duration-200
-                      flex items-center gap-4
-                      ${isSelected 
-                        ? 'bg-black text-white shadow-lg' 
-                        : 'bg-gray-50 hover:bg-gray-100 text-gray-900 border-2 border-transparent hover:border-gray-200'
-                      }
-                    `}
-                  >
-                    <div className={`
-                      w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0
-                      ${isSelected ? 'border-white bg-white' : 'border-gray-300'}
-                    `}>
-                      {isSelected && <div className="w-3 h-3 rounded-full bg-black" />}
-                    </div>
-                    <span className="font-medium">{option.text}</span>
-                  </motion.button>
-                )
-              })}
-            </div>
           </motion.div>
-        </AnimatePresence>
-
-        {/* Navigation */}
-        <div className="flex justify-between items-center">
-          <Button
-            variant="light"
-            isDisabled={currentQuestion === 0}
-            onPress={() => setCurrentQuestion((prev) => Math.max(0, prev - 1))}
-            className="font-medium"
-          >
-            ← 上一题
-          </Button>
-
-          {currentQuestion === questions.length - 1 ? (
-            <Button
-              isLoading={isSubmitting}
-              isDisabled={Object.keys(answers).length < questions.length}
-              onPress={handleSubmit}
-              className="bg-black text-white font-semibold px-8"
-            >
-              提交测试 →
-            </Button>
-          ) : (
-            <Button
-              variant="light"
-              isDisabled={answers[currentQuestion] === undefined}
-              onPress={() => setCurrentQuestion((prev) => Math.min(questions.length - 1, prev + 1))}
-              className="font-medium"
-            >
-              下一题 →
-            </Button>
-          )}
-        </div>
-
-        {/* Question Dots */}
-        <div className="flex justify-center gap-2 mt-8 flex-wrap">
-          {questions.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              aria-label={`跳转到问题 ${index + 1}`}
-              onClick={() => setCurrentQuestion(index)}
-              className={`
-                h-2 rounded-full transition-all duration-200
-                ${index === currentQuestion
-                  ? 'w-6 bg-black'
-                  : answers[index] !== undefined
-                    ? 'w-2 bg-purple-400'
-                    : 'w-2 bg-gray-300'
-                }
-              `}
-            />
-          ))}
-        </div>
-      </div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

@@ -2,25 +2,23 @@ import { Outlet, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import Navbar from './Navbar'
 import EnhancedBackground from './EnhancedBackground'
+import { variants, easings } from '../theme/motion'
 
-// 简洁的页面过渡
+// 页面过渡配置 - 使用统一动画系统
 const pageVariants = {
-  initial: {
-    opacity: 0,
-    y: 20,
-  },
+  initial: variants.pageTransition.initial,
   animate: {
-    opacity: 1,
-    y: 0,
+    ...variants.pageTransition.animate,
     transition: {
-      duration: 0.4,
-      ease: [0.25, 0.1, 0.25, 1] as const,
+      duration: 0.3, // enter: 300ms
+      ease: easings.smooth,
     },
   },
   exit: {
-    opacity: 0,
+    ...variants.pageTransition.exit,
     transition: {
-      duration: 0.2,
+      duration: 0.2, // exit: 200ms
+      ease: easings.smooth,
     },
   },
 }

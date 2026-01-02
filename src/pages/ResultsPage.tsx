@@ -3,6 +3,9 @@ import { motion } from 'framer-motion'
 import {
   Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
 } from 'recharts'
+import { GlassCard } from '../components/ui'
+import { easings, durations } from '../theme/motion'
+import { primary, neutral } from '../theme/colors'
 
 const mbtiDescriptions: Record<string, { name: string; description: string; careers: string[]; strengths: string[] }> = {
   INTJ: {
@@ -82,40 +85,52 @@ export default function ResultsPage() {
     { left: { label: '判断 (J)', value: mbtiType.includes('J') ? 55 : 45 }, right: { label: '知觉 (P)', value: mbtiType.includes('P') ? 55 : 45 } },
   ]
 
+  // 统一的动画配置
+  const smoothTransition = { duration: durations.slow, ease: easings.smooth }
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4">
+    <div 
+      className="min-h-screen py-12 px-4 overflow-y-auto"
+      style={{ background: `linear-gradient(180deg, ${neutral[50]} 0%, white 100%)` }}
+    >
       <div className="max-w-5xl mx-auto">
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={smoothTransition}
           className="text-center mb-12"
         >
           <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+            initial={{ scale: 0.5, opacity: 0, filter: 'blur(10px)' }}
+            animate={{ scale: 1, opacity: 1, filter: 'blur(0px)' }}
+            transition={{ delay: 0.2, duration: durations.slow, ease: easings.smooth }}
             className="inline-block mb-6"
           >
-            <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center shadow-2xl">
+            <div 
+              className="w-32 h-32 rounded-3xl flex items-center justify-center shadow-2xl"
+              style={{ background: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)` }}
+            >
               <span className="text-4xl font-black text-white">{mbtiType}</span>
             </div>
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-4xl md:text-5xl font-black text-gray-900 mb-4"
+            initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            transition={{ delay: 0.4, ...smoothTransition }}
+            className="text-4xl md:text-5xl font-black mb-4"
+            style={{ color: neutral[900] }}
           >
             你是 "{typeInfo.name}" 型人格
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="text-lg text-gray-600 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, ...smoothTransition }}
+            className="text-lg max-w-2xl mx-auto"
+            style={{ color: neutral[600] }}
           >
             {typeInfo.description}
           </motion.p>
@@ -129,15 +144,17 @@ export default function ResultsPage() {
           className="flex flex-wrap justify-center gap-3 mb-12"
         >
           {typeInfo.strengths.map((strength, index) => (
-            <motion.span
-              key={strength}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.6 + index * 0.1 }}
-              className="px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 shadow-sm"
-            >
-              ✨ {strength}
-            </motion.span>
+            <GlassCard key={strength} variant="light" color="white" className="px-4 py-2">
+              <motion.span
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.6 + index * 0.1 }}
+                className="text-sm font-medium"
+                style={{ color: neutral[700] }}
+              >
+                ✨ {strength}
+              </motion.span>
+            </GlassCard>
           ))}
         </motion.div>
 
@@ -148,17 +165,18 @@ export default function ResultsPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.6 }}
-            className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100"
           >
-            <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">性格维度雷达图</h3>
-            <ResponsiveContainer width="100%" height={280}>
-              <RadarChart data={dimensions}>
-                <PolarGrid stroke="#e5e5e5" />
-                <PolarAngleAxis dataKey="name" tick={{ fill: '#666', fontSize: 12 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
-                <Radar name="维度" dataKey="value" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.3} />
-              </RadarChart>
-            </ResponsiveContainer>
+            <GlassCard variant="standard" color="white" className="p-6">
+              <h3 className="text-lg font-bold mb-4 text-center" style={{ color: neutral[900] }}>性格维度雷达图</h3>
+              <ResponsiveContainer width="100%" height={280}>
+                <RadarChart data={dimensions}>
+                  <PolarGrid stroke={neutral[200]} />
+                  <PolarAngleAxis dataKey="name" tick={{ fill: neutral[600], fontSize: 12 }} />
+                  <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
+                  <Radar name="维度" dataKey="value" stroke={primary[600]} fill={primary[500]} fillOpacity={0.3} />
+                </RadarChart>
+              </ResponsiveContainer>
+            </GlassCard>
           </motion.div>
 
           {/* Dimension Bars */}
@@ -166,33 +184,36 @@ export default function ResultsPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.7 }}
-            className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100"
           >
-            <h3 className="text-lg font-bold text-gray-900 mb-6 text-center">维度分布</h3>
-            <div className="space-y-6">
-              {dimensionBars.map((dim, index) => (
-                <div key={index}>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className={dim.left.value > dim.right.value ? 'font-bold text-gray-900' : 'text-gray-500'}>{dim.left.label}</span>
-                    <span className={dim.right.value > dim.left.value ? 'font-bold text-gray-900' : 'text-gray-500'}>{dim.right.label}</span>
+            <GlassCard variant="standard" color="white" className="p-6">
+              <h3 className="text-lg font-bold mb-6 text-center" style={{ color: neutral[900] }}>维度分布</h3>
+              <div className="space-y-6">
+                {dimensionBars.map((dim, index) => (
+                  <div key={index}>
+                    <div className="flex justify-between text-sm mb-2">
+                      <span style={{ fontWeight: dim.left.value > dim.right.value ? 'bold' : 'normal', color: dim.left.value > dim.right.value ? neutral[900] : neutral[500] }}>{dim.left.label}</span>
+                      <span style={{ fontWeight: dim.right.value > dim.left.value ? 'bold' : 'normal', color: dim.right.value > dim.left.value ? neutral[900] : neutral[500] }}>{dim.right.label}</span>
+                    </div>
+                    <div className="h-3 rounded-full overflow-hidden flex" style={{ background: neutral[100] }}>
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${dim.left.value}%` }}
+                        transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                        className="h-full rounded-l-full"
+                        style={{ background: `linear-gradient(90deg, ${primary[500]} 0%, ${primary[600]} 100%)` }}
+                      />
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${dim.right.value}%` }}
+                        transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                        className="h-full rounded-r-full"
+                        style={{ background: neutral[300] }}
+                      />
+                    </div>
                   </div>
-                  <div className="h-3 bg-gray-100 rounded-full overflow-hidden flex">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${dim.left.value}%` }}
-                      transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                      className="h-full bg-gradient-to-r from-purple-500 to-purple-600 rounded-l-full"
-                    />
-                    <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${dim.right.value}%` }}
-                      transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                      className="h-full bg-gray-300 rounded-r-full"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </GlassCard>
           </motion.div>
         </div>
 
@@ -201,28 +222,40 @@ export default function ResultsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.9 }}
-          className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-8 mb-8 text-white"
         >
-          <h3 className="text-2xl font-bold mb-6">🎯 推荐 AI 职业方向</h3>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {typeInfo.careers.map((career, index) => (
-              <motion.div
-                key={career}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1 + index * 0.1 }}
-                className="bg-white/10 backdrop-blur rounded-2xl p-4 hover:bg-white/20 transition-colors"
-              >
-                <span className="font-medium">{career}</span>
-              </motion.div>
-            ))}
-          </div>
-          <Link
-            to={`/careers?type=${mbtiType}`}
-            className="inline-flex items-center gap-2 mt-6 text-white/80 hover:text-white transition-colors"
+          <GlassCard 
+            variant="strong" 
+            color="white" 
+            className="p-8 mb-8 text-white"
+            style={{ background: `linear-gradient(135deg, ${primary[800]} 0%, ${primary[900]} 100%)` }}
           >
-            查看详细职业分析 →
-          </Link>
+            <h3 className="text-2xl font-bold mb-6">🎯 推荐 AI 职业方向</h3>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {typeInfo.careers.map((career, index) => (
+                <motion.div
+                  key={career}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1 + index * 0.1 }}
+                  className="backdrop-blur rounded-2xl p-4 transition-colors"
+                  style={{ background: 'rgba(255,255,255,0.1)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                >
+                  <span className="font-medium">{career}</span>
+                </motion.div>
+              ))}
+            </div>
+            <Link
+              to={`/careers?type=${mbtiType}`}
+              className="inline-flex items-center gap-2 mt-6 transition-colors"
+              style={{ color: 'rgba(255,255,255,0.8)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.8)'}
+            >
+              查看详细职业分析 →
+            </Link>
+          </GlassCard>
         </motion.div>
 
         {/* Actions */}
@@ -234,19 +267,22 @@ export default function ResultsPage() {
         >
           <Link
             to="/learning-path"
-            className="px-8 py-4 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-colors text-center"
+            className="px-8 py-4 text-white rounded-full font-semibold transition-colors text-center"
+            style={{ background: primary[800] }}
           >
             📚 查看学习路径
           </Link>
           <Link
             to="/ai-advisor"
-            className="px-8 py-4 bg-white border-2 border-gray-200 text-gray-900 rounded-full font-semibold hover:border-gray-300 hover:shadow-lg transition-all text-center"
+            className="px-8 py-4 bg-white rounded-full font-semibold transition-all text-center"
+            style={{ border: `2px solid ${neutral[200]}`, color: neutral[900] }}
           >
             💬 咨询 AI 助手
           </Link>
           <Link
             to="/mbti-test"
-            className="px-8 py-4 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition-colors text-center"
+            className="px-8 py-4 rounded-full font-semibold transition-colors text-center"
+            style={{ background: neutral[100], color: neutral[700] }}
           >
             🔄 重新测试
           </Link>

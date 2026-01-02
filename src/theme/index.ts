@@ -3,6 +3,10 @@
  * Centralized theme values for the application
  */
 
+// Re-export motion configuration
+export { easings, springs, durations, variants, transitions } from './motion'
+export { default as motion } from './motion'
+
 export const colors = {
   // Primary colors
   primary: {
@@ -184,4 +188,5 @@ export default {
   getLuminance,
   getContrastRatio,
   meetsContrastRequirement,
+  // Motion configuration is also available via named exports
 }

@@ -1,7 +1,18 @@
+/**
+ * Graph Page - 专业液态玻璃设计
+ * 
+ * 特点：
+ * - 与 Dashboard 统一的专业配色
+ * - 液态玻璃效果
+ * - 嵌入式设计，不跳转新页面
+ */
+
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import KnowledgeGraph from '../components/KnowledgeGraph'
 import { useNavigate } from 'react-router-dom'
+import { GlassCard } from '../components/ui'
+import { primary, neutral } from '../theme/colors'
 
 type GraphMode = 'full' | 'student' | 'career'
 
@@ -18,7 +29,6 @@ export default function GraphPage() {
   const [mode, setMode] = useState<GraphMode>('full')
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null)
   
-  // 从 localStorage 获取学生信息
   const studentId = localStorage.getItem('studentId') || undefined
   const studentName = localStorage.getItem('studentName') || '同学'
   const mbtiCode = localStorage.getItem('mbtiCode')
@@ -32,9 +42,7 @@ export default function GraphPage() {
     
     switch (selectedNode.type) {
       case 'career':
-        navigate(`/career?id=${selectedNode.id}`)
-        break
-      case 'course':
+        navigate(`/careers?id=${selectedNode.id}`)
         break
       case 'mbti':
         navigate(`/results?type=${selectedNode.id.replace('mbti-', '').toUpperCase()}`)
@@ -45,135 +53,207 @@ export default function GraphPage() {
   }
 
   return (
-    <div className="fixed inset-0 w-screen h-screen overflow-hidden">
-      {/* 全屏知识图谱 - 作为背景 */}
-      <div className="absolute inset-0">
-        <KnowledgeGraph
-          mode={mode}
-          studentId={studentId}
-          onNodeClick={handleNodeClick}
-        />
-      </div>
-
-      {/* 顶部控制栏 - 浮动 */}
-      <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20">
-        <div className="flex items-center gap-3 px-6 py-3 bg-white/90 backdrop-blur-md rounded-full shadow-lg border border-gray-200">
-          {/* 返回按钮 */}
-          <button
-            onClick={() => navigate('/')}
-            className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
-            title="返回首页"
-          >
-            ←
-          </button>
-          <h1 className="text-lg font-bold text-gray-900">📊 知识图谱</h1>
-          <div className="w-px h-6 bg-gray-300" />
+    <div 
+      className="min-h-screen p-4 md:p-6 lg:p-8 overflow-hidden flex flex-col"
+      style={{ background: `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, ${primary[50]}40 100%)` }}
+    >
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+        animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4"
+      >
+        <div>
+          <p className="text-sm mb-1 font-medium" style={{ color: primary[600] }}>可视化</p>
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight" style={{ color: neutral[900] }}>
+            知识图谱
+          </h1>
+        </div>
+        
+        {/* Mode Switcher */}
+        <div 
+          className="flex items-center gap-1 p-1 rounded-xl"
+          style={{ background: neutral[100] }}
+        >
           <button
             onClick={() => setMode('full')}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-              mode === 'full'
-                ? 'bg-black text-white'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+            style={mode === 'full' ? {
+              background: 'white',
+              color: neutral[900],
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            } : {
+              background: 'transparent',
+              color: neutral[500],
+            }}
           >
             🌐 完整图谱
           </button>
           {studentId && (
             <button
               onClick={() => setMode('student')}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
-                mode === 'student'
-                  ? 'bg-black text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
+              style={mode === 'student' ? {
+                background: 'white',
+                color: neutral[900],
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              } : {
+                background: 'transparent',
+                color: neutral[500],
+              }}
             >
               👤 我的画像
             </button>
           )}
         </div>
-      </div>
+      </motion.div>
 
-      {/* 左下角状态 */}
-      <div className="absolute bottom-4 left-4 z-20">
-        <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-md rounded-full shadow-lg border border-gray-200 text-sm">
-          {studentId ? (
-            <>
-              <span className="text-gray-600">👤 {studentName}</span>
-              {mbtiCode && <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded-full font-medium text-xs">{mbtiCode}</span>}
-            </>
-          ) : (
-            <span className="text-gray-500">完成 MBTI 测试查看个人画像</span>
-          )}
-        </div>
-      </div>
-
-      {/* 侧边栏 - 节点详情 */}
-      <AnimatePresence>
-        {selectedNode && (
-          <motion.div
-            initial={{ x: 400, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 400, opacity: 0 }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="absolute top-4 right-4 bottom-4 w-80 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-200 p-6 overflow-y-auto z-20"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-bold text-gray-900">节点详情</h3>
-              <button
-                onClick={() => setSelectedNode(null)}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 hover:text-gray-700 transition-colors"
+      {/* Main Content */}
+      <div className="flex-1 flex gap-4 min-h-0">
+        {/* Graph Container */}
+        <motion.div
+          initial={{ opacity: 0, y: 20, filter: 'blur(6px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ delay: 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          className={`flex-1 ${selectedNode ? 'hidden md:block' : ''}`}
+        >
+          <GlassCard variant="standard" color="white" className="h-full p-0 overflow-hidden">
+            <div className="h-full relative">
+              <KnowledgeGraph
+                mode={mode}
+                studentId={studentId}
+                onNodeClick={handleNodeClick}
+              />
+              
+              {/* Status Badge */}
+              <div 
+                className="absolute bottom-4 left-4 flex items-center gap-2 px-4 py-2 rounded-full text-sm"
+                style={{ 
+                  background: 'rgba(255,255,255,0.9)',
+                  backdropFilter: 'blur(8px)',
+                  border: `1px solid ${neutral[200]}`,
+                }}
               >
-                ✕
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              {/* 节点图标和名称 */}
-              <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl">
-                <div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl shadow-lg"
-                  style={{ backgroundColor: selectedNode.color || '#6b7280' }}
-                >
-                  {selectedNode.type === 'mbti' && '🧠'}
-                  {selectedNode.type === 'career' && '💼'}
-                  {selectedNode.type === 'skill' && '⚡'}
-                  {selectedNode.type === 'course' && '📚'}
-                  {selectedNode.type === 'student' && '👤'}
-                  {selectedNode.type === 'learning_path' && '🛤️'}
-                </div>
-                <div>
-                  <p className="text-gray-900 font-semibold text-lg">{selectedNode.name}</p>
-                  <p className="text-gray-500 text-sm">
-                    {selectedNode.type === 'mbti' && 'MBTI 性格类型'}
-                    {selectedNode.type === 'career' && '职业方向'}
-                    {selectedNode.type === 'skill' && '技能'}
-                    {selectedNode.type === 'course' && '课程'}
-                    {selectedNode.type === 'student' && '学生'}
-                    {selectedNode.type === 'learning_path' && '学习路径'}
-                  </p>
-                </div>
+                {studentId ? (
+                  <>
+                    <span style={{ color: neutral[600] }}>👤 {studentName}</span>
+                    {mbtiCode && (
+                      <span 
+                        className="px-2 py-0.5 rounded-full font-medium text-xs"
+                        style={{ background: primary[100], color: primary[700] }}
+                      >
+                        {mbtiCode}
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span style={{ color: neutral[500] }}>完成 MBTI 测试查看个人画像</span>
+                )}
               </div>
-
-              {selectedNode.description && (
-                <div className="p-4 bg-gray-50 rounded-xl">
-                  <span className="text-xs text-gray-400 uppercase tracking-wider">描述</span>
-                  <p className="text-gray-600 text-sm mt-2 leading-relaxed">{selectedNode.description}</p>
-                </div>
-              )}
-
-              {/* 操作按钮 */}
-              {(selectedNode.type === 'career' || selectedNode.type === 'mbti') && (
-                <button
-                  onClick={handleNodeAction}
-                  className="w-full px-4 py-3 bg-black hover:bg-gray-800 text-white rounded-xl font-medium transition-colors shadow-lg"
-                >
-                  查看详情 →
-                </button>
-              )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </GlassCard>
+        </motion.div>
+
+        {/* Node Detail Panel */}
+        <AnimatePresence>
+          {selectedNode && (
+            <motion.div
+              initial={{ opacity: 0, x: 20, filter: 'blur(8px)' }}
+              animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, x: 20, filter: 'blur(8px)' }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full md:w-80 flex-shrink-0"
+            >
+              <GlassCard variant="standard" color="white" className="h-full">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-bold" style={{ color: neutral[900] }}>节点详情</h3>
+                  <button
+                    onClick={() => setSelectedNode(null)}
+                    className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+                    style={{ background: neutral[100], color: neutral[500] }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = neutral[200]
+                      e.currentTarget.style.color = neutral[700]
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = neutral[100]
+                      e.currentTarget.style.color = neutral[500]
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Node Icon and Name */}
+                  <div 
+                    className="flex items-center gap-3 p-4 rounded-xl"
+                    style={{ background: neutral[50] }}
+                  >
+                    <div 
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl shadow-lg"
+                      style={{ backgroundColor: selectedNode.color || primary[500] }}
+                    >
+                      {selectedNode.type === 'mbti' && '🧠'}
+                      {selectedNode.type === 'career' && '💼'}
+                      {selectedNode.type === 'skill' && '⚡'}
+                      {selectedNode.type === 'course' && '📚'}
+                      {selectedNode.type === 'student' && '👤'}
+                      {selectedNode.type === 'learning_path' && '🛤️'}
+                    </div>
+                    <div>
+                      <p className="font-semibold text-lg" style={{ color: neutral[900] }}>{selectedNode.name}</p>
+                      <p className="text-sm" style={{ color: neutral[500] }}>
+                        {selectedNode.type === 'mbti' && 'MBTI 性格类型'}
+                        {selectedNode.type === 'career' && '职业方向'}
+                        {selectedNode.type === 'skill' && '技能'}
+                        {selectedNode.type === 'course' && '课程'}
+                        {selectedNode.type === 'student' && '学生'}
+                        {selectedNode.type === 'learning_path' && '学习路径'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {selectedNode.description && (
+                    <div 
+                      className="p-4 rounded-xl"
+                      style={{ background: neutral[50] }}
+                    >
+                      <span 
+                        className="text-xs uppercase tracking-wider"
+                        style={{ color: neutral[400] }}
+                      >
+                        描述
+                      </span>
+                      <p 
+                        className="text-sm mt-2 leading-relaxed"
+                        style={{ color: neutral[600] }}
+                      >
+                        {selectedNode.description}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action Button */}
+                  {(selectedNode.type === 'career' || selectedNode.type === 'mbti') && (
+                    <button
+                      onClick={handleNodeAction}
+                      className="w-full px-4 py-3 rounded-xl font-medium transition-all"
+                      style={{ 
+                        background: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)`,
+                        color: 'white',
+                      }}
+                    >
+                      查看详情 →
+                    </button>
+                  )}
+                </div>
+              </GlassCard>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   )
 }

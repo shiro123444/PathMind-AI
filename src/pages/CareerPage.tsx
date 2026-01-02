@@ -3,6 +3,9 @@ import { useSearchParams, Link } from 'react-router-dom'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import type { MBTICode, AICareer } from '../types/student'
+import { GlassCard } from '../components/ui'
+import { easings, durations } from '../theme/motion'
+import { primary, neutral, secondary } from '../theme/colors'
 
 const aiCareers: AICareer[] = [
   {
@@ -86,25 +89,39 @@ export default function CareerPage() {
     [selectedCareer, suitableCareers]
   )
 
+  // 统一的动画配置
+  const smoothTransition = { duration: durations.slow, ease: easings.smooth }
+
   return (
-    <div ref={ref} className="min-h-screen bg-gray-50 py-8 px-4 md:px-8">
+    <div 
+      ref={ref} 
+      className="min-h-screen py-8 px-4 md:px-8 overflow-y-auto"
+      style={{ background: neutral[50] }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={smoothTransition}
           className="mb-12"
         >
           <div className="flex items-center gap-3 mb-4">
-            <span className="px-3 py-1 bg-purple-100 text-purple-700 text-sm font-bold rounded-full">
+            <motion.span 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, ...smoothTransition }}
+              className="px-3 py-1 text-sm font-bold rounded-full"
+              style={{ background: primary[100], color: primary[700] }}
+            >
               {mbtiType}
-            </span>
-            <span className="text-gray-500">型人格推荐</span>
+            </motion.span>
+            <span style={{ color: neutral[500] }}>型人格推荐</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+          <h1 className="text-4xl md:text-5xl font-black mb-4" style={{ color: neutral[900] }}>
             AI 职业探索
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl">
+          <p className="text-lg max-w-2xl" style={{ color: neutral[600] }}>
             基于你的性格特质，我们为你推荐最适合的 AI 领域职业方向
           </p>
         </motion.div>
@@ -112,42 +129,51 @@ export default function CareerPage() {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Career List */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, x: -30, filter: 'blur(10px)' }}
+            animate={isInView ? { opacity: 1, x: 0, filter: 'blur(0px)' } : {}}
+            transition={{ delay: 0.2, duration: durations.slow, ease: easings.smooth }}
             className="lg:col-span-1"
           >
-            <div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-100 sticky top-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">适合你的职业</h2>
+            <GlassCard variant="standard" color="white" className="p-6 sticky top-8">
+              <h2 className="text-lg font-bold mb-4" style={{ color: neutral[900] }}>适合你的职业</h2>
               <div className="space-y-3">
-                {suitableCareers.map((career) => (
-                  <motion.button
-                    key={career.id}
-                    onClick={() => setSelectedCareer(career.id)}
-                    whileHover={{ x: 5 }}
-                    className={`w-full text-left p-4 rounded-2xl transition-all duration-200 ${
-                      selectedCareer === career.id || (!selectedCareer && career === suitableCareers[0])
-                        ? 'bg-black text-white shadow-lg'
-                        : 'bg-gray-50 hover:bg-gray-100 text-gray-900'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{career.icon}</span>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">{career.name}</p>
-                        <p className="text-xs opacity-70">{career.salaryRange}</p>
+                {suitableCareers.map((career) => {
+                  const isSelected = selectedCareer === career.id || (!selectedCareer && career === suitableCareers[0])
+                  return (
+                    <motion.button
+                      key={career.id}
+                      onClick={() => setSelectedCareer(career.id)}
+                      whileHover={{ x: 5 }}
+                      className="w-full text-left p-4 rounded-2xl transition-all duration-200"
+                      style={isSelected ? {
+                        background: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)`,
+                        color: 'white',
+                        boxShadow: '0 8px 24px rgba(71, 85, 105, 0.25)',
+                      } : {
+                        background: 'rgba(255,255,255,0.6)',
+                        color: neutral[900],
+                        border: `1px solid ${neutral[100]}`,
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{career.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm truncate">{career.name}</p>
+                          <p className="text-xs" style={{ opacity: 0.7 }}>{career.salaryRange}</p>
+                        </div>
                       </div>
-                    </div>
-                  </motion.button>
-                ))}
+                    </motion.button>
+                  )
+                })}
               </div>
-            </div>
+            </GlassCard>
           </motion.div>
 
           {/* Career Detail */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.2 }}
+            initial={{ opacity: 0, x: 30, filter: 'blur(10px)' }}
+            animate={isInView ? { opacity: 1, x: 0, filter: 'blur(0px)' } : {}}
+            transition={{ delay: 0.3, duration: durations.slow, ease: easings.smooth }}
             className="lg:col-span-2 space-y-6"
           >
             {selectedCareerData && (
@@ -157,59 +183,71 @@ export default function CareerPage() {
                   key={selectedCareerData.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100"
                 >
-                  <div className="flex items-start gap-6 mb-8">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-4xl">
-                      {selectedCareerData.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                        {selectedCareerData.name}
-                      </h2>
-                      <p className="text-gray-600 mb-4">{selectedCareerData.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        <span className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-full">
-                          {selectedCareerData.demandLevel === 'high' ? '🔥 需求旺盛' : '需求中等'}
-                        </span>
-                        <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
-                          增长潜力 {selectedCareerData.growthPotential}/10
-                        </span>
+                  <GlassCard variant="standard" color="white" className="p-8">
+                    <div className="flex items-start gap-6 mb-8">
+                      <div 
+                        className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl"
+                        style={{ background: `linear-gradient(135deg, ${primary[500]} 0%, ${primary[700]} 100%)` }}
+                      >
+                        {selectedCareerData.icon}
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-3 gap-6 pt-6 border-t border-gray-100">
-                    <div>
-                      <p className="text-gray-500 text-sm mb-1">薪资范围</p>
-                      <p className="text-xl font-bold text-gray-900">{selectedCareerData.salaryRange}</p>
-                    </div>
-                    <div>
-                      <p className="text-gray-500 text-sm mb-1">市场需求</p>
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
-                            style={{ width: selectedCareerData.demandLevel === 'high' ? '100%' : '65%' }}
-                          />
+                      <div className="flex-1">
+                        <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: neutral[900] }}>
+                          {selectedCareerData.name}
+                        </h2>
+                        <p className="mb-4" style={{ color: neutral[600] }}>{selectedCareerData.description}</p>
+                        <div className="flex flex-wrap gap-2">
+                          <span 
+                            className="px-3 py-1 text-sm font-medium rounded-full"
+                            style={{ background: secondary[100], color: secondary[700] }}
+                          >
+                            {selectedCareerData.demandLevel === 'high' ? '🔥 需求旺盛' : '需求中等'}
+                          </span>
+                          <span 
+                            className="px-3 py-1 text-sm font-medium rounded-full"
+                            style={{ background: primary[100], color: primary[700] }}
+                          >
+                            增长潜力 {selectedCareerData.growthPotential}/10
+                          </span>
                         </div>
                       </div>
                     </div>
-                    <div>
-                      <p className="text-gray-500 text-sm mb-1">增长潜力</p>
-                      <div className="flex items-center gap-1">
-                        {[...Array(10)].map((_, i) => (
-                          <div
-                            key={i}
-                            className={`w-2 h-2 rounded-full ${
-                              i < selectedCareerData.growthPotential ? 'bg-purple-500' : 'bg-gray-200'
-                            }`}
-                          />
-                        ))}
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-3 gap-6 pt-6" style={{ borderTop: `1px solid ${neutral[100]}` }}>
+                      <div>
+                        <p className="text-sm mb-1" style={{ color: neutral[500] }}>薪资范围</p>
+                        <p className="text-xl font-bold" style={{ color: neutral[900] }}>{selectedCareerData.salaryRange}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm mb-1" style={{ color: neutral[500] }}>市场需求</p>
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: neutral[200] }}>
+                            <div
+                              className="h-full"
+                              style={{ 
+                                width: selectedCareerData.demandLevel === 'high' ? '100%' : '65%',
+                                background: `linear-gradient(90deg, ${primary[500]} 0%, ${primary[700]} 100%)`
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm mb-1" style={{ color: neutral[500] }}>增长潜力</p>
+                        <div className="flex items-center gap-1">
+                          {[...Array(10)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="w-2 h-2 rounded-full"
+                              style={{ background: i < selectedCareerData.growthPotential ? primary[500] : neutral[200] }}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </GlassCard>
                 </motion.div>
 
                 {/* Skills */}
@@ -217,48 +255,55 @@ export default function CareerPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100"
                 >
-                  <h3 className="text-xl font-bold text-gray-900 mb-6">核心技能要求</h3>
-                  <div className="space-y-4">
-                    {selectedCareerData.requiredSkills.map((skill) => (
-                      <div
-                        key={skill.id}
-                        className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-                      >
-                        <div>
-                          <p className="font-semibold text-gray-900">{skill.name}</p>
-                          <p className="text-sm text-gray-500">
-                            {skill.level === 'advanced' ? '高级' : skill.level === 'intermediate' ? '中级' : '初级'}
-                          </p>
+                  <GlassCard variant="standard" color="white" className="p-8">
+                    <h3 className="text-xl font-bold mb-6" style={{ color: neutral[900] }}>核心技能要求</h3>
+                    <div className="space-y-4">
+                      {selectedCareerData.requiredSkills.map((skill) => (
+                        <div
+                          key={skill.id}
+                          className="flex items-center justify-between p-4 rounded-xl transition-colors"
+                          style={{ background: neutral[50] }}
+                          onMouseEnter={(e) => e.currentTarget.style.background = neutral[100]}
+                          onMouseLeave={(e) => e.currentTarget.style.background = neutral[50]}
+                        >
+                          <div>
+                            <p className="font-semibold" style={{ color: neutral[900] }}>{skill.name}</p>
+                            <p className="text-sm" style={{ color: neutral[500] }}>
+                              {skill.level === 'advanced' ? '高级' : skill.level === 'intermediate' ? '中级' : '初级'}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            {[...Array(3)].map((_, i) => (
+                              <div
+                                key={i}
+                                className="w-2 h-2 rounded-full"
+                                style={{ 
+                                  background: i < (skill.level === 'advanced' ? 3 : skill.level === 'intermediate' ? 2 : 1)
+                                    ? primary[500] : neutral[300]
+                                }}
+                              />
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          {[...Array(3)].map((_, i) => (
-                            <div
-                              key={i}
-                              className={`w-2 h-2 rounded-full ${
-                                i < (skill.level === 'advanced' ? 3 : skill.level === 'intermediate' ? 2 : 1)
-                                  ? 'bg-purple-500' : 'bg-gray-300'
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </GlassCard>
                 </motion.div>
 
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Link
                     to="/learning-path"
-                    className="flex-1 px-6 py-4 bg-black text-white rounded-2xl font-semibold hover:bg-gray-800 transition-colors text-center"
+                    className="flex-1 px-6 py-4 text-white rounded-2xl font-semibold transition-colors text-center"
+                    style={{ background: primary[800] }}
                   >
                     ✨ 查看学习路径
                   </Link>
                   <Link
                     to="/ai-advisor"
-                    className="flex-1 px-6 py-4 bg-white text-gray-900 rounded-2xl font-semibold hover:bg-gray-50 transition-colors border border-gray-200 text-center"
+                    className="flex-1 px-6 py-4 bg-white rounded-2xl font-semibold transition-colors text-center"
+                    style={{ color: neutral[900], border: `1px solid ${neutral[200]}` }}
                   >
                     💬 咨询 AI 助手
                   </Link>

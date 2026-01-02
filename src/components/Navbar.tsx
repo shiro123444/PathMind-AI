@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@heroui/react'
+import { springs } from '../theme/motion'
 
 // 导航链接配置
 const navLinks = [
@@ -108,7 +109,7 @@ function MagneticNavLink({
           <motion.span
             className="absolute inset-0 bg-black rounded-full -z-10"
             layoutId="activeNavIndicator"
-            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            transition={{ type: 'spring', ...springs.slide }}
           />
         )}
         

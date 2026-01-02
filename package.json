@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@heroui/react": "^2.8.5",
+    "@lottiefiles/dotlottie-react": "^0.17.12",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
     "@tailwindcss/vite": "^4.1.17",
@@ -23,8 +24,10 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-force-graph-2d": "^1.29.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.10.1",
     "recharts": "^3.5.1",
+    "remark-gfm": "^4.0.1",
     "styled-components": "^6.1.19",
     "tailwindcss": "^4.1.17",
     "three": "^0.181.2"

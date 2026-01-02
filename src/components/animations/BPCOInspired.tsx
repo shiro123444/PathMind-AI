@@ -11,7 +11,8 @@
  */
 
 import { useRef, useEffect, useState } from 'react'
-import { motion, useScroll, useTransform, useSpring, useAnimationFrame, useMotionValue, useVelocity } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, useAnimationFrame, useMotionValue, useVelocity, AnimatePresence } from 'framer-motion'
+import { variants, easings, springs } from '../../theme/motion'
 import { Canvas, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -430,7 +431,7 @@ export function HoverCard({ children, className = '' }: HoverCardProps) {
         rotateX,
         rotateY,
       }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      transition={{ type: 'spring', ...springs.gentle }}
       style={{ transformStyle: 'preserve-3d', perspective: 1000 }}
     >
       {children}
@@ -463,8 +464,23 @@ export function RotatingText({
   }, [texts.length, interval])
 
   return (
-    <span className={`inline-block ${className}`}>
-      {texts[currentIndex]}
+    <span className={`inline-block relative ${className}`}>
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={currentIndex}
+          variants={variants.rotatingText}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={{
+            duration: 0.4,
+            ease: easings.smooth,
+          }}
+          className="inline-block"
+        >
+          {texts[currentIndex]}
+        </motion.span>
+      </AnimatePresence>
     </span>
   )
 }

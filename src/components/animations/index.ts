@@ -15,3 +15,14 @@ export {
   RotatingText,
   ScrollProgressIndicator,
 } from './BPCOInspired'
+
+// Hero Animation Components
+export { FlipText } from './FlipText'
+export { BreathingOrb } from './BreathingOrb'
+
+// Scroll Glass Transition Components
+export { default as ScrollGlassTransition, useScrollGlassEffect } from './ScrollGlassTransition'
+export { default as SectionGlassTransition, GlassTransitionWrapper } from './SectionGlassTransition'
+
+// Magic UI Inspired Components
+export { BlurFade } from './BlurFade'

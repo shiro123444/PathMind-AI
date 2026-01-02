@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
+import { variants, easings, durations } from '../../theme/motion'
 
 interface ButtonProps {
   children: React.ReactNode
@@ -7,6 +9,7 @@ interface ButtonProps {
   onClick?: () => void
   type?: 'button' | 'submit'
   fullWidth?: boolean
+  disabled?: boolean
 }
 
 const Button = ({ 
@@ -15,14 +18,30 @@ const Button = ({
   icon, 
   onClick, 
   type = 'button',
-  fullWidth = false 
+  fullWidth = false,
+  disabled = false
 }: ButtonProps) => {
+  // Button animation transition using smooth easing and 200ms duration
+  const buttonTransition = {
+    duration: durations.fast + 0.05, // 200ms (0.2s)
+    ease: easings.smooth,
+  }
+
   return (
     <StyledButton 
+      as={motion.button}
       $variant={variant} 
       $fullWidth={fullWidth}
+      $disabled={disabled}
       onClick={onClick}
       type={type}
+      disabled={disabled}
+      // Apply hover/tap animations only when not disabled (Requirements 4.5)
+      whileHover={!disabled ? variants.button.hover : undefined}
+      whileTap={!disabled ? variants.button.tap : undefined}
+      transition={buttonTransition}
+      data-testid="animated-button"
+      data-disabled={disabled}
     >
       {icon && <span className="icon">{icon}</span>}
       {children}
@@ -30,7 +49,7 @@ const Button = ({
   )
 }
 
-const StyledButton = styled.button<{ $variant: string; $fullWidth: boolean }>`
+const StyledButton = styled(motion.button)<{ $variant: string; $fullWidth: boolean; $disabled: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,11 +61,12 @@ const StyledButton = styled.button<{ $variant: string; $fullWidth: boolean }>`
   border-radius: 8px;
   font-size: 15px;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
+  cursor: ${props => props.$disabled ? 'not-allowed' : 'pointer'};
+  transition: box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
   position: relative;
   overflow: hidden;
   z-index: 1;
+  opacity: ${props => props.$disabled ? 0.6 : 1};
 
   ${props => props.$variant === 'primary' && `
     background-color: #1a1a1a;
@@ -54,14 +74,8 @@ const StyledButton = styled.button<{ $variant: string; $fullWidth: boolean }>`
     border: 2px solid #1a1a1a;
     box-shadow: 4px 4px 0 #1a1a1a;
     
-    &:hover {
-      transform: translate(-2px, -2px);
+    &:hover:not(:disabled) {
       box-shadow: 6px 6px 0 #1a1a1a;
-    }
-    
-    &:active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0 #1a1a1a;
     }
   `}
 
@@ -71,14 +85,8 @@ const StyledButton = styled.button<{ $variant: string; $fullWidth: boolean }>`
     border: 2px solid #1a1a1a;
     box-shadow: 4px 4px 0 #1a1a1a;
     
-    &:hover {
-      transform: translate(-2px, -2px);
+    &:hover:not(:disabled) {
       box-shadow: 6px 6px 0 #1a1a1a;
-    }
-    
-    &:active {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0 #1a1a1a;
     }
   `}
 
@@ -101,7 +109,7 @@ const StyledButton = styled.button<{ $variant: string; $fullWidth: boolean }>`
       transition: all 0.25s ease;
     }
     
-    &:hover {
+    &:hover:not(:disabled) {
       color: #e8e8e8;
       
       &::before {
