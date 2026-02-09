@@ -4,7 +4,7 @@
 
 import { motion } from 'framer-motion'
 import type { ScaleQuestion as ScaleQuestionType, ScaleAnswer } from '../../types/mbti'
-import { neutral, primary } from '../../theme/colors'
+import { primary } from '../../theme/colors'
 
 interface ScaleQuestionProps {
   question: ScaleQuestionType
@@ -28,8 +28,7 @@ export default function ScaleQuestion({ question, answer, onAnswer }: ScaleQuest
     <div className="space-y-8">
       {/* 题目文本 */}
       <h2 
-        className="text-xl md:text-2xl font-bold leading-relaxed text-center"
-        style={{ color: neutral[900] }}
+        className="text-xl md:text-2xl font-bold leading-relaxed text-center text-text-primary"
       >
         {question.text}
       </h2>
@@ -59,18 +58,18 @@ export default function ScaleQuestion({ question, answer, onAnswer }: ScaleQuest
                 <div 
                   className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center border-2 transition-all duration-200"
                   style={{
-                    borderColor: isSelected ? primary[600] : neutral[300],
+                    borderColor: isSelected ? primary[600] : 'var(--border-primary)',
                     background: isSelected 
                       ? `linear-gradient(135deg, ${primary[500]} 0%, ${primary[700]} 100%)`
                       : isNeutral 
-                        ? neutral[100]
+                        ? 'var(--bg-tertiary)'
                         : 'rgba(255,255,255,0.8)',
                     boxShadow: isSelected ? `0 4px 12px ${primary[500]}40` : 'none',
                   }}
                 >
                   <span 
                     className="text-sm font-bold"
-                    style={{ color: isSelected ? 'white' : neutral[600] }}
+                    style={{ color: isSelected ? 'white' : 'var(--text-secondary)' }}
                   >
                     {point}
                   </span>
@@ -81,7 +80,7 @@ export default function ScaleQuestion({ question, answer, onAnswer }: ScaleQuest
         </div>
 
         {/* 说明文字 */}
-        <div className="flex justify-between text-xs px-2" style={{ color: neutral[400] }}>
+        <div className="flex justify-between text-xs px-2 text-text-muted">
           <span>非常同意左边</span>
           <span>中立</span>
           <span>非常同意右边</span>

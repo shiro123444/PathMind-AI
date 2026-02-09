@@ -12,7 +12,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import KnowledgeGraph from '../components/KnowledgeGraph'
 import { useNavigate } from 'react-router-dom'
 import { GlassCard } from '../components/ui'
-import { primary, neutral } from '../theme/colors'
+import { primary } from '../theme/colors'
+import { Globe, User, Brain, Briefcase, Zap, BookOpen, Route } from 'lucide-react'
 
 type GraphMode = 'full' | 'student' | 'career'
 
@@ -55,7 +56,7 @@ export default function GraphPage() {
   return (
     <div 
       className="min-h-screen p-4 md:p-6 lg:p-8 overflow-hidden flex flex-col"
-      style={{ background: `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, ${primary[50]}40 100%)` }}
+      style={{ background: `linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFC 50%, ${primary[50]}40 100%)` }}
     >
       {/* Header */}
       <motion.div
@@ -66,29 +67,28 @@ export default function GraphPage() {
       >
         <div>
           <p className="text-sm mb-1 font-medium" style={{ color: primary[600] }}>可视化</p>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight" style={{ color: neutral[900] }}>
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-text-primary">
             知识图谱
           </h1>
         </div>
         
         {/* Mode Switcher */}
         <div 
-          className="flex items-center gap-1 p-1 rounded-xl"
-          style={{ background: neutral[100] }}
+          className="flex items-center gap-1 p-1 rounded-xl bg-bg-tertiary"
         >
           <button
             onClick={() => setMode('full')}
             className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
             style={mode === 'full' ? {
               background: 'white',
-              color: neutral[900],
+              color: 'var(--text-primary)',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
             } : {
               background: 'transparent',
-              color: neutral[500],
+              color: 'var(--text-muted)',
             }}
           >
-            🌐 完整图谱
+            <Globe className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} />完整图谱
           </button>
           {studentId && (
             <button
@@ -96,14 +96,14 @@ export default function GraphPage() {
               className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
               style={mode === 'student' ? {
                 background: 'white',
-                color: neutral[900],
+                color: 'var(--text-primary)',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
               } : {
                 background: 'transparent',
-                color: neutral[500],
+                color: 'var(--text-muted)',
               }}
             >
-              👤 我的画像
+              <User className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} />我的画像
             </button>
           )}
         </div>
@@ -128,16 +128,15 @@ export default function GraphPage() {
               
               {/* Status Badge */}
               <div 
-                className="absolute bottom-4 left-4 flex items-center gap-2 px-4 py-2 rounded-full text-sm"
+                className="absolute bottom-4 left-4 flex items-center gap-2 px-4 py-2 rounded-full text-sm border border-border-primary"
                 style={{ 
                   background: 'rgba(255,255,255,0.9)',
                   backdropFilter: 'blur(8px)',
-                  border: `1px solid ${neutral[200]}`,
                 }}
               >
                 {studentId ? (
                   <>
-                    <span style={{ color: neutral[600] }}>👤 {studentName}</span>
+                    <span className="flex items-center gap-1 text-text-secondary"><User className="w-4 h-4" strokeWidth={1.5} />{studentName}</span>
                     {mbtiCode && (
                       <span 
                         className="px-2 py-0.5 rounded-full font-medium text-xs"
@@ -148,7 +147,7 @@ export default function GraphPage() {
                     )}
                   </>
                 ) : (
-                  <span style={{ color: neutral[500] }}>完成 MBTI 测试查看个人画像</span>
+                  <span className="text-text-muted">完成 MBTI 测试查看个人画像</span>
                 )}
               </div>
             </div>
@@ -167,19 +166,10 @@ export default function GraphPage() {
             >
               <GlassCard variant="standard" color="white" className="h-full">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold" style={{ color: neutral[900] }}>节点详情</h3>
+                  <h3 className="text-lg font-bold text-text-primary">节点详情</h3>
                   <button
                     onClick={() => setSelectedNode(null)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full transition-colors"
-                    style={{ background: neutral[100], color: neutral[500] }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = neutral[200]
-                      e.currentTarget.style.color = neutral[700]
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = neutral[100]
-                      e.currentTarget.style.color = neutral[500]
-                    }}
+                    className="w-8 h-8 flex items-center justify-center rounded-full transition-colors bg-bg-tertiary text-text-muted hover:bg-border-primary hover:text-text-secondary"
                   >
                     ✕
                   </button>
@@ -188,23 +178,22 @@ export default function GraphPage() {
                 <div className="space-y-4">
                   {/* Node Icon and Name */}
                   <div 
-                    className="flex items-center gap-3 p-4 rounded-xl"
-                    style={{ background: neutral[50] }}
+                    className="flex items-center gap-3 p-4 rounded-xl bg-bg-primary"
                   >
                     <div 
                       className="w-12 h-12 rounded-full flex items-center justify-center text-white text-xl shadow-lg"
                       style={{ backgroundColor: selectedNode.color || primary[500] }}
                     >
-                      {selectedNode.type === 'mbti' && '🧠'}
-                      {selectedNode.type === 'career' && '💼'}
-                      {selectedNode.type === 'skill' && '⚡'}
-                      {selectedNode.type === 'course' && '📚'}
-                      {selectedNode.type === 'student' && '👤'}
-                      {selectedNode.type === 'learning_path' && '🛤️'}
+                      {selectedNode.type === 'mbti' && <Brain className="w-6 h-6" strokeWidth={1.5} />}
+                      {selectedNode.type === 'career' && <Briefcase className="w-6 h-6" strokeWidth={1.5} />}
+                      {selectedNode.type === 'skill' && <Zap className="w-6 h-6" strokeWidth={1.5} />}
+                      {selectedNode.type === 'course' && <BookOpen className="w-6 h-6" strokeWidth={1.5} />}
+                      {selectedNode.type === 'student' && <User className="w-6 h-6" strokeWidth={1.5} />}
+                      {selectedNode.type === 'learning_path' && <Route className="w-6 h-6" strokeWidth={1.5} />}
                     </div>
                     <div>
-                      <p className="font-semibold text-lg" style={{ color: neutral[900] }}>{selectedNode.name}</p>
-                      <p className="text-sm" style={{ color: neutral[500] }}>
+                      <p className="font-semibold text-lg text-text-primary">{selectedNode.name}</p>
+                      <p className="text-sm text-text-muted">
                         {selectedNode.type === 'mbti' && 'MBTI 性格类型'}
                         {selectedNode.type === 'career' && '职业方向'}
                         {selectedNode.type === 'skill' && '技能'}
@@ -217,18 +206,15 @@ export default function GraphPage() {
 
                   {selectedNode.description && (
                     <div 
-                      className="p-4 rounded-xl"
-                      style={{ background: neutral[50] }}
+                      className="p-4 rounded-xl bg-bg-primary"
                     >
                       <span 
-                        className="text-xs uppercase tracking-wider"
-                        style={{ color: neutral[400] }}
+                        className="text-xs uppercase tracking-wider text-text-muted"
                       >
                         描述
                       </span>
                       <p 
-                        className="text-sm mt-2 leading-relaxed"
-                        style={{ color: neutral[600] }}
+                        className="text-sm mt-2 leading-relaxed text-text-secondary"
                       >
                         {selectedNode.description}
                       </p>

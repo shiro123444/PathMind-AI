@@ -1,8 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
 import DashboardLayout from './components/DashboardLayout'
 import { AdminLayout } from './components/admin'
-import HomePage from './pages/HomePage'
 import HomePageBPCO from './pages/HomePageBPCO'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
@@ -22,12 +20,11 @@ function AppRoutes() {
     <HeroUIProvider>
       <LoadingProvider>
         <Routes>
-          {/* 全屏页面 - 不使用 Layout */}
+          {/* 全屏页面 */}
           <Route index element={<HomePageBPCO />} />
-          <Route path="home-bpco" element={<HomePageBPCO />} />
           <Route path="login" element={<LoginPage />} />
-          
-          {/* Dashboard 页面 - 使用专业液态玻璃布局 */}
+
+          {/* Dashboard 页面 - 玻璃态布局 */}
           <Route element={<DashboardLayout />}>
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="results" element={<ResultsPage />} />
@@ -36,20 +33,15 @@ function AppRoutes() {
             <Route path="ai-advisor" element={<AIAdvisor />} />
             <Route path="graph" element={<GraphPage />} />
           </Route>
-          
+
           {/* MBTI 测试页面 - 独立全屏 */}
           <Route path="mbti-test" element={<MBTITestPage />} />
-          
-          {/* 管理后台 - 使用 AdminLayout */}
+
+          {/* 管理后台 */}
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="questions" element={<AdminQuestions />} />
             <Route path="students" element={<AdminStudents />} />
-          </Route>
-          
-          {/* 旧版页面 - 使用原 Layout */}
-          <Route path="/" element={<Layout />}>
-            <Route path="home-old" element={<HomePage />} />
           </Route>
         </Routes>
       </LoadingProvider>

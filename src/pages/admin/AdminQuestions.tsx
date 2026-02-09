@@ -4,7 +4,7 @@
 
 import { useState, useMemo, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { neutral, primary } from '../../theme/colors'
+import { primary } from '../../theme/colors'
 import type { Question, QuestionType, MBTIDimension, MBTIValue, BinaryQuestion } from '../../types/mbti'
 import { deepTestQuestions } from '../../data/questions'
 
@@ -220,11 +220,11 @@ function BatchImportModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* 标题 */}
-        <div className="p-6 border-b" style={{ borderColor: neutral[200] }}>
-          <h2 className="text-xl font-bold" style={{ color: neutral[900] }}>
+        <div className="p-6 border-b border-border-primary">
+          <h2 className="text-xl font-bold text-text-primary">
             批量导入题目
           </h2>
-          <p className="text-sm mt-1" style={{ color: neutral[500] }}>
+          <p className="text-sm mt-1 text-text-muted">
             上传 CSV 文件批量导入题目，需包含: text, type, dimension, category, optionA, optionB
           </p>
         </div>
@@ -237,7 +237,7 @@ function BatchImportModal({
               className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer ${
                 isDragging ? 'border-primary-500 bg-primary-50' : ''
               }`}
-              style={{ borderColor: isDragging ? primary[500] : neutral[300] }}
+              style={{ borderColor: isDragging ? primary[500] : 'var(--border-primary)' }}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
@@ -254,11 +254,10 @@ function BatchImportModal({
                 }}
               />
               <svg
-                className="w-12 h-12 mx-auto mb-4"
+                className="w-12 h-12 mx-auto mb-4 text-text-muted"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                style={{ color: neutral[400] }}
               >
                 <path
                   strokeLinecap="round"
@@ -267,10 +266,10 @@ function BatchImportModal({
                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                 />
               </svg>
-              <p className="font-medium" style={{ color: neutral[700] }}>
+              <p className="font-medium text-text-secondary">
                 拖拽 CSV 文件到此处，或点击选择文件
               </p>
-              <p className="text-sm mt-2" style={{ color: neutral[500] }}>
+              <p className="text-sm mt-2 text-text-muted">
                 支持 .csv 格式
               </p>
             </div>
@@ -291,10 +290,10 @@ function BatchImportModal({
             <div>
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <span className="font-medium" style={{ color: neutral[700] }}>
+                  <span className="font-medium text-text-secondary">
                     {fileName}
                   </span>
-                  <span className="text-sm ml-3" style={{ color: neutral[500] }}>
+                  <span className="text-sm ml-3 text-text-muted">
                     共 {parsedQuestions.length} 条，有效 {validCount} 条
                     {invalidCount > 0 && (
                       <span style={{ color: '#DC2626' }}>，无效 {invalidCount} 条</span>
@@ -306,20 +305,17 @@ function BatchImportModal({
                     setParsedQuestions([])
                     setFileName('')
                   }}
-                  className="text-sm px-3 py-1 rounded-lg"
-                  style={{ color: neutral[600], background: neutral[100] }}
+                  className="text-sm px-3 py-1 rounded-lg text-text-secondary bg-bg-tertiary"
                 >
                   重新选择
                 </button>
               </div>
 
               <div
-                className="rounded-xl overflow-hidden border"
-                style={{ borderColor: neutral[200] }}
+                className="rounded-xl overflow-hidden border border-border-primary"
               >
                 <div
-                  className="grid grid-cols-12 gap-2 px-4 py-2 text-xs font-medium"
-                  style={{ background: neutral[50], color: neutral[600] }}
+                  className="grid grid-cols-12 gap-2 px-4 py-2 text-xs font-medium bg-bg-primary text-text-secondary"
                 >
                   <div className="col-span-1">状态</div>
                   <div className="col-span-5">题目</div>
@@ -333,7 +329,7 @@ function BatchImportModal({
                       key={idx}
                       className="grid grid-cols-12 gap-2 px-4 py-2 text-sm items-center"
                       style={{
-                        borderTop: `1px solid ${neutral[100]}`,
+                        borderTop: '1px solid var(--border-primary)',
                         background: q.valid ? 'white' : '#FEF2F2',
                       }}
                     >
@@ -350,21 +346,19 @@ function BatchImportModal({
                         )}
                       </div>
                       <div
-                        className="col-span-5 truncate"
-                        style={{ color: neutral[800] }}
+                        className="col-span-5 truncate text-text-primary"
                         title={q.text}
                       >
                         {q.text || '-'}
                       </div>
-                      <div className="col-span-2" style={{ color: neutral[600] }}>
+                      <div className="col-span-2 text-text-secondary">
                         {questionTypeLabels[q.type] || q.type}
                       </div>
-                      <div className="col-span-2" style={{ color: neutral[600] }}>
+                      <div className="col-span-2 text-text-secondary">
                         {q.dimension}
                       </div>
                       <div
-                        className="col-span-2 truncate text-xs"
-                        style={{ color: neutral[500] }}
+                        className="col-span-2 truncate text-xs text-text-muted"
                         title={`${q.optionA} / ${q.optionB}`}
                       >
                         {q.optionA ? `${q.optionA.slice(0, 8)}...` : '-'}
@@ -379,13 +373,11 @@ function BatchImportModal({
 
         {/* 底部按钮 */}
         <div
-          className="p-6 border-t flex gap-3"
-          style={{ borderColor: neutral[200] }}
+          className="p-6 border-t flex gap-3 border-border-primary"
         >
           <button
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl font-medium transition-colors"
-            style={{ background: neutral[100], color: neutral[700] }}
+            className="flex-1 py-3 rounded-xl font-medium transition-colors bg-bg-tertiary text-text-secondary"
           >
             取消
           </button>
@@ -442,42 +434,34 @@ function QuestionEditor({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold mb-6" style={{ color: neutral[900] }}>
+        <h2 className="text-xl font-bold mb-6 text-text-primary">
           {question ? '编辑题目' : '新建题目'}
         </h2>
 
         <div className="space-y-4">
           {/* 题目内容 */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: neutral[600] }}>
+            <label className="block text-sm font-medium mb-2 text-text-secondary">
               题目内容
             </label>
             <textarea
               value={formData.text}
               onChange={(e) => setFormData({ ...formData, text: e.target.value })}
               rows={3}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all resize-none"
-              style={{ 
-                borderColor: neutral[200],
-                color: neutral[900],
-              }}
+              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all resize-none border-border-primary text-text-primary"
               placeholder="请输入题目内容..."
             />
           </div>
 
           {/* 题目类型 */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: neutral[600] }}>
+            <label className="block text-sm font-medium mb-2 text-text-secondary">
               题目类型
             </label>
             <select
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value as QuestionType })}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
-              style={{ 
-                borderColor: neutral[200],
-                color: neutral[900],
-              }}
+              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
             >
               {Object.entries(questionTypeLabels).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
@@ -487,17 +471,13 @@ function QuestionEditor({
 
           {/* 维度 */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: neutral[600] }}>
+            <label className="block text-sm font-medium mb-2 text-text-secondary">
               MBTI 维度
             </label>
             <select
               value={formData.dimension}
               onChange={(e) => setFormData({ ...formData, dimension: e.target.value as MBTIDimension })}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
-              style={{ 
-                borderColor: neutral[200],
-                color: neutral[900],
-              }}
+              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
             >
               {Object.entries(dimensionLabels).map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
@@ -507,17 +487,13 @@ function QuestionEditor({
 
           {/* 测试类型 */}
           <div>
-            <label className="block text-sm font-medium mb-2" style={{ color: neutral[600] }}>
+            <label className="block text-sm font-medium mb-2 text-text-secondary">
               所属测试
             </label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
-              style={{ 
-                borderColor: neutral[200],
-                color: neutral[900],
-              }}
+              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
             >
               <option value="quick">快速测试</option>
               <option value="standard">标准测试</option>
@@ -530,11 +506,7 @@ function QuestionEditor({
         <div className="flex gap-3 mt-6">
           <button
             onClick={onCancel}
-            className="flex-1 py-3 rounded-xl font-medium transition-colors"
-            style={{ 
-              background: neutral[100],
-              color: neutral[700],
-            }}
+            className="flex-1 py-3 rounded-xl font-medium transition-colors bg-bg-tertiary text-text-secondary"
           >
             取消
           </button>
@@ -626,10 +598,10 @@ export default function AdminQuestions() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-2xl md:text-3xl font-black mb-2" style={{ color: neutral[900] }}>
+        <h1 className="text-2xl md:text-3xl font-black mb-2 text-text-primary">
           题目管理
         </h1>
-        <p style={{ color: neutral[600] }}>
+        <p className="text-text-secondary">
           管理 MBTI 测试题库，共 {questions.length} 道题目
         </p>
       </motion.div>
@@ -645,11 +617,10 @@ export default function AdminQuestions() {
         <div className="flex-1 min-w-[200px]">
           <div className="relative">
             <svg 
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted"
               fill="none" 
               viewBox="0 0 24 24" 
               stroke="currentColor"
-              style={{ color: neutral[400] }}
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -658,11 +629,9 @@ export default function AdminQuestions() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="搜索题目..."
-              className="w-full pl-12 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
               style={{ 
                 background: 'rgba(255,255,255,0.8)',
-                borderColor: neutral[200],
-                color: neutral[900],
               }}
             />
           </div>
@@ -672,11 +641,9 @@ export default function AdminQuestions() {
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value as QuestionType | 'all')}
-          className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
+          className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
           style={{ 
             background: 'rgba(255,255,255,0.8)',
-            borderColor: neutral[200],
-            color: neutral[900],
           }}
         >
           <option value="all">全部类型</option>
@@ -689,11 +656,9 @@ export default function AdminQuestions() {
         <select
           value={filterDimension}
           onChange={(e) => setFilterDimension(e.target.value as MBTIDimension | 'all')}
-          className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
+          className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
           style={{ 
             background: 'rgba(255,255,255,0.8)',
-            borderColor: neutral[200],
-            color: neutral[900],
           }}
         >
           <option value="all">全部维度</option>
@@ -732,21 +697,15 @@ export default function AdminQuestions() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="rounded-2xl overflow-hidden"
+        className="rounded-2xl overflow-hidden border border-border-primary"
         style={{
           background: 'rgba(255,255,255,0.8)',
           backdropFilter: 'blur(12px)',
-          border: `1px solid ${neutral[200]}`,
         }}
       >
         {/* 表头 */}
         <div 
-          className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-medium"
-          style={{ 
-            background: neutral[50],
-            color: neutral[600],
-            borderBottom: `1px solid ${neutral[200]}`,
-          }}
+          className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-medium bg-bg-primary text-text-secondary border-b border-border-primary"
         >
           <div className="col-span-1">ID</div>
           <div className="col-span-5">题目内容</div>
@@ -762,13 +721,12 @@ export default function AdminQuestions() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.03 }}
-            className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/50 transition-colors"
-            style={{ borderBottom: `1px solid ${neutral[100]}` }}
+            className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-bg-hover transition-colors border-b border-border-primary"
           >
-            <div className="col-span-1 text-sm font-mono" style={{ color: neutral[500] }}>
+            <div className="col-span-1 text-sm font-mono text-text-muted">
               {question.id.slice(0, 6)}
             </div>
-            <div className="col-span-5 truncate" style={{ color: neutral[800] }}>
+            <div className="col-span-5 truncate text-text-primary">
               {question.text}
             </div>
             <div className="col-span-2">
@@ -784,11 +742,7 @@ export default function AdminQuestions() {
             </div>
             <div className="col-span-2">
               <span 
-                className="px-2 py-1 rounded-full text-xs font-medium"
-                style={{ 
-                  background: neutral[100],
-                  color: neutral[600],
-                }}
+                className="px-2 py-1 rounded-full text-xs font-medium bg-bg-tertiary text-text-secondary"
               >
                 {question.dimension}
               </span>
@@ -796,8 +750,7 @@ export default function AdminQuestions() {
             <div className="col-span-2 flex justify-end gap-2">
               <button
                 onClick={() => setEditingQuestion(question)}
-                className="p-2 rounded-lg transition-colors hover:bg-white"
-                style={{ color: neutral[500] }}
+                className="p-2 rounded-lg transition-colors hover:bg-bg-hover text-text-muted"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -818,7 +771,7 @@ export default function AdminQuestions() {
 
         {/* 空状态 */}
         {paginatedQuestions.length === 0 && (
-          <div className="py-12 text-center" style={{ color: neutral[500] }}>
+          <div className="py-12 text-center text-text-muted">
             没有找到匹配的题目
           </div>
         )}
@@ -830,10 +783,9 @@ export default function AdminQuestions() {
           <button
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg transition-colors disabled:opacity-50 text-text-secondary"
             style={{ 
               background: 'rgba(255,255,255,0.8)',
-              color: neutral[600],
             }}
           >
             上一页
@@ -849,7 +801,7 @@ export default function AdminQuestions() {
                   background: page === currentPage 
                     ? `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)`
                     : 'rgba(255,255,255,0.8)',
-                  color: page === currentPage ? 'white' : neutral[600],
+                  color: page === currentPage ? 'white' : 'var(--text-secondary)',
                 }}
               >
                 {page}
@@ -860,10 +812,9 @@ export default function AdminQuestions() {
           <button
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg transition-colors disabled:opacity-50 text-text-secondary"
             style={{ 
               background: 'rgba(255,255,255,0.8)',
-              color: neutral[600],
             }}
           >
             下一页

@@ -11,7 +11,8 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { GlassCard } from '../components/ui'
-import { primary, neutral, secondary, accent } from '../theme/colors'
+import { primary } from '../theme/colors'
+import { Brain, BarChart3, Target, Bot, CheckCircle, TrendingUp, BookOpen } from 'lucide-react'
 
 const stats = [
   { 
@@ -45,43 +46,43 @@ const quickActions = [
     title: 'MBTI 测试', 
     desc: '完成性格评估', 
     link: '/mbti-test',
-    icon: '🧠',
+    icon: Brain,
     color: 'pink' as const,
   },
   { 
     title: '结果分析', 
     desc: '深入了解性格', 
     link: '/results',
-    icon: '📊',
+    icon: BarChart3,
     color: 'yellow' as const,
   },
   { 
     title: '职业推荐', 
     desc: '探索职业方向', 
     link: '/careers',
-    icon: '🎯',
+    icon: Target,
     color: 'blue' as const,
   },
   { 
     title: 'AI 助手', 
     desc: '个性化建议', 
     link: '/ai-advisor',
-    icon: '🤖',
+    icon: Bot,
     color: 'purple' as const,
   },
 ]
 
 const recentActivities = [
-  { title: '完成 MBTI 测试', time: '2 小时前', icon: '✅', color: 'green' },
-  { title: '查看结果分析', time: '2 小时前', icon: '📈', color: 'blue' },
-  { title: '开始学习计划', time: '1 天前', icon: '📚', color: 'purple' },
+  { title: '完成 MBTI 测试', time: '2 小时前', icon: CheckCircle, color: 'green' },
+  { title: '查看结果分析', time: '2 小时前', icon: TrendingUp, color: 'blue' },
+  { title: '开始学习计划', time: '1 天前', icon: BookOpen, color: 'purple' },
 ]
 
 export default function DashboardPage() {
   return (
     <div 
       className="min-h-screen p-4 md:p-6 lg:p-8 overflow-y-auto"
-      style={{ background: `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, ${primary[50]}40 100%)` }}
+      style={{ background: `linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, ${primary[50]}40 100%)` }}
     >
       {/* 欢迎区域 */}
       <motion.div
@@ -91,7 +92,7 @@ export default function DashboardPage() {
         className="mb-6"
       >
         <p className="text-sm mb-1 font-medium" style={{ color: primary[600] }}>个人中心</p>
-        <h1 className="text-2xl md:text-3xl font-black tracking-tight" style={{ color: neutral[900] }}>
+ <h1 className="text-text-primary text-2xl md:text-3xl font-black tracking-tight" >
           欢迎回来
         </h1>
       </motion.div>
@@ -112,11 +113,11 @@ export default function DashboardPage() {
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="text-2xl md:text-3xl font-black" style={{ color: neutral[900] }}>{stat.value}</p>
-                  <p className="text-xs mt-1" style={{ color: neutral[500] }}>{stat.label}</p>
+ <p className="text-text-primary text-2xl md:text-3xl font-black" >{stat.value}</p>
+ <p className="text-text-muted text-xs mt-1" >{stat.label}</p>
                 </div>
                 <div style={{ opacity: 0.3 }}>
-                  <svg className="w-8 h-8" style={{ color: neutral[700] }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+ <svg className="text-text-secondary w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d={stat.icon} />
                   </svg>
                 </div>
@@ -145,8 +146,8 @@ export default function DashboardPage() {
             
             {/* 描述 */}
             <div className="flex-1">
-              <h2 className="text-xl md:text-2xl font-bold mb-2" style={{ color: neutral[900] }}>建筑师型人格</h2>
-              <p className="leading-relaxed mb-4 text-sm" style={{ color: neutral[600] }}>
+ <h2 className="text-text-primary text-xl md:text-2xl font-bold mb-2" >建筑师型人格</h2>
+ <p className="text-text-secondary leading-relaxed mb-4 text-sm" >
                 富有想象力和战略性的思想家，一切皆在计划之中。你善于分析复杂问题，追求知识和能力的提升。
               </p>
               <div className="flex flex-wrap gap-2">
@@ -159,8 +160,7 @@ export default function DashboardPage() {
                 </Link>
                 <Link
                   to="/careers"
-                  className="px-4 py-2 rounded-full font-semibold text-sm transition-colors"
-                  style={{ background: neutral[100], color: neutral[800] }}
+                  className="px-4 py-2 rounded-full font-semibold text-sm transition-colors bg-bg-tertiary text-text-primary"
                 >
                   职业推荐
                 </Link>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ delay: 0.3, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
-          <h3 className="text-sm font-medium mb-3" style={{ color: neutral[500] }}>快速操作</h3>
+ <h3 className="text-text-muted text-sm font-medium mb-3" >快速操作</h3>
           <div className="grid grid-cols-2 gap-3">
             {quickActions.map((action, index) => (
               <Link key={index} to={action.link}>
@@ -188,9 +188,9 @@ export default function DashboardPage() {
                   className="h-full hover:scale-[1.02] transition-transform"
                 >
                   <div className="text-center">
-                    <span className="text-2xl mb-2 block">{action.icon}</span>
-                    <h4 className="font-bold text-sm" style={{ color: neutral[800] }}>{action.title}</h4>
-                    <p className="text-xs mt-1" style={{ color: neutral[500] }}>{action.desc}</p>
+                    <action.icon className="w-6 h-6 mb-2 mx-auto" strokeWidth={1.5} />
+ <h4 className="text-text-primary font-bold text-sm" >{action.title}</h4>
+ <p className="text-text-muted text-xs mt-1" >{action.desc}</p>
                   </div>
                 </GlassCard>
               </Link>
@@ -204,22 +204,19 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ delay: 0.4, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         >
-          <h3 className="text-sm font-medium mb-3" style={{ color: neutral[500] }}>最近活动</h3>
+ <h3 className="text-text-muted text-sm font-medium mb-3" >最近活动</h3>
           <GlassCard variant="standard" color="white">
             <div className="space-y-1">
               {recentActivities.map((activity, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 p-3 rounded-xl transition-colors cursor-pointer"
-                  style={{ background: 'transparent' }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = neutral[50]}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-bg-hover transition-colors cursor-pointer"
                 >
-                  <span className="text-xl">{activity.icon}</span>
+                  <activity.icon className="w-5 h-5" strokeWidth={1.5} />
                   <div className="flex-1">
-                    <p className="text-sm font-medium" style={{ color: neutral[800] }}>{activity.title}</p>
+ <p className="text-text-primary text-sm font-medium" >{activity.title}</p>
                   </div>
-                  <p className="text-xs" style={{ color: neutral[400] }}>{activity.time}</p>
+ <p className="text-text-muted text-xs" >{activity.time}</p>
                 </div>
               ))}
             </div>

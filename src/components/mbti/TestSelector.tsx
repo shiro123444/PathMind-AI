@@ -8,9 +8,10 @@
 import { motion } from 'framer-motion'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { Link } from 'react-router-dom'
-import { testCategories, difficultyLabels, difficultyColors } from '../../data/testCategories'
+import { testCategories, difficultyLabels, difficultyColors, testCategoryIcons } from '../../data/testCategories'
 import type { TestCategory, TestProgress } from '../../types/mbti'
 import { primary, neutral } from '../../theme/colors'
+import { Lightbulb, Brain, Target } from 'lucide-react'
 
 interface TestSelectorProps {
   onSelectTest: (categoryId: string) => void
@@ -38,11 +39,10 @@ function TestCard({
       className="w-full text-left group"
     >
       <div 
-        className="relative p-6 rounded-2xl border transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
+        className="relative p-6 rounded-2xl border border-border-primary transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
         style={{
           background: 'rgba(255,255,255,0.8)',
           backdropFilter: 'blur(12px)',
-          borderColor: neutral[200],
         }}
       >
         {/* 进度标记 */}
@@ -62,22 +62,20 @@ function TestCard({
             whileHover={{ scale: 1.2, rotate: 10 }}
             transition={{ type: 'spring', stiffness: 400 }}
           >
-            {category.icon}
+            {(() => { const Icon = testCategoryIcons[category.icon]; return Icon ? <Icon className="w-8 h-8" strokeWidth={1.5} /> : null })()}
           </motion.span>
 
           <div className="flex-1 min-w-0">
             {/* 标题 */}
             <h3 
-              className="text-lg font-bold mb-1"
-              style={{ color: neutral[900] }}
+              className="text-lg font-bold mb-1 text-text-primary"
             >
               {category.name}
             </h3>
 
             {/* 描述 */}
             <p 
-              className="text-sm mb-3 line-clamp-2"
-              style={{ color: neutral[600] }}
+              className="text-sm mb-3 line-clamp-2 text-text-secondary"
             >
               {category.description}
             </p>
@@ -85,8 +83,7 @@ function TestCard({
             {/* 元信息 */}
             <div className="flex items-center gap-4 text-xs">
               <span 
-                className="flex items-center gap-1"
-                style={{ color: neutral[500] }}
+                className="flex items-center gap-1 text-text-muted"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -94,8 +91,7 @@ function TestCard({
                 {category.questionCount} 题
               </span>
               <span 
-                className="flex items-center gap-1"
-                style={{ color: neutral[500] }}
+                className="flex items-center gap-1 text-text-muted"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -116,8 +112,7 @@ function TestCard({
 
           {/* 箭头 */}
           <motion.div 
-            className="flex-shrink-0 mt-1"
-            style={{ color: neutral[400] }}
+            className="flex-shrink-0 mt-1 text-text-muted"
             whileHover={{ x: 4 }}
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -145,10 +140,7 @@ export default function TestSelector({ onSelectTest, savedProgress }: TestSelect
             {/* 返回链接 */}
             <Link 
               to="/dashboard" 
-              className="inline-flex items-center gap-2 mb-8 transition-colors"
-              style={{ color: neutral[500] }}
-              onMouseEnter={(e) => e.currentTarget.style.color = neutral[800]}
-              onMouseLeave={(e) => e.currentTarget.style.color = neutral[500]}
+              className="inline-flex items-center gap-2 mb-8 transition-colors text-text-muted hover:text-text-primary"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -161,8 +153,7 @@ export default function TestSelector({ onSelectTest, savedProgress }: TestSelect
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
-              className="text-3xl md:text-4xl font-black mb-3"
-              style={{ color: neutral[900] }}
+              className="text-3xl md:text-4xl font-black mb-3 text-text-primary"
             >
               选择测试类型
             </motion.h1>
@@ -171,8 +162,7 @@ export default function TestSelector({ onSelectTest, savedProgress }: TestSelect
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
-              className="text-base mb-8"
-              style={{ color: neutral[600] }}
+              className="text-base mb-8 text-text-secondary"
             >
               发现最适合你的 AI 学习路径
             </motion.p>
@@ -203,7 +193,7 @@ export default function TestSelector({ onSelectTest, savedProgress }: TestSelect
                 }}
               >
                 <p className="text-sm" style={{ color: primary[700] }}>
-                  💡 你有一个未完成的测试，点击对应卡片可以继续
+                  <Lightbulb className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 你有一个未完成的测试，点击对应卡片可以继续
                 </p>
               </motion.div>
             )}
@@ -244,7 +234,7 @@ export default function TestSelector({ onSelectTest, savedProgress }: TestSelect
                   boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                 }}
               >
-                🧠 了解自己
+                <Brain className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 了解自己
               </motion.div>
 
               <motion.div
@@ -258,7 +248,7 @@ export default function TestSelector({ onSelectTest, savedProgress }: TestSelect
                   boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
                 }}
               >
-                🎯 发现方向
+                <Target className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 发现方向
               </motion.div>
             </div>
 
@@ -267,8 +257,7 @@ export default function TestSelector({ onSelectTest, savedProgress }: TestSelect
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-center mt-6 text-lg font-medium"
-              style={{ color: neutral[600] }}
+              className="text-center mt-6 text-lg font-medium text-text-secondary"
             >
               "了解自己是成长的第一步"
             </motion.p>

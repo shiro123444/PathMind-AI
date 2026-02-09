@@ -14,9 +14,9 @@ interface FeatureCardProps {
 }
 
 const variantClasses = {
-  default: 'bg-white shadow-sm hover:shadow-md',
+  default: 'bg-bg-secondary shadow-sm hover:shadow-md',
   glass: 'glass',
-  bordered: 'bg-white border-2 border-gray-200',
+  bordered: 'bg-bg-secondary border-2 border-border-primary',
 }
 
 /**
@@ -50,7 +50,7 @@ export default function FeatureCard({
           
           {/* Title */}
           <h3 
-            className="text-xl font-bold text-gray-900"
+            className="text-xl font-bold text-text-primary"
             data-testid="feature-title"
           >
             {title}
@@ -58,7 +58,7 @@ export default function FeatureCard({
           
           {/* Description */}
           <p 
-            className="text-gray-600 leading-relaxed"
+            className="text-text-secondary leading-relaxed"
             data-testid="feature-description"
           >
             {description}
@@ -69,7 +69,7 @@ export default function FeatureCard({
           <CardFooter className="p-0 pt-4">
             <Link
               to={link}
-              className="inline-flex items-center gap-2 text-black font-semibold group-hover:gap-4 transition-all"
+              className="inline-flex items-center gap-2 text-text-primary font-semibold group-hover:gap-4 transition-all"
               data-testid="feature-link"
             >
               {linkText}

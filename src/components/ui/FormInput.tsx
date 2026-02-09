@@ -44,13 +44,13 @@ export default function FormInput({
         base: className,
         inputWrapper: [
           'border-2',
-          'border-gray-200',
-          'hover:border-gray-300',
+          'border-border-primary',
+          'hover:border-border-primary',
           'focus-within:border-black',
           'transition-colors',
         ],
-        input: 'text-gray-900',
-        label: 'text-gray-700 font-medium',
+        input: 'text-text-primary',
+        label: 'text-text-secondary font-medium',
         errorMessage: 'text-red-500 text-sm mt-1',
       }}
       data-testid="form-input"

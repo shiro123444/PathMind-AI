@@ -137,7 +137,7 @@ function GiantWord({
   return (
     <motion.div 
       style={{ opacity, x, scale }}
-      className="text-[12vw] md:text-[10vw] font-black uppercase leading-none tracking-tighter text-gray-900"
+      className="text-[12vw] md:text-[10vw] font-black uppercase leading-none tracking-tighter text-text-primary"
     >
       {word}
     </motion.div>
@@ -179,7 +179,7 @@ export function CircularText({
         return (
           <span
             key={i}
-            className="absolute text-sm font-medium text-gray-700"
+            className="absolute text-sm font-medium text-text-secondary"
             style={{
               left: x,
               top: y,
@@ -498,7 +498,7 @@ export function ScrollProgressIndicator() {
 
   return (
     <motion.div
-      className="fixed right-4 top-1/2 -translate-y-1/2 w-1 h-32 bg-gray-200 rounded-full overflow-hidden z-50"
+      className="fixed right-4 top-1/2 -translate-y-1/2 w-1 h-32 bg-bg-tertiary rounded-full overflow-hidden z-50"
     >
       <motion.div
         className="w-full bg-black rounded-full origin-top"

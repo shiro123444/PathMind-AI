@@ -3,30 +3,32 @@ import { useLocation, useNavigate, Link as RouterLink } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@heroui/react'
 import { springs } from '../theme/motion'
+import { Home, User, Network, Brain, Target, BookOpen, Bot } from 'lucide-react'
+import { ThemeToggle } from '../theme/ThemeContext'
 
 // 导航链接配置
 const navLinks = [
-  { path: '/', label: '首页', icon: '🏠' },
-  { path: '/dashboard', label: '个人中心', icon: '👤' },
-  { path: '/graph', label: '知识图谱', icon: '🔗' },
+  { path: '/', label: '首页', icon: Home },
+  { path: '/dashboard', label: '个人中心', icon: User },
+  { path: '/graph', label: '知识图谱', icon: Network },
 ]
 
 // 移动端菜单项
 const mobileMenuItems = [
-  { path: '/', label: '首页', icon: '🏠' },
-  { path: '/dashboard', label: '个人中心', icon: '👤' },
-  { path: '/mbti-test', label: 'MBTI 测试', icon: '🧠' },
-  { path: '/careers', label: '职业推荐', icon: '🎯' },
-  { path: '/learning-path', label: '学习路径', icon: '📚' },
-  { path: '/ai-advisor', label: 'AI 助手', icon: '🤖' },
-  { path: '/graph', label: '知识图谱', icon: '🔗' },
+  { path: '/', label: '首页', icon: Home },
+  { path: '/dashboard', label: '个人中心', icon: User },
+  { path: '/mbti-test', label: 'MBTI 测试', icon: Brain },
+  { path: '/careers', label: '职业推荐', icon: Target },
+  { path: '/learning-path', label: '学习路径', icon: BookOpen },
+  { path: '/ai-advisor', label: 'AI 助手', icon: Bot },
+  { path: '/graph', label: '知识图谱', icon: Network },
 ]
 
 // Logo 组件 - 简洁设计
 function Logo() {
   return (
     <motion.div 
-      className="w-10 h-10 flex items-center justify-center bg-black rounded-xl"
+      className="w-10 h-10 flex items-center justify-center bg-black dark:bg-white rounded-xl"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
@@ -34,7 +36,7 @@ function Logo() {
         viewBox="0 0 24 24"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-5 h-5 text-white"
+        className="w-5 h-5 text-white dark:text-black"
       >
         <path
           d="M12 2L2 7L12 12L22 7L12 2Z"
@@ -88,14 +90,14 @@ function MagneticNavLink({
       <RouterLink
         to={path}
         className={`relative px-4 py-2 text-sm font-medium transition-colors block ${
-          isActive ? 'text-black' : 'text-gray-600 hover:text-black'
+          isActive ? 'text-text-primary' : 'text-text-secondary hover:text-text-primary'
         }`}
       >
         {/* 悬停背景动画 */}
         <AnimatePresence>
           {isHovered && !isActive && (
             <motion.span
-              className="absolute inset-0 bg-gray-100 rounded-full -z-10"
+              className="absolute inset-0 bg-bg-hover rounded-full -z-10"
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
@@ -107,13 +109,13 @@ function MagneticNavLink({
         {/* 激活状态指示器 */}
         {isActive && (
           <motion.span
-            className="absolute inset-0 bg-black rounded-full -z-10"
+            className="absolute inset-0 bg-black dark:bg-white rounded-full -z-10"
             layoutId="activeNavIndicator"
             transition={{ type: 'spring', ...springs.slide }}
           />
         )}
         
-        <span className={isActive ? 'text-white' : ''}>
+        <span className={isActive ? 'text-white dark:text-black' : ''}>
           {label}
         </span>
       </RouterLink>
@@ -138,7 +140,7 @@ function HamburgerButton({
       aria-label={isOpen ? '关闭菜单' : '打开菜单'}
     >
       <motion.span
-        className="w-6 h-0.5 bg-black rounded-full block"
+        className="w-6 h-0.5 bg-text-primary rounded-full block"
         animate={{
           rotate: isOpen ? 45 : 0,
           y: isOpen ? 8 : 0,
@@ -146,7 +148,7 @@ function HamburgerButton({
         transition={{ duration: 0.3 }}
       />
       <motion.span
-        className="w-6 h-0.5 bg-black rounded-full block"
+        className="w-6 h-0.5 bg-text-primary rounded-full block"
         animate={{
           opacity: isOpen ? 0 : 1,
           x: isOpen ? 20 : 0,
@@ -154,7 +156,7 @@ function HamburgerButton({
         transition={{ duration: 0.3 }}
       />
       <motion.span
-        className="w-6 h-0.5 bg-black rounded-full block"
+        className="w-6 h-0.5 bg-text-primary rounded-full block"
         animate={{
           rotate: isOpen ? -45 : 0,
           y: isOpen ? -8 : 0,
@@ -192,8 +194,8 @@ export default function Navbar() {
       <motion.nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled 
-            ? 'bg-white/90 backdrop-blur-xl shadow-lg' 
-            : 'bg-white/70 backdrop-blur-md'
+            ? 'bg-bg-card backdrop-blur-xl shadow-lg' 
+            : 'bg-bg-card backdrop-blur-md'
         }`}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -211,26 +213,26 @@ export default function Navbar() {
               <Logo />
               <div className="flex flex-col">
                 <motion.span 
-                  className="font-bold text-base leading-tight"
+                  className="font-bold text-base leading-tight text-text-primary"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
                 >
-                  EduProfile
+                  PathMind
                 </motion.span>
                 <motion.span 
-                  className="text-[10px] text-gray-500 font-medium hidden sm:block"
+                  className="text-[10px] text-text-muted font-medium hidden sm:block"
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  学生画像平台
+                  智能学习路径
                 </motion.span>
               </div>
             </motion.div>
 
             {/* 中间：导航链接 - 带胶囊滑动效果 */}
-            <div className="hidden sm:flex items-center gap-1 bg-gray-100/80 rounded-full p-1">
+            <div className="hidden sm:flex items-center gap-1 bg-bg-hover rounded-full p-1">
               {navLinks.map((link, index) => (
                 <MagneticNavLink
                   key={link.path}
@@ -244,6 +246,7 @@ export default function Navbar() {
 
             {/* 右侧：操作按钮 */}
             <div className="flex items-center gap-3">
+              <ThemeToggle />
               <motion.div
                 className="hidden lg:block"
                 initial={{ opacity: 0, x: 20 }}
@@ -252,7 +255,7 @@ export default function Navbar() {
               >
                 <RouterLink
                   to="/login"
-                  className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center gap-2"
+                  className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors flex items-center gap-2"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -271,7 +274,7 @@ export default function Navbar() {
                   as={RouterLink}
                   to="/dashboard"
                   size="sm"
-                  className="font-semibold bg-black text-white hover:bg-gray-800 rounded-full px-5"
+                  className="font-semibold bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 rounded-full px-5"
                   endContent={
                     <motion.svg
                       width="14"
@@ -300,7 +303,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
-            className="fixed inset-0 z-40 bg-white pt-20"
+            className="fixed inset-0 z-40 bg-bg-secondary pt-20"
             initial={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 40px) 32px)' }}
             animate={{ opacity: 1, clipPath: 'circle(150% at calc(100% - 40px) 32px)' }}
             exit={{ opacity: 0, clipPath: 'circle(0% at calc(100% - 40px) 32px)' }}
@@ -317,21 +320,16 @@ export default function Navbar() {
                 >
                   <RouterLink
                     to={item.path}
-                    className={`flex items-center gap-4 py-4 text-xl font-medium border-b border-gray-100 ${
-                      isActive(item.path) ? 'text-black' : 'text-gray-600'
+                    className={`flex items-center gap-4 py-4 text-xl font-medium border-b border-border-primary ${
+                      isActive(item.path) ? 'text-text-primary' : 'text-text-secondary'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <motion.span 
-                      className="text-2xl"
-                      whileHover={{ scale: 1.2, rotate: 10 }}
-                    >
-                      {item.icon}
-                    </motion.span>
+                    <item.icon className="w-5 h-5" />
                     <span>{item.label}</span>
                     {isActive(item.path) && (
                       <motion.div
-                        className="ml-auto w-2 h-2 bg-black rounded-full"
+                        className="ml-auto w-2 h-2 bg-text-primary rounded-full"
                         layoutId="mobileActiveIndicator"
                       />
                     )}
@@ -351,7 +349,7 @@ export default function Navbar() {
                   fullWidth
                   size="lg"
                   variant="bordered"
-                  className="font-semibold border-2 border-black rounded-full"
+                  className="font-semibold border-2 border-text-primary rounded-full"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   登录 / 注册

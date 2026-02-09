@@ -387,7 +387,7 @@ export default function KnowledgeGraph({
       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-100" style={{ minWidth: '100vw', minHeight: '100vh' }}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-600 font-medium">加载知识图谱中...</p>
+          <p className="text-text-secondary font-medium">加载知识图谱中...</p>
         </div>
       </div>
     );
@@ -397,9 +397,9 @@ export default function KnowledgeGraph({
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-50 via-gray-50 to-zinc-100" style={{ minWidth: '100vw', minHeight: '100vh' }}>
         <div className="flex flex-col items-center gap-4 text-center p-8">
-          <div className="text-7xl">📊</div>
+          <div className="text-7xl text-text-muted font-bold">!</div>
           <p className="text-red-500 font-semibold text-lg">{error}</p>
-          <p className="text-gray-500">
+          <p className="text-text-muted">
             请确保 Neo4j 数据库已启动并运行后端服务
           </p>
         </div>
@@ -414,8 +414,8 @@ export default function KnowledgeGraph({
       style={{ width: '100%', height: '100%', minWidth: '100vw', minHeight: '100vh' }}
     >
       {/* 图例 - 左上角浮动 */}
-      <div className="absolute top-4 left-4 bg-white/80 backdrop-blur-md rounded-xl p-3 z-10 shadow-lg border border-white/50">
-        <h3 className="text-gray-700 font-semibold mb-2 text-xs uppercase tracking-wider">图例</h3>
+      <div className="absolute top-4 left-4 bg-bg-card backdrop-blur-md rounded-xl p-3 z-10 shadow-lg border border-border-primary">
+        <h3 className="text-text-secondary font-semibold mb-2 text-xs uppercase tracking-wider">图例</h3>
         <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
           {Object.entries(nodeTypeLabels).map(([type, label]) => (
             <div key={type} className="flex items-center gap-1.5">
@@ -423,7 +423,7 @@ export default function KnowledgeGraph({
                 className="w-2.5 h-2.5 rounded-full shadow-sm"
                 style={{ backgroundColor: nodeColors[type] }}
               />
-              <span className="text-gray-600 text-xs">{label}</span>
+              <span className="text-text-secondary text-xs">{label}</span>
             </div>
           ))}
         </div>
@@ -432,7 +432,7 @@ export default function KnowledgeGraph({
       {/* 节点详情悬浮框 - 带动画效果 */}
       {hoveredNode && (
         <div 
-          className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md rounded-2xl px-5 py-4 z-10 shadow-xl border-2 transition-all duration-200 animate-in slide-in-from-bottom-2"
+          className="absolute bottom-4 left-4 bg-bg-card backdrop-blur-md rounded-2xl px-5 py-4 z-10 shadow-xl border-2 transition-all duration-200 animate-in slide-in-from-bottom-2"
           style={{ borderColor: `${hoveredNode.color}40` }}
         >
           <div className="flex items-center gap-3">
@@ -441,44 +441,44 @@ export default function KnowledgeGraph({
               style={{ backgroundColor: hoveredNode.color }}
             >
               <span className="text-white text-lg">
-                {hoveredNode.type === 'student' && '👤'}
-                {hoveredNode.type === 'mbti' && '🧠'}
-                {hoveredNode.type === 'career' && '💼'}
-                {hoveredNode.type === 'skill' && '⚡'}
-                {hoveredNode.type === 'course' && '📚'}
-                {hoveredNode.type === 'learning_path' && '🛤️'}
+                {hoveredNode.type === 'student' && 'S'}
+                {hoveredNode.type === 'mbti' && 'M'}
+                {hoveredNode.type === 'career' && 'C'}
+                {hoveredNode.type === 'skill' && 'K'}
+                {hoveredNode.type === 'course' && 'L'}
+                {hoveredNode.type === 'learning_path' && 'P'}
               </span>
             </div>
             <div>
-              <p className="text-gray-900 font-semibold text-base">{hoveredNode.name}</p>
-              <p className="text-gray-500 text-xs">{nodeTypeLabels[hoveredNode.type]}</p>
+              <p className="text-text-primary font-semibold text-base">{hoveredNode.name}</p>
+              <p className="text-text-muted text-xs">{nodeTypeLabels[hoveredNode.type]}</p>
             </div>
           </div>
           {hoveredNode.description && (
-            <p className="mt-2 text-gray-600 text-sm border-t border-gray-100 pt-2">
+            <p className="mt-2 text-text-secondary text-sm border-t border-border-primary pt-2">
               {hoveredNode.description}
             </p>
           )}
-          <p className="mt-2 text-gray-400 text-xs">点击查看详情 →</p>
+          <p className="mt-2 text-text-muted text-xs">点击查看详情 →</p>
         </div>
       )}
 
       {/* 统计信息 - 右上角 */}
-      <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md rounded-xl px-4 py-2 z-10 shadow-lg border border-white/50">
+      <div className="absolute top-4 right-4 bg-bg-card backdrop-blur-md rounded-xl px-4 py-2 z-10 shadow-lg border border-border-primary">
         <div className="flex items-center gap-4 text-sm">
-          <span className="text-gray-500">
-            节点 <span className="text-gray-800 font-semibold">{graphData.nodes.length}</span>
+          <span className="text-text-muted">
+            节点 <span className="text-text-primary font-semibold">{graphData.nodes.length}</span>
           </span>
-          <span className="text-gray-300">|</span>
-          <span className="text-gray-500">
-            关系 <span className="text-gray-800 font-semibold">{graphData.links?.length || 0}</span>
+          <span className="text-text-muted">|</span>
+          <span className="text-text-muted">
+            关系 <span className="text-text-primary font-semibold">{graphData.links?.length || 0}</span>
           </span>
         </div>
       </div>
 
       {/* 操作提示 - 右下角 */}
-      <div className="absolute bottom-4 right-4 bg-white/80 backdrop-blur-md rounded-xl px-3 py-2 z-10 shadow-lg border border-white/50">
-        <p className="text-gray-400 text-xs">
+      <div className="absolute bottom-4 right-4 bg-bg-card backdrop-blur-md rounded-xl px-3 py-2 z-10 shadow-lg border border-border-primary">
+        <p className="text-text-muted text-xs">
           拖拽节点移动 · 空白处平移 · 滚轮缩放
         </p>
       </div>

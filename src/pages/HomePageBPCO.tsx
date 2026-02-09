@@ -23,13 +23,17 @@ import {
 } from '../components/animations'
 import { GlassCard } from '../components/ui'
 import { variants, easings, durations, heroSequence } from '../theme/motion'
-import { primary, neutral } from '../theme/colors'
+import { primary } from '../theme/colors'
+import { useTheme } from '../theme/ThemeContext'
+import { Brain, BarChart3, Target, Bot, Shapes, BookOpen, Rocket } from 'lucide-react'
 
 // ============================================
 // Hero Section - Claude 风格左右分栏设计
 // ============================================
 function HeroSection() {
   const heroRef = useRef(null)
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ['start start', 'end start']
@@ -42,18 +46,18 @@ function HeroSection() {
     <section 
       ref={heroRef} 
       className="relative min-h-screen flex items-center overflow-hidden"
-      style={{ background: `linear-gradient(135deg, ${neutral[50]} 0%, white 50%, ${primary[50]}30 100%)` }}
+      style={{ background: `linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, ${primary[50]}30 100%)` }}
     >
       {/* 背景呼吸光晕 - 更微妙 */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <BreathingOrb 
-          color="rgba(226,232,240,0.3)"
+          color={isDark ? 'rgba(30,30,30,0.3)' : 'rgba(226,232,240,0.3)'}
           size={600}
           position={{ top: '-15%', left: '-10%' }}
           phaseOffset={0}
         />
         <BreathingOrb 
-          color="rgba(241,245,249,0.25)"
+          color={isDark ? 'rgba(20,20,20,0.25)' : 'rgba(241,245,249,0.25)'}
           size={500}
           position={{ bottom: '-10%', right: '20%' }}
           phaseOffset={0.5}
@@ -86,7 +90,7 @@ function HeroSection() {
               >
                 武汉商学院
               </span>
-              <span style={{ color: neutral[500] }} className="text-sm">
+ <span className="text-text-muted text-sm">
                 AI 与大数据学院
               </span>
             </motion.div>
@@ -102,8 +106,7 @@ function HeroSection() {
                   duration: durations.slower, 
                   ease: easings.smooth 
                 }}
-                className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-2"
-                style={{ color: neutral[900] }}
+                className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.1] tracking-tight mb-2 text-text-primary"
               >
                 发现你的
               </motion.h1>
@@ -134,7 +137,7 @@ function HeroSection() {
                     duration: durations.slower, 
                     ease: easings.smooth 
                   }}
-                  style={{ color: neutral[900] }}
+ className="text-text-primary"
                 >
                   <FlipText 
                     texts={['职业方向', '学习之路', '无限可能']}
@@ -155,11 +158,8 @@ function HeroSection() {
                 duration: durations.slow, 
                 ease: easings.smooth 
               }}
-              className="text-base md:text-lg mb-8 leading-relaxed"
-              style={{ 
-                maxWidth: '420px',
-                color: neutral[600],
-              }}
+              className="text-base md:text-lg mb-8 leading-relaxed text-text-secondary"
+              style={{ maxWidth: '420px' }}
             >
               通过 MBTI 性格测试了解自己，获取 AI 领域的个性化职业推荐和学习路径
             </motion.p>
@@ -192,8 +192,7 @@ function HeroSection() {
                 size="lg"
                 radius="full"
                 variant="bordered"
-                className="font-semibold px-6 py-6"
-                style={{ borderColor: neutral[300], color: neutral[700] }}
+                className="font-semibold px-6 py-6 border-border-primary text-text-secondary"
               >
                 登录账户
               </Button>
@@ -216,7 +215,7 @@ function HeroSection() {
               className="relative rounded-3xl overflow-hidden"
               style={{
                 aspectRatio: '1/1',
-                background: `linear-gradient(135deg, ${neutral[50]}80 0%, white 50%, ${primary[50]}40 100%)`,
+                background: `linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, ${primary[50]}40 100%)`,
                 boxShadow: `0 25px 80px -20px ${primary[900]}15, 0 10px 40px -15px ${primary[800]}10`,
               }}
             >
@@ -241,13 +240,13 @@ function HeroSection() {
                 }}
                 className="absolute top-6 right-6 px-4 py-2 rounded-full text-sm font-medium"
                 style={{
-                  background: 'rgba(255,255,255,0.9)',
+                  background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.9)',
                   backdropFilter: 'blur(8px)',
-                  color: primary[700],
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                  color: isDark ? 'rgba(255,255,255,0.8)' : primary[700],
+                  boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 4px 20px rgba(0,0,0,0.1)',
                 }}
               >
-                🎯 AI 职业规划
+                <Target className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> AI 职业规划
               </motion.div>
               
               <motion.div
@@ -263,13 +262,13 @@ function HeroSection() {
                 }}
                 className="absolute bottom-6 left-6 px-4 py-2 rounded-full text-sm font-medium"
                 style={{
-                  background: 'rgba(255,255,255,0.9)',
+                  background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.9)',
                   backdropFilter: 'blur(8px)',
-                  color: primary[700],
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.1)',
+                  color: isDark ? 'rgba(255,255,255,0.8)' : primary[700],
+                  boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.3)' : '0 4px 20px rgba(0,0,0,0.1)',
                 }}
               >
-                🧠 MBTI 性格测试
+                <Brain className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> MBTI 性格测试
               </motion.div>
             </div>
             
@@ -297,14 +296,13 @@ function HeroSection() {
         }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
       >
-        <span className="text-xs uppercase tracking-widest" style={{ color: neutral[400] }}>Scroll</span>
+ <span className="text-text-muted text-xs uppercase tracking-widest" >Scroll</span>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-5 h-8 rounded-full flex justify-center pt-1"
-          style={{ border: `2px solid ${neutral[300]}` }}
+          className="w-5 h-8 rounded-full flex justify-center pt-1 border-2 border-border-primary"
         >
-          <div className="w-1 h-2 rounded-full" style={{ background: neutral[400] }} />
+          <div className="w-1 h-2 rounded-full bg-text-muted" />
         </motion.div>
       </motion.div>
     </section>
@@ -323,7 +321,7 @@ function QuickEntrySection() {
       id: 'mbti',
       title: 'MBTI 测试', 
       desc: '了解你的性格类型',
-      icon: '🧠',
+      icon: Brain,
       link: '/mbti-test',
       color: 'white' as const
     },
@@ -331,7 +329,7 @@ function QuickEntrySection() {
       id: 'results',
       title: '结果分析', 
       desc: '深入分析性格特质',
-      icon: '📊',
+      icon: BarChart3,
       link: '/results',
       color: 'white' as const
     },
@@ -339,7 +337,7 @@ function QuickEntrySection() {
       id: 'career',
       title: '职业推荐', 
       desc: '智能匹配职业方向',
-      icon: '🎯',
+      icon: Target,
       link: '/careers',
       color: 'white' as const
     },
@@ -347,7 +345,7 @@ function QuickEntrySection() {
       id: 'ai',
       title: 'AI 助手', 
       desc: '24/7 智能学习顾问',
-      icon: '🤖',
+      icon: Bot,
       link: '/ai-advisor',
       color: 'white' as const
     },
@@ -357,7 +355,7 @@ function QuickEntrySection() {
     <section 
       ref={ref} 
       className="py-20 px-6 md:px-12 lg:px-20"
-      style={{ background: `linear-gradient(180deg, ${neutral[50]} 0%, white 100%)` }}
+      style={{ background: `linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)` }}
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
@@ -368,12 +366,11 @@ function QuickEntrySection() {
           className="text-center mb-12"
         >
           <h2 
-            className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-4"
-            style={{ color: neutral[900] }}
+            className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight mb-4 text-text-primary"
           >
             快速开始
           </h2>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: neutral[600] }}>
+ <p className="text-text-secondary text-lg max-w-2xl mx-auto" >
             选择你感兴趣的功能，开始探索你的 AI 职业方向
           </p>
         </motion.div>
@@ -395,22 +392,21 @@ function QuickEntrySection() {
                 >
                   <div>
                     <motion.span 
-                      className="text-4xl mb-4 block"
+                      className="mb-4 block"
                       whileHover={{ scale: 1.2, rotate: 10 }}
                       transition={{ type: 'spring', stiffness: 400 }}
                     >
-                      {feature.icon}
+                      <feature.icon className="w-8 h-8" strokeWidth={1.5} />
                     </motion.span>
-                    <h3 className="text-xl font-bold mb-2" style={{ color: neutral[900] }}>
+ <h3 className="text-text-primary text-xl font-bold mb-2" >
                       {feature.title}
                     </h3>
-                    <p className="text-sm" style={{ color: neutral[600] }}>
+ <p className="text-text-secondary text-sm" >
                       {feature.desc}
                     </p>
                   </div>
                   <motion.div 
-                    className="mt-4 text-lg"
-                    style={{ color: neutral[400] }}
+                    className="mt-4 text-lg text-text-muted"
                     whileHover={{ x: 4 }}
                   >
                     →
@@ -430,17 +426,17 @@ function QuickEntrySection() {
 // ============================================
 function MarqueeSection() {
   return (
-    <section className="py-12 bg-white overflow-hidden">
+    <section className="py-12 bg-bg-secondary overflow-hidden">
       <ParallaxMarquee 
         text="MBTI • AI LEARNING • CAREER PATH • PERSONALITY •" 
         baseVelocity={2}
-        textClassName="text-stone-200"
+        textClassName="text-stone-200 dark:text-stone-800"
       />
       <div className="h-2" />
       <ParallaxMarquee 
         text="DISCOVER • GROW • ACHIEVE • TRANSFORM •" 
         baseVelocity={-2}
-        textClassName="text-stone-300"
+        textClassName="text-stone-300 dark:text-stone-700"
       />
     </section>
   )
@@ -455,17 +451,17 @@ function FeaturesSection() {
 
   const features = [
     {
-      icon: '🧠',
+      icon: Brain,
       title: 'MBTI 性格测试',
       desc: '通过科学的性格测试，深入了解你的性格类型、优势和发展方向。',
     },
     {
-      icon: '🤖',
+      icon: Bot,
       title: 'AI 智能分析',
       desc: '利用先进的 AI 技术，为你提供个性化的职业推荐和学习建议。',
     },
     {
-      icon: '📊',
+      icon: BarChart3,
       title: '知识图谱可视化',
       desc: '直观展示 AI 领域的知识体系，帮助你规划完整的学习路径。',
     },
@@ -475,7 +471,7 @@ function FeaturesSection() {
     <section 
       ref={ref} 
       className="py-24 px-6 md:px-12 lg:px-20"
-      style={{ background: `linear-gradient(180deg, white 0%, ${neutral[50]} 100%)` }}
+      style={{ background: `linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%)` }}
     >
       <div className="max-w-7xl mx-auto">
         <motion.div
@@ -484,12 +480,11 @@ function FeaturesSection() {
           className="text-center mb-16"
         >
           <h2 
-            className="text-4xl md:text-5xl font-black tracking-tight mb-4"
-            style={{ color: neutral[900] }}
+            className="text-4xl md:text-5xl font-black tracking-tight mb-4 text-text-primary"
           >
             系统特色
           </h2>
-          <p className="text-lg max-w-2xl mx-auto" style={{ color: neutral[600] }}>
+ <p className="text-text-secondary text-lg max-w-2xl mx-auto" >
             三大核心功能，助力你的 AI 学习之路
           </p>
         </motion.div>
@@ -504,15 +499,15 @@ function FeaturesSection() {
               className="text-center"
             >
               <motion.span 
-                className="text-5xl mb-4 block"
+                className="mb-4 block"
                 whileHover={{ scale: 1.2 }}
               >
-                {feature.icon}
+                <feature.icon className="w-10 h-10" strokeWidth={1.5} />
               </motion.span>
-              <h3 className="text-2xl font-bold mb-3" style={{ color: neutral[900] }}>
+ <h3 className="text-text-primary text-2xl font-bold mb-3" >
                 {feature.title}
               </h3>
-              <p className="leading-relaxed" style={{ color: neutral[600] }}>
+ <p className="text-text-secondary leading-relaxed" >
                 {feature.desc}
               </p>
             </motion.div>
@@ -528,17 +523,17 @@ function FeaturesSection() {
 // ============================================
 function StatsSection() {
   const stats = [
-    { value: '16', label: '性格类型', icon: '🎭' },
-    { value: '100+', label: '优质课程', icon: '📖' },
-    { value: '∞', label: '学习可能', icon: '🚀' },
-    { value: '24/7', label: 'AI 助手', icon: '🤖' },
+    { value: '16', label: '性格类型', icon: Shapes },
+    { value: '100+', label: '优质课程', icon: BookOpen },
+    { value: '∞', label: '学习可能', icon: Rocket },
+    { value: '24/7', label: 'AI 助手', icon: Bot },
   ]
 
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true })
 
   return (
-    <section ref={ref} className="py-24 px-6 md:px-12 lg:px-20 bg-white">
+    <section ref={ref} className="py-24 px-6 md:px-12 lg:px-20 bg-bg-secondary">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {stats.map((stat, index) => (
@@ -549,17 +544,16 @@ function StatsSection() {
               transition={{ delay: index * 0.1, duration: 0.5 }}
               className="text-center"
             >
-              <span className="text-3xl mb-4 block">{stat.icon}</span>
+              <span className="mb-4 block"><stat.icon className="w-7 h-7 mx-auto" strokeWidth={1.5} /></span>
               <motion.p 
-                className="text-4xl md:text-5xl lg:text-6xl font-black"
-                style={{ color: neutral[900] }}
+                className="text-4xl md:text-5xl lg:text-6xl font-black text-text-primary"
                 initial={{ scale: 0.5 }}
                 animate={isInView ? { scale: 1 } : {}}
                 transition={{ delay: index * 0.1 + 0.2, type: 'spring', stiffness: 100 }}
               >
                 {stat.value}
               </motion.p>
-              <p className="mt-2 font-medium" style={{ color: neutral[600] }}>{stat.label}</p>
+ <p className="text-text-secondary mt-2 font-medium" >{stat.label}</p>
             </motion.div>
           ))}
         </div>
@@ -610,8 +604,7 @@ function CTASection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
-          className="text-xl mb-12 max-w-2xl mx-auto"
-          style={{ color: `${neutral[400]}` }}
+          className="text-xl mb-12 max-w-2xl mx-auto text-text-muted"
         >
           无论你是否有编程基础，我们都能帮助你找到适合的 AI 学习道路
         </motion.p>
@@ -628,7 +621,7 @@ function CTASection() {
             to="/mbti-test"
             size="lg"
             radius="full"
-            className="bg-white font-bold px-12 py-6 text-lg transition-all hover:scale-105"
+            className="bg-bg-secondary font-bold px-12 py-6 text-lg transition-all hover:scale-105"
             style={{ color: primary[800] }}
           >
             立即开始 →
@@ -659,15 +652,15 @@ function FooterSection() {
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div className="md:col-span-2">
-            <h3 className="text-2xl font-black mb-4">EduProfile</h3>
-            <p style={{ maxWidth: '400px', lineHeight: '1.8', color: neutral[400] }}>
+            <h3 className="text-2xl font-black mb-4">PathMind</h3>
+            <p className="text-text-muted" style={{ maxWidth: '400px', lineHeight: '1.8' }}>
               武汉商学院 AI 与大数据学院 职业规划系统。通过 MBTI 性格测试，发现最适合你的 AI 学习路径。
             </p>
           </div>
           
           <div>
             <h4 className="font-bold mb-4">快速链接</h4>
-            <ul className="space-y-2" style={{ color: neutral[400] }}>
+ <ul className="text-text-muted space-y-2" >
               <li><Link to="/mbti-test" className="hover:text-white transition-colors">MBTI 测试</Link></li>
               <li><Link to="/careers" className="hover:text-white transition-colors">职业推荐</Link></li>
               <li><Link to="/learning-path" className="hover:text-white transition-colors">学习路径</Link></li>
@@ -677,7 +670,7 @@ function FooterSection() {
           
           <div>
             <h4 className="font-bold mb-4">联系我们</h4>
-            <ul className="space-y-2" style={{ color: neutral[400] }}>
+ <ul className="text-text-muted space-y-2" >
               <li>support@eduprofile.com</li>
               <li>GitHub</li>
               <li>Twitter</li>
@@ -689,10 +682,10 @@ function FooterSection() {
           className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
           style={{ borderTop: `1px solid ${primary[800]}` }}
         >
-          <p className="text-sm" style={{ color: neutral[500] }}>
-            © 2025 EduProfile. All rights reserved.
+ <p className="text-text-muted text-sm" >
+            © 2025 PathMind. All rights reserved.
           </p>
-          <div className="flex gap-6 text-sm" style={{ color: neutral[500] }}>
+ <div className="text-text-muted flex gap-6 text-sm" >
             <a href="#" className="hover:text-white transition-colors">隐私政策</a>
             <a href="#" className="hover:text-white transition-colors">服务条款</a>
           </div>
@@ -707,7 +700,7 @@ function FooterSection() {
 // ============================================
 export default function HomePageBPCO() {
   return (
-    <div className="w-full overflow-hidden bg-white">
+    <div className="w-full overflow-hidden bg-bg-secondary">
       <ScrollProgressIndicator />
       <HeroSection />
       <QuickEntrySection />

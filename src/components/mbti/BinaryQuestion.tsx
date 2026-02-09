@@ -4,7 +4,7 @@
 
 import { motion } from 'framer-motion'
 import type { BinaryQuestion as BinaryQuestionType, BinaryAnswer } from '../../types/mbti'
-import { neutral } from '../../theme/colors'
+// theme/colors import removed (neutral unused)
 
 interface BinaryQuestionProps {
   question: BinaryQuestionType
@@ -25,8 +25,7 @@ export default function BinaryQuestion({ question, answer, onAnswer }: BinaryQue
     <div className="space-y-6">
       {/* 题目文本 */}
       <h2 
-        className="text-xl md:text-2xl font-bold leading-relaxed"
-        style={{ color: neutral[900] }}
+        className="text-xl md:text-2xl font-bold leading-relaxed text-text-primary"
       >
         {question.text}
       </h2>
@@ -43,7 +42,7 @@ export default function BinaryQuestion({ question, answer, onAnswer }: BinaryQue
               whileTap={{ scale: 0.98 }}
               className="w-full p-5 rounded-2xl text-left transition-all duration-200 flex items-center gap-4 border"
               style={{
-                borderColor: isSelected ? '#64748B' : neutral[200],
+                borderColor: isSelected ? '#64748B' : 'var(--border-primary)',
                 background: isSelected ? 'rgba(100,116,139,0.1)' : 'rgba(255,255,255,0.6)',
               }}
             >
@@ -51,7 +50,7 @@ export default function BinaryQuestion({ question, answer, onAnswer }: BinaryQue
               <div 
                 className="w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors"
                 style={{
-                  borderColor: isSelected ? '#64748B' : neutral[300],
+                  borderColor: isSelected ? '#64748B' : 'var(--border-primary)',
                   background: isSelected ? '#64748B' : 'transparent',
                 }}
               >
@@ -60,8 +59,7 @@ export default function BinaryQuestion({ question, answer, onAnswer }: BinaryQue
 
               {/* 选项文本 */}
               <span 
-                className="font-medium"
-                style={{ color: neutral[800] }}
+                className="font-medium text-text-primary"
               >
                 {option.text}
               </span>

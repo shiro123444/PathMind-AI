@@ -60,7 +60,7 @@ export default function FormButton({
         isLoading={isLoading}
         isDisabled={disabled}
         onClick={onClick}
-        className={`font-semibold ${color === 'primary' ? 'bg-black text-white hover:bg-gray-800' : ''} ${className}`}
+        className={`font-semibold ${color === 'primary' ? 'bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200' : ''} ${className}`}
         fullWidth={fullWidth}
         radius="lg"
         spinner={<Spinner size="sm" color="current" />}

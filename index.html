@@ -8,17 +8,29 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <title>StudentProfile - MBTI 性格测试</title>
+    <title>PathMind - 智能学习路径规划</title>
     
     <!-- Inter 字体 - 用于按钮和导航 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
+    <!-- 中文衬线：用于正文中文显示 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
     <!-- 预加载本地 Serifa 字体 -->
     <link rel="preload" href="/fonts/Serifa.woff2" as="font" type="font/woff2" crossorigin>
     
     <style>
+      /* 声明本地字体名称并安全展示 */
+      @font-face {
+        font-family: 'Serifa';
+        src: url('/fonts/Serifa.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: swap;
+      }
+      
       /* 防止 FOUC (Flash of Unstyled Content) */
       html, body, #root {
         width: 100%;

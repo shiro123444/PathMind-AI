@@ -5,7 +5,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { neutral, primary } from '../../theme/colors'
+import { primary } from '../../theme/colors'
+import { Users, CheckCircle, FileEdit, BarChart3 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 // 模拟数据
 const mockStats = {
@@ -38,13 +40,13 @@ const mockMbtiDistribution = [
 function StatCard({ 
   title, 
   value, 
-  icon, 
+  icon: Icon, 
   color, 
   delay 
 }: { 
   title: string
   value: string | number
-  icon: string
+  icon: LucideIcon
   color: string
   delay: number
 }) {
@@ -53,23 +55,22 @@ function StatCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5 }}
-      className="p-6 rounded-2xl"
+      className="p-6 rounded-2xl border border-border-primary"
       style={{
         background: 'rgba(255,255,255,0.8)',
         backdropFilter: 'blur(12px)',
-        border: `1px solid ${neutral[200]}`,
       }}
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm mb-1" style={{ color: neutral[500] }}>{title}</p>
-          <p className="text-3xl font-black" style={{ color: neutral[900] }}>{value}</p>
+          <p className="text-sm mb-1 text-text-muted">{title}</p>
+          <p className="text-3xl font-black text-text-primary">{value}</p>
         </div>
         <div 
-          className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-          style={{ background: `${color}15` }}
+          className="w-12 h-12 rounded-xl flex items-center justify-center"
+          style={{ background: `${color}15`, color }}
         >
-          {icon}
+          <Icon className="w-6 h-6" strokeWidth={1.5} />
         </div>
       </div>
     </motion.div>
@@ -97,10 +98,10 @@ export default function AdminDashboard() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-2xl md:text-3xl font-black mb-2" style={{ color: neutral[900] }}>
+        <h1 className="text-2xl md:text-3xl font-black mb-2 text-text-primary">
           管理概览
         </h1>
-        <p style={{ color: neutral[600] }}>
+        <p className="text-text-secondary">
           查看测试数据统计和学生分析
         </p>
       </motion.div>
@@ -110,28 +111,28 @@ export default function AdminDashboard() {
         <StatCard
           title="学生总数"
           value={stats.totalStudents}
-          icon="👥"
+          icon={Users}
           color={primary[500]}
           delay={0}
         />
         <StatCard
           title="已完成测试"
           value={stats.completedTests}
-          icon="✅"
+          icon={CheckCircle}
           color="#10B981"
           delay={0.1}
         />
         <StatCard
           title="题库数量"
           value={stats.totalQuestions}
-          icon="📝"
+          icon={FileEdit}
           color="#F59E0B"
           delay={0.2}
         />
         <StatCard
           title="完成率"
           value={`${stats.avgCompletionRate}%`}
-          icon="📊"
+          icon={BarChart3}
           color="#8B5CF6"
           delay={0.3}
         />
@@ -144,15 +145,14 @@ export default function AdminDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="lg:col-span-2 p-6 rounded-2xl"
+          className="lg:col-span-2 p-6 rounded-2xl border border-border-primary"
           style={{
             background: 'rgba(255,255,255,0.8)',
             backdropFilter: 'blur(12px)',
-            border: `1px solid ${neutral[200]}`,
           }}
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold" style={{ color: neutral[900] }}>
+            <h2 className="text-lg font-bold text-text-primary">
               MBTI 类型分布
             </h2>
             <Link 
@@ -168,12 +168,11 @@ export default function AdminDashboard() {
             {distribution.map((item, index) => (
               <div key={item.type} className="flex items-center gap-4">
                 <span 
-                  className="w-12 text-sm font-mono font-bold"
-                  style={{ color: neutral[700] }}
+                  className="w-12 text-sm font-mono font-bold text-text-secondary"
                 >
                   {item.type}
                 </span>
-                <div className="flex-1 h-8 rounded-lg overflow-hidden" style={{ background: neutral[100] }}>
+                <div className="flex-1 h-8 rounded-lg overflow-hidden bg-bg-tertiary">
                   <motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${item.percentage * 5}%` }}
@@ -190,8 +189,7 @@ export default function AdminDashboard() {
                   </motion.div>
                 </div>
                 <span 
-                  className="w-12 text-sm text-right"
-                  style={{ color: neutral[500] }}
+                  className="w-12 text-sm text-right text-text-muted"
                 >
                   {item.percentage}%
                 </span>
@@ -205,15 +203,14 @@ export default function AdminDashboard() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="p-6 rounded-2xl"
+          className="p-6 rounded-2xl border border-border-primary"
           style={{
             background: 'rgba(255,255,255,0.8)',
             backdropFilter: 'blur(12px)',
-            border: `1px solid ${neutral[200]}`,
           }}
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-bold" style={{ color: neutral[900] }}>
+            <h2 className="text-lg font-bold text-text-primary">
               最近测试
             </h2>
             <Link 
@@ -229,14 +226,13 @@ export default function AdminDashboard() {
             {recentResults.map((result) => (
               <div 
                 key={result.id}
-                className="flex items-center justify-between py-3 border-b last:border-0"
-                style={{ borderColor: neutral[100] }}
+                className="flex items-center justify-between py-3 border-b last:border-0 border-border-primary"
               >
                 <div>
-                  <p className="font-medium" style={{ color: neutral[800] }}>
+                  <p className="font-medium text-text-primary">
                     {result.name}
                   </p>
-                  <p className="text-xs" style={{ color: neutral[500] }}>
+                  <p className="text-xs text-text-muted">
                     {result.completedAt}
                   </p>
                 </div>
@@ -264,33 +260,31 @@ export default function AdminDashboard() {
       >
         <Link
           to="/admin/questions"
-          className="p-6 rounded-2xl flex items-center gap-4 transition-all hover:shadow-lg hover:scale-[1.02]"
+          className="p-6 rounded-2xl flex items-center gap-4 transition-all hover:shadow-lg hover:scale-[1.02] border border-border-primary"
           style={{
             background: 'rgba(255,255,255,0.8)',
             backdropFilter: 'blur(12px)',
-            border: `1px solid ${neutral[200]}`,
           }}
         >
           <div 
-            className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
-            style={{ background: `${primary[500]}15` }}
+            className="w-14 h-14 rounded-xl flex items-center justify-center"
+            style={{ background: `${primary[500]}15`, color: primary[500] }}
           >
-            📝
+            <FileEdit className="w-7 h-7" strokeWidth={1.5} />
           </div>
           <div>
-            <h3 className="font-bold mb-1" style={{ color: neutral[900] }}>
+            <h3 className="font-bold mb-1 text-text-primary">
               管理题目
             </h3>
-            <p className="text-sm" style={{ color: neutral[600] }}>
+            <p className="text-sm text-text-secondary">
               添加、编辑或删除测试题目
             </p>
           </div>
           <svg 
-            className="w-5 h-5 ml-auto" 
+            className="w-5 h-5 ml-auto text-text-muted" 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"
-            style={{ color: neutral[400] }}
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
@@ -298,33 +292,31 @@ export default function AdminDashboard() {
 
         <Link
           to="/admin/students"
-          className="p-6 rounded-2xl flex items-center gap-4 transition-all hover:shadow-lg hover:scale-[1.02]"
+          className="p-6 rounded-2xl flex items-center gap-4 transition-all hover:shadow-lg hover:scale-[1.02] border border-border-primary"
           style={{
             background: 'rgba(255,255,255,0.8)',
             backdropFilter: 'blur(12px)',
-            border: `1px solid ${neutral[200]}`,
           }}
         >
           <div 
-            className="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
-            style={{ background: '#10B98115' }}
+            className="w-14 h-14 rounded-xl flex items-center justify-center"
+            style={{ background: '#10B98115', color: '#10B981' }}
           >
-            👥
+            <Users className="w-7 h-7" strokeWidth={1.5} />
           </div>
           <div>
-            <h3 className="font-bold mb-1" style={{ color: neutral[900] }}>
+            <h3 className="font-bold mb-1 text-text-primary">
               学生数据
             </h3>
-            <p className="text-sm" style={{ color: neutral[600] }}>
+            <p className="text-sm text-text-secondary">
               查看学生测试结果和分析
             </p>
           </div>
           <svg 
-            className="w-5 h-5 ml-auto" 
+            className="w-5 h-5 ml-auto text-text-muted" 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"
-            style={{ color: neutral[400] }}
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>

@@ -14,7 +14,8 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { chatApi, type ChatMessage } from '../services/api'
 import { GlassCard } from '../components/ui'
-import { primary, neutral } from '../theme/colors'
+import { primary } from '../theme/colors'
+// lucide-react icons removed (unused)
 
 interface Message {
   id: string
@@ -32,13 +33,13 @@ export default function AIAdvisor() {
     {
       id: '1',
       role: 'assistant',
-      content: `你好，**${studentName}**！👋 我是你的 AI 学习助手，由 DeepSeek 大模型驱动。
+      content: `你好，**${studentName}**！我是你的 AI 学习助手，由 DeepSeek 大模型驱动。
 
 我可以帮助你：
-- 📚 推荐适合你的课程和学习路径
-- 💡 解答技术问题和学习困惑
-- 🎯 制定个人职业发展计划
-- 💬 讨论 AI 领域的最新发展
+- 推荐适合你的课程和学习路径
+- 解答技术问题和学习困惑
+- 制定个人职业发展计划
+- 讨论 AI 领域的最新发展
 
 请告诉我你感兴趣的话题吧！`,
       timestamp: new Date(),
@@ -137,7 +138,7 @@ export default function AIAdvisor() {
   return (
     <div 
       className="min-h-screen p-4 md:p-6 lg:p-8 overflow-hidden flex flex-col"
-      style={{ background: `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, ${primary[50]}40 100%)` }}
+      style={{ background: `linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFC 50%, ${primary[50]}40 100%)` }}
     >
       {/* Header */}
       <motion.div
@@ -148,7 +149,7 @@ export default function AIAdvisor() {
       >
         <div>
           <p className="text-sm mb-1 font-medium" style={{ color: primary[600] }}>智能助手</p>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight" style={{ color: neutral[900] }}>
+          <h1 className="text-2xl md:text-3xl font-black tracking-tight text-text-primary">
             AI 学习顾问
           </h1>
         </div>
@@ -192,12 +193,12 @@ export default function AIAdvisor() {
                       background: `linear-gradient(135deg, ${primary[700]} 0%, ${primary[800]} 100%)`,
                       color: 'white',
                     } : {
-                      background: neutral[100],
-                      color: neutral[800],
+                      background: 'var(--bg-tertiary)',
+                      color: 'var(--text-primary)',
                     }}
                   >
                     {message.role === 'assistant' ? (
-                      <div className="prose prose-sm max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-strong:text-gray-900 prose-code:bg-gray-200 prose-code:px-1 prose-code:rounded">
+                      <div className="prose prose-sm max-w-none prose-headings:text-text-primary prose-p:text-text-secondary prose-li:text-text-secondary prose-strong:text-text-primary prose-code:bg-bg-tertiary prose-code:px-1 prose-code:rounded">
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                           {message.content}
                         </ReactMarkdown>
@@ -229,20 +230,7 @@ export default function AIAdvisor() {
                   <button
                     key={suggestion}
                     onClick={() => handleSendMessage(suggestion)}
-                    className="px-4 py-2 rounded-full text-sm font-medium transition-all"
-                    style={{ 
-                      background: 'white',
-                      border: `1px solid ${neutral[200]}`,
-                      color: neutral[700],
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = primary[300]
-                      e.currentTarget.style.background = primary[50]
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = neutral[200]
-                      e.currentTarget.style.background = 'white'
-                    }}
+                    className="px-4 py-2 rounded-full text-sm font-medium transition-all bg-bg-secondary border border-border-primary text-text-secondary hover:border-primary-300 hover:bg-primary-50"
                   >
                     {suggestion}
                   </button>
@@ -258,11 +246,10 @@ export default function AIAdvisor() {
                 className="flex justify-start"
               >
                 <div 
-                  className="rounded-2xl rounded-tl-sm px-5 py-4"
-                  style={{ background: neutral[100] }}
+                  className="rounded-2xl rounded-tl-sm px-5 py-4 bg-bg-tertiary"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm" style={{ color: neutral[500] }}>AI 思考中</span>
+                    <span className="text-sm text-text-muted">AI 思考中</span>
                     <div className="flex gap-1">
                       {[0, 1, 2].map((i) => (
                         <motion.div 
@@ -289,8 +276,7 @@ export default function AIAdvisor() {
 
           {/* Input Area */}
           <div 
-            className="p-4 md:p-6"
-            style={{ borderTop: `1px solid ${neutral[200]}` }}
+            className="p-4 md:p-6 border-t border-border-primary"
           >
             <form
               onSubmit={(e) => { e.preventDefault(); handleSendMessage() }}
@@ -301,21 +287,7 @@ export default function AIAdvisor() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="输入你的问题..."
-                className="flex-1 px-5 py-3 rounded-xl text-sm transition-all"
-                style={{ 
-                  background: neutral[50],
-                  border: `1px solid ${neutral[200]}`,
-                  color: neutral[800],
-                  outline: 'none',
-                }}
-                onFocus={(e) => {
-                  e.currentTarget.style.borderColor = primary[400]
-                  e.currentTarget.style.boxShadow = `0 0 0 3px ${primary[100]}`
-                }}
-                onBlur={(e) => {
-                  e.currentTarget.style.borderColor = neutral[200]
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
+                className="flex-1 px-5 py-3 rounded-xl text-sm transition-all bg-bg-primary border border-border-primary text-text-primary outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100"
                 disabled={isLoading}
               />
               <button

@@ -13,7 +13,7 @@ interface StatCardProps {
 const trendColors = {
   up: 'text-green-500',
   down: 'text-red-500',
-  neutral: 'text-gray-500',
+  neutral: 'text-text-muted',
 }
 
 const trendIcons = {
@@ -48,7 +48,7 @@ export default function StatCard({
             <div>
               {/* Label - smaller font */}
               <p 
-                className="text-gray-500 text-sm mb-1"
+                className="text-text-muted text-sm mb-1"
                 data-testid="stat-label"
               >
                 {label}
@@ -57,7 +57,7 @@ export default function StatCard({
               {/* Value - larger font with trend */}
               <div className="flex items-center gap-2">
                 <p 
-                  className="text-3xl font-bold text-gray-900"
+                  className="text-3xl font-bold text-text-primary"
                   data-testid="stat-value"
                 >
                   {value}

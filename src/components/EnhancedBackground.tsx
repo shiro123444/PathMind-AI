@@ -1,6 +1,7 @@
 import { useRef, useMemo, useEffect, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import { useTheme } from '../theme/ThemeContext'
 
 // 粒子系统配置
 interface ParticleConfig {
@@ -20,7 +21,7 @@ const defaultParticleConfig: ParticleConfig = {
 }
 
 // 粒子系统组件
-function ParticleSystem({ config = defaultParticleConfig }: { config?: ParticleConfig }) {
+function ParticleSystem({ config = defaultParticleConfig, dark = false }: { config?: ParticleConfig; dark?: boolean }) {
   const pointsRef = useRef<THREE.Points>(null)
   const { viewport } = useThree()
   
@@ -70,9 +71,9 @@ function ParticleSystem({ config = defaultParticleConfig }: { config?: ParticleC
       </bufferGeometry>
       <pointsMaterial
         size={0.8}
-        color={config.color}
+        color={dark ? '#ffffff' : config.color}
         transparent
-        opacity={0.08}
+        opacity={dark ? 0.06 : 0.08}
         sizeAttenuation
         depthWrite={false}
       />
@@ -81,7 +82,7 @@ function ParticleSystem({ config = defaultParticleConfig }: { config?: ParticleC
 }
 
 // 网格线组件
-function GridLines() {
+function GridLines({ dark = false }: { dark?: boolean }) {
   const linesRef = useRef<THREE.Group>(null)
 
   const { horizontalLines, verticalLines } = useMemo(() => {
@@ -123,7 +124,7 @@ function GridLines() {
               args={[new Float32Array(points.flatMap((p) => [p.x, p.y, p.z])), 3]}
             />
           </bufferGeometry>
-          <lineBasicMaterial color="#e8e8e8" transparent opacity={0.5} />
+          <lineBasicMaterial color={dark ? '#222222' : '#e8e8e8'} transparent opacity={0.5} />
         </line>
       ))}
       {verticalLines.map((points, i) => (
@@ -134,7 +135,7 @@ function GridLines() {
               args={[new Float32Array(points.flatMap((p) => [p.x, p.y, p.z])), 3]}
             />
           </bufferGeometry>
-          <lineBasicMaterial color="#e8e8e8" transparent opacity={0.5} />
+          <lineBasicMaterial color={dark ? '#222222' : '#e8e8e8'} transparent opacity={0.5} />
         </line>
       ))}
     </group>
@@ -143,7 +144,7 @@ function GridLines() {
 
 
 // 浮动球体组件 - 增强版
-function FloatingOrbs() {
+function FloatingOrbs({ dark = false }: { dark?: boolean }) {
   const orbsRef = useRef<THREE.Group>(null)
   const { viewport } = useThree()
 
@@ -183,9 +184,9 @@ function FloatingOrbs() {
         <mesh key={i} position={orb.pos as [number, number, number]}>
           <sphereGeometry args={[orb.size, 64, 64]} />
           <meshStandardMaterial
-            color="#f5f5f5"
+            color={dark ? '#1a1a1a' : '#f5f5f5'}
             transparent
-            opacity={0.15 + (i % 3) * 0.03}
+            opacity={dark ? 0.08 + (i % 3) * 0.02 : 0.15 + (i % 3) * 0.03}
             roughness={0.3}
             metalness={0.1}
           />
@@ -273,7 +274,7 @@ export function checkWebGLSupport(): boolean {
 }
 
 // CSS 降级背景
-function CSSFallbackBackground() {
+function CSSFallbackBackground({ dark = false }: { dark?: boolean }) {
   return (
     <div
       style={{
@@ -282,7 +283,25 @@ function CSSFallbackBackground() {
         left: 0,
         width: '100%',
         height: '100%',
-        background: `
+        background: dark
+          ? `
+          linear-gradient(135deg, #0c0c0c 0%, #111111 50%, #0c0c0c 100%),
+          repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 39px,
+            rgba(255, 255, 255, 0.03) 39px,
+            rgba(255, 255, 255, 0.03) 40px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 39px,
+            rgba(255, 255, 255, 0.03) 39px,
+            rgba(255, 255, 255, 0.03) 40px
+          )
+        `
+          : `
           linear-gradient(135deg, #fafafa 0%, #f5f5f5 50%, #fafafa 100%),
           repeating-linear-gradient(
             0deg,
@@ -326,7 +345,9 @@ export default function EnhancedBackground({
   const [webGLSupported, setWebGLSupported] = useState(true)
   const [dpr, setDpr] = useState(1)
   const scrollY = useParallax(enableParallax)
-  
+  const { theme } = useTheme()
+  const dark = theme === 'dark'
+
   useEffect(() => {
     setWebGLSupported(checkWebGLSupport())
     setDpr(Math.min(window.devicePixelRatio, 2))
@@ -334,7 +355,7 @@ export default function EnhancedBackground({
 
   // WebGL 不支持时使用 CSS 降级
   if (!webGLSupported) {
-    return <CSSFallbackBackground />
+    return <CSSFallbackBackground dark={dark} />
   }
 
   return (
@@ -368,13 +389,13 @@ export default function EnhancedBackground({
         }}
       >
         <CameraController />
-        <ambientLight intensity={0.9} />
-        <directionalLight position={[10, 10, 5]} intensity={0.4} />
-        
+        <ambientLight intensity={dark ? 0.4 : 0.9} />
+        <directionalLight position={[10, 10, 5]} intensity={dark ? 0.2 : 0.4} />
+
         <ParallaxLayer scrollY={scrollY}>
-          {enableGrid && <GridLines />}
-          {enableOrbs && <FloatingOrbs />}
-          {enableParticles && <ParticleSystem config={particleConfig} />}
+          {enableGrid && <GridLines dark={dark} />}
+          {enableOrbs && <FloatingOrbs dark={dark} />}
+          {enableParticles && <ParticleSystem config={particleConfig} dark={dark} />}
         </ParallaxLayer>
       </Canvas>
     </div>

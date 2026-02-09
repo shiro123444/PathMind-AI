@@ -26,11 +26,6 @@
    * Tailwind v4 中 max-w-sm/md/lg/xl/2xl 使用 --spacing-* 变量
    * 这里定义正确的容器宽度值
    */
-  --spacing-sm: 24rem;     /* 384px - for max-w-sm */
-  --spacing-md: 28rem;     /* 448px - for max-w-md */
-  --spacing-lg: 32rem;     /* 512px - for max-w-lg */
-  --spacing-xl: 36rem;     /* 576px - for max-w-xl */
-  --spacing-2xl: 42rem;    /* 672px - for max-w-2xl */
 
   /* 基础颜色 */
   --color-primary: #000000;
@@ -49,6 +44,19 @@
   --color-content2: #f4f4f5;
   --color-content3: #e4e4e7;
   --color-content4: #d4d4d8;
+
+  /* Theme-aware semantic colors */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-card: var(--bg-card);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-border-primary: var(--border-primary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-hover: var(--bg-hover);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-text: var(--accent-text);
   
   /* 默认色阶 */
   --color-default-50: #fafafa;
@@ -86,17 +94,58 @@
 /* 玻璃态效果 - 使用 @layer 定义 */
 @layer utilities {
   .glass {
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--glass-bg);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
   }
   
   .glass-dark {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(255,255,255,0.05);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+}
+
+@layer base {
+  :root {
+    --bg-primary: #FAFAF9;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255,255,255,0.75);
+    --bg-card-hover: rgba(255,255,255,0.85);
+    --text-primary: #1C1917;
+    --text-secondary: #57534E;
+    --text-muted: #78716C;
+    --border-primary: rgba(0,0,0,0.08);
+    --border-hover: rgba(0,0,0,0.12);
+    --bg-tertiary: #f1f5f9;
+    --bg-hover: rgba(0,0,0,0.04);
+    --accent-bg: #f1f5f9;
+    --accent-text: #475569;
+    --glass-bg: rgba(255,255,255,0.8);
+    --glass-border: rgba(255,255,255,0.3);
+    --glass-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+  .dark {
+    --bg-primary: #0c0c0c;
+    --bg-secondary: #141414;
+    --bg-card: rgba(255,255,255,0.05);
+    --bg-card-hover: rgba(255,255,255,0.08);
+    --text-primary: #f5f5f5;
+    --text-secondary: #d1d5db;
+    --text-muted: #9ca3af;
+    --border-primary: rgba(255,255,255,0.12);
+    --border-hover: rgba(255,255,255,0.2);
+    --bg-tertiary: rgba(255,255,255,0.08);
+    --bg-hover: rgba(255,255,255,0.06);
+    --accent-bg: rgba(255,255,255,0.1);
+    --accent-text: #d1d5db;
+    --glass-bg: rgba(255,255,255,0.05);
+    --glass-border: rgba(255,255,255,0.1);
+    --glass-shadow: 0 8px 32px rgba(0,0,0,0.3);
   }
 }
 
@@ -151,6 +200,12 @@
   background-image: 
     linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+}
+
+.dark .grid-bg {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
 /* Smooth Scroll System - Requirements 8.1, 8.2, 8.3 */

@@ -10,6 +10,7 @@ import { Outlet, useLocation, Link, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BreathingOrb } from '../animations'
 import { neutral, primary } from '../../theme/colors'
+import { useTheme } from '../../theme/ThemeContext'
 
 // 导航项配置
 const navItems = [
@@ -49,7 +50,7 @@ function NavItem({
         ${isCollapsed ? 'justify-center px-3 py-3' : 'px-4 py-3 gap-3'}
         ${isActive 
           ? 'text-white shadow-lg' 
-          : 'text-slate-500 hover:text-slate-800 hover:bg-white/60'
+          : 'text-text-muted hover:text-text-primary hover:bg-bg-hover'
         }
       `}
       style={isActive ? {
@@ -115,6 +116,8 @@ export default function AdminLayout() {
   const navigate = useNavigate()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { theme } = useTheme()
+  const isDark = theme === 'dark'
 
   // 关闭移动端菜单当路由变化
   useEffect(() => {
@@ -129,17 +132,17 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen w-full relative flex" style={{ background: `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, rgba(241,245,249,0.5) 100%)` }}>
+    <div className="min-h-screen w-full relative flex" style={{ background: isDark ? '#0c0c0c' : `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, rgba(241,245,249,0.5) 100%)` }}>
       {/* 背景呼吸光晕 */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <BreathingOrb 
-          color="rgba(226,232,240,0.4)"
+          color={isDark ? 'rgba(30,30,30,0.4)' : 'rgba(226,232,240,0.4)'}
           size={800}
           position={{ top: '-20%', right: '-15%' }}
           phaseOffset={0}
         />
         <BreathingOrb 
-          color="rgba(241,245,249,0.35)"
+          color={isDark ? 'rgba(20,20,20,0.35)' : 'rgba(241,245,249,0.35)'}
           size={600}
           position={{ bottom: '-15%', left: '10%' }}
           phaseOffset={0.33}
@@ -151,7 +154,13 @@ export default function AdminLayout() {
         className="hidden md:flex flex-col fixed left-0 top-0 bottom-0 z-40"
         animate={{ width: isCollapsed ? 72 : 240 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        style={{
+        style={isDark ? {
+          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.85) 100%)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRight: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+        } : {
           background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
@@ -162,7 +171,7 @@ export default function AdminLayout() {
         {/* Logo */}
         <div 
           className="h-16 flex items-center justify-between px-4"
-          style={{ borderBottom: '1px solid rgba(0,0,0,0.05)' }}
+          style={{ borderBottom: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.05)' }}
         >
           <Link to="/admin" className="flex items-center gap-3">
             <div 
@@ -181,7 +190,7 @@ export default function AdminLayout() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="font-bold"
-                  style={{ color: primary[800] }}
+                  style={{ color: 'var(--text-primary)' }}
                 >
                   管理后台
                 </motion.span>
@@ -203,19 +212,10 @@ export default function AdminLayout() {
         </nav>
 
         {/* 底部：返回前台 + 折叠按钮 */}
-        <div className="p-3 space-y-2" style={{ borderTop: `1px solid ${neutral[200]}` }}>
+        <div className="p-3 space-y-2 border-t border-border-primary">
           <button
             onClick={() => navigate('/dashboard')}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all duration-200"
-            style={{ color: neutral[500] }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = neutral[800]
-              e.currentTarget.style.background = 'rgba(255,255,255,0.6)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = neutral[500]
-              e.currentTarget.style.background = 'transparent'
-            }}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 text-text-muted hover:text-text-primary hover:bg-bg-hover transition-colors"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -236,16 +236,7 @@ export default function AdminLayout() {
           
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all duration-200"
-            style={{ color: neutral[500] }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = neutral[800]
-              e.currentTarget.style.background = 'rgba(255,255,255,0.6)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = neutral[500]
-              e.currentTarget.style.background = 'transparent'
-            }}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl transition-all duration-200 text-text-muted hover:text-text-primary hover:bg-bg-hover transition-colors"
           >
             <motion.svg 
               className="w-5 h-5" 
@@ -274,12 +265,16 @@ export default function AdminLayout() {
 
       {/* 移动端顶部栏 */}
       <div 
-        className="md:hidden fixed top-0 left-0 right-0 h-16 z-40 flex items-center justify-between px-4"
-        style={{
+        className="md:hidden fixed top-0 left-0 right-0 h-16 z-40 flex items-center justify-between px-4 border-b border-border-primary"
+        style={isDark ? {
+          background: 'linear-gradient(135deg, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.85) 100%)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+        } : {
           background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.9) 100%)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          borderBottom: `1px solid ${neutral[200]}`,
           boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
         }}
       >
@@ -293,28 +288,24 @@ export default function AdminLayout() {
               <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <span className="font-bold" style={{ color: primary[800] }}>管理后台</span>
+          <span className="font-bold" style={{ color: 'var(--text-primary)' }}>管理后台</span>
         </Link>
         
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="w-10 h-10 flex items-center justify-center rounded-xl transition-colors"
-          style={{ color: neutral[700] }}
+          className="w-10 h-10 flex items-center justify-center rounded-xl transition-colors text-text-secondary"
         >
           <motion.div className="flex flex-col gap-1.5">
             <motion.span 
-              className="w-6 h-0.5 rounded-full"
-              style={{ background: neutral[700] }}
+              className="w-6 h-0.5 rounded-full bg-text-secondary"
               animate={{ rotate: isMobileMenuOpen ? 45 : 0, y: isMobileMenuOpen ? 8 : 0 }}
             />
             <motion.span 
-              className="w-6 h-0.5 rounded-full"
-              style={{ background: neutral[700] }}
+              className="w-6 h-0.5 rounded-full bg-text-secondary"
               animate={{ opacity: isMobileMenuOpen ? 0 : 1 }}
             />
             <motion.span 
-              className="w-6 h-0.5 rounded-full"
-              style={{ background: neutral[700] }}
+              className="w-6 h-0.5 rounded-full bg-text-secondary"
               animate={{ rotate: isMobileMenuOpen ? -45 : 0, y: isMobileMenuOpen ? -8 : 0 }}
             />
           </motion.div>
@@ -331,7 +322,7 @@ export default function AdminLayout() {
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="md:hidden fixed inset-0 z-30 pt-16"
             style={{
-              background: `linear-gradient(135deg, rgba(255,255,255,0.98) 0%, ${neutral[50]}F2 100%)`,
+              background: isDark ? 'rgba(12,12,12,0.98)' : `linear-gradient(135deg, rgba(255,255,255,0.98) 0%, ${neutral[50]}F2 100%)`,
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
             }}
@@ -341,13 +332,11 @@ export default function AdminLayout() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className="flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200"
+                  className={`flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 ${isActive(item) ? '' : 'text-text-secondary'}`}
                   style={isActive(item) ? {
                     background: `linear-gradient(135deg, ${primary[100]} 0%, ${primary[50]} 100%)`,
                     color: primary[800],
-                  } : {
-                    color: neutral[600],
-                  }}
+                  } : {}}
                 >
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
@@ -356,11 +345,10 @@ export default function AdminLayout() {
                 </Link>
               ))}
               
-              <div className="pt-4 border-t" style={{ borderColor: neutral[200] }}>
+              <div className="pt-4 border-t border-border-primary">
                 <button
                   onClick={() => navigate('/dashboard')}
-                  className="flex items-center gap-4 px-4 py-3 rounded-xl w-full"
-                  style={{ color: neutral[600] }}
+                  className="flex items-center gap-4 px-4 py-3 rounded-xl w-full text-text-secondary"
                 >
                   <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />

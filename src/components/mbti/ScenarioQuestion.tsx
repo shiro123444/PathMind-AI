@@ -4,7 +4,8 @@
 
 import { motion } from 'framer-motion'
 import type { ScenarioQuestion as ScenarioQuestionType, ScenarioAnswer } from '../../types/mbti'
-import { neutral, primary } from '../../theme/colors'
+import { primary } from '../../theme/colors'
+import { BookOpen } from 'lucide-react'
 
 interface ScenarioQuestionProps {
   question: ScenarioQuestionType
@@ -25,8 +26,7 @@ export default function ScenarioQuestion({ question, answer, onAnswer }: Scenari
     <div className="space-y-6">
       {/* 题目标题 */}
       <h2 
-        className="text-xl md:text-2xl font-bold leading-relaxed"
-        style={{ color: neutral[900] }}
+        className="text-xl md:text-2xl font-bold leading-relaxed text-text-primary"
       >
         {question.text}
       </h2>
@@ -35,15 +35,14 @@ export default function ScenarioQuestion({ question, answer, onAnswer }: Scenari
       <div 
         className="p-5 rounded-2xl"
         style={{ 
-          background: `linear-gradient(135deg, ${primary[50]} 0%, ${neutral[50]} 100%)`,
+          background: `linear-gradient(135deg, ${primary[50]} 0%, var(--bg-primary) 100%)`,
           border: `1px solid ${primary[100]}`,
         }}
       >
         <div className="flex items-start gap-3">
-          <span className="text-2xl">📖</span>
+          <BookOpen className="w-6 h-6" strokeWidth={1.5} />
           <p 
-            className="text-base leading-relaxed"
-            style={{ color: neutral[700] }}
+            className="text-base leading-relaxed text-text-secondary"
           >
             {question.scenario}
           </p>
@@ -52,7 +51,7 @@ export default function ScenarioQuestion({ question, answer, onAnswer }: Scenari
 
       {/* 选项 */}
       <div className="space-y-3">
-        <p className="text-sm font-medium" style={{ color: neutral[500] }}>
+        <p className="text-sm font-medium text-text-muted">
           你会怎么做？
         </p>
         
@@ -68,7 +67,7 @@ export default function ScenarioQuestion({ question, answer, onAnswer }: Scenari
               whileTap={{ scale: 0.99 }}
               className="w-full p-4 rounded-xl text-left transition-all duration-200 flex items-start gap-3 border"
               style={{
-                borderColor: isSelected ? primary[500] : neutral[200],
+                borderColor: isSelected ? primary[500] : 'var(--border-primary)',
                 background: isSelected ? `${primary[500]}10` : 'rgba(255,255,255,0.6)',
               }}
             >
@@ -76,8 +75,8 @@ export default function ScenarioQuestion({ question, answer, onAnswer }: Scenari
               <div 
                 className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 text-sm font-bold transition-colors"
                 style={{
-                  background: isSelected ? primary[600] : neutral[200],
-                  color: isSelected ? 'white' : neutral[600],
+                  background: isSelected ? primary[600] : 'var(--border-primary)',
+                  color: isSelected ? 'white' : 'var(--text-secondary)',
                 }}
               >
                 {optionLabel}
@@ -85,8 +84,7 @@ export default function ScenarioQuestion({ question, answer, onAnswer }: Scenari
 
               {/* 选项文本 */}
               <span 
-                className="font-medium pt-0.5"
-                style={{ color: neutral[800] }}
+                className="font-medium pt-0.5 text-text-primary"
               >
                 {option.text}
               </span>

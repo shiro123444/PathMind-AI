@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react'
 import { motion, Reorder } from 'framer-motion'
 import type { RankingQuestion as RankingQuestionType, RankingAnswer } from '../../types/mbti'
-import { neutral, primary } from '../../theme/colors'
+import { primary } from '../../theme/colors'
 
 interface RankingQuestionProps {
   question: RankingQuestionType
@@ -52,16 +52,14 @@ export default function RankingQuestion({ question, answer, onAnswer }: RankingQ
     <div className="space-y-6">
       {/* 题目文本 */}
       <h2 
-        className="text-xl md:text-2xl font-bold leading-relaxed"
-        style={{ color: neutral[900] }}
+        className="text-xl md:text-2xl font-bold leading-relaxed text-text-primary"
       >
         {question.text}
       </h2>
 
       {/* 说明 */}
       <div 
-        className="flex items-center gap-2 text-sm"
-        style={{ color: neutral[500] }}
+        className="flex items-center gap-2 text-sm text-text-muted"
       >
         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
@@ -90,7 +88,7 @@ export default function RankingQuestion({ question, answer, onAnswer }: RankingQ
               className="p-4 rounded-xl border flex items-center gap-4 transition-shadow hover:shadow-md"
               style={{
                 background: 'rgba(255,255,255,0.8)',
-                borderColor: neutral[200],
+                borderColor: 'var(--border-primary)',
               }}
             >
               {/* 排名数字 */}
@@ -99,8 +97,8 @@ export default function RankingQuestion({ question, answer, onAnswer }: RankingQ
                 style={{
                   background: index === 0 
                     ? `linear-gradient(135deg, ${primary[500]} 0%, ${primary[700]} 100%)`
-                    : neutral[100],
-                  color: index === 0 ? 'white' : neutral[600],
+                    : 'var(--bg-tertiary)',
+                  color: index === 0 ? 'white' : 'var(--text-secondary)',
                 }}
               >
                 {index + 1}
@@ -108,8 +106,7 @@ export default function RankingQuestion({ question, answer, onAnswer }: RankingQ
 
               {/* 拖拽手柄 */}
               <div 
-                className="flex-shrink-0"
-                style={{ color: neutral[400] }}
+                className="flex-shrink-0 text-text-muted"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
@@ -118,8 +115,7 @@ export default function RankingQuestion({ question, answer, onAnswer }: RankingQ
 
               {/* 选项文本 */}
               <span 
-                className="font-medium flex-1"
-                style={{ color: neutral[800] }}
+                className="font-medium flex-1 text-text-primary"
               >
                 {item.text}
               </span>
@@ -140,8 +136,8 @@ export default function RankingQuestion({ question, answer, onAnswer }: RankingQ
                 <span 
                   className="text-xs px-2 py-1 rounded-full"
                   style={{ 
-                    background: `${neutral[400]}15`,
-                    color: neutral[500],
+                    background: 'color-mix(in srgb, var(--text-muted) 8%, transparent)',
+                    color: 'var(--text-muted)',
                   }}
                 >
                   最不喜欢

@@ -70,10 +70,10 @@ interface ScrollGlassWrapperProps {
 }
 
 function ScrollGlassWrapper({
-  scrollY,
-  sectionHeights,
-  transitionHeight,
-  maxBlur,
+  scrollY: _scrollY,
+  sectionHeights: _sectionHeights,
+  transitionHeight: _transitionHeight,
+  maxBlur: _maxBlur,
   children,
 }: ScrollGlassWrapperProps) {
   // 为每个板块创建动态的模糊和透明度变换

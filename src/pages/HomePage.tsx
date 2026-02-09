@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { Button } from '@heroui/react'
+import { Brain, Target, BookOpen, Bot, BarChart3, Trophy, GraduationCap, Briefcase } from 'lucide-react'
 
 // 滚动视差 Section 组件
 function ParallaxSection({ 
@@ -106,12 +107,12 @@ function AnimatedNumber({ value, suffix = '' }: { value: string; suffix?: string
 }
 
 const features = [
-  { icon: '🧠', title: 'MBTI 人格测试', description: '精准的性格分析，了解你的认知偏好和学习风格', link: '/mbti-test' },
-  { icon: '🎯', title: 'AI 职业推荐', description: '基于性格和市场需求，推荐最适合的 AI 领域职业', link: '/careers' },
-  { icon: '📚', title: '学习路径规划', description: '个性化的课程推荐，从入门到精通的完整学习路线', link: '/learning-path' },
-  { icon: '🤖', title: 'AI 智能助手', description: '24/7 学习顾问，解答问题，提供实时建议', link: '/ai-advisor' },
-  { icon: '📊', title: '进度追踪', description: '可视化学习进度，掌握技能成长的每一步', link: '/dashboard' },
-  { icon: '🏆', title: '认证与成就', description: '完成课程获得认证，赢得徽章和行业认可', link: '/dashboard' },
+  { icon: Brain, title: 'MBTI 人格测试', description: '精准的性格分析，了解你的认知偏好和学习风格', link: '/mbti-test' },
+  { icon: Target, title: 'AI 职业推荐', description: '基于性格和市场需求，推荐最适合的 AI 领域职业', link: '/careers' },
+  { icon: BookOpen, title: '学习路径规划', description: '个性化的课程推荐，从入门到精通的完整学习路线', link: '/learning-path' },
+  { icon: Bot, title: 'AI 智能助手', description: '24/7 学习顾问，解答问题，提供实时建议', link: '/ai-advisor' },
+  { icon: BarChart3, title: '进度追踪', description: '可视化学习进度，掌握技能成长的每一步', link: '/dashboard' },
+  { icon: Trophy, title: '认证与成就', description: '完成课程获得认证，赢得徽章和行业认可', link: '/dashboard' },
 ]
 
 const stats = [
@@ -146,7 +147,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-6 leading-tight">
               找到你的
               <motion.span 
                 className="block bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 bg-clip-text text-transparent"
@@ -165,7 +166,7 @@ export default function HomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed"
+            className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto mb-10 leading-relaxed"
           >
             通过 MBTI 性格测试了解自己，获取 AI 领域的个性化职业推荐和学习路径
           </motion.p>
@@ -191,7 +192,7 @@ export default function HomePage() {
               size="lg"
               radius="full"
               variant="bordered"
-              className="font-semibold px-8 border-gray-300 hover:bg-gray-50"
+              className="font-semibold px-8 border-border-primary hover:bg-bg-hover"
             >
               登录已有账户
             </Button>
@@ -207,9 +208,9 @@ export default function HomePage() {
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-6 h-10 border-2 border-gray-400 rounded-full flex justify-center pt-2"
+              className="w-6 h-10 border-2 border-border-primary rounded-full flex justify-center pt-2"
             >
-              <motion.div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+              <motion.div className="w-1.5 h-1.5 bg-text-muted rounded-full" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -220,10 +221,10 @@ export default function HomePage() {
       <section className="py-24 relative">
         <div className="max-w-6xl mx-auto px-4">
           <FadeInOnScroll className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
               完整的学习生态系统
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <p className="text-text-secondary text-lg max-w-2xl mx-auto">
               从性格测试到职业规划，我们提供全方位的 AI 学习支持
             </p>
           </FadeInOnScroll>
@@ -245,17 +246,17 @@ export default function HomePage() {
                     className="block glass rounded-3xl p-8 h-full hover:shadow-xl transition-shadow"
                   >
                     <motion.div 
-                      className="text-5xl mb-4"
+                      className="mb-4"
                       whileHover={{ scale: 1.2, rotate: 10 }}
                       transition={{ type: 'spring', stiffness: 400 }}
                     >
-                      {feature.icon}
+                      <feature.icon className="w-10 h-10" strokeWidth={1.5} />
                     </motion.div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+                    <h3 className="text-xl font-bold text-text-primary mb-3 group-hover:text-purple-600 transition-colors">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-600 mb-4">{feature.description}</p>
-                    <span className="inline-flex items-center gap-2 text-black font-semibold group-hover:gap-4 transition-all">
+                    <p className="text-text-secondary mb-4">{feature.description}</p>
+                    <span className="inline-flex items-center gap-2 text-text-primary font-semibold group-hover:gap-4 transition-all">
                       了解更多 
                       <motion.span
                         animate={{ x: [0, 5, 0] }}
@@ -284,10 +285,10 @@ export default function HomePage() {
               {stats.map((stat, index) => (
                 <FadeInOnScroll key={index} delay={index * 0.15} direction="up">
                   <div className="text-center">
-                    <p className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-2">
+                    <p className="text-4xl md:text-5xl lg:text-6xl font-bold text-text-primary mb-2">
                       <AnimatedNumber value={stat.value} />
                     </p>
-                    <p className="text-gray-600 font-medium">{stat.label}</p>
+                    <p className="text-text-secondary font-medium">{stat.label}</p>
                   </div>
                 </FadeInOnScroll>
               ))}
@@ -300,7 +301,7 @@ export default function HomePage() {
       <section className="py-24">
         <div className="max-w-6xl mx-auto px-4">
           <FadeInOnScroll className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
               学生成功故事
             </h2>
           </FadeInOnScroll>
@@ -312,14 +313,14 @@ export default function HomePage() {
                 name: '张同学',
                 role: 'AI 算法工程师',
                 story: '通过系统的学习路径和 AI 助手的个性化指导，从零基础到掌握深度学习，用时 8 个月获得国际认证。',
-                avatar: '🎓',
+                avatar: GraduationCap,
               },
               {
                 mbti: 'ENTP',
                 name: '李同学',
                 role: 'AI 产品经理',
                 story: '了解自己的性格优势后，专注于产品思维的培养，成功转向 AI 产品方向，现在领导推荐系统团队。',
-                avatar: '💼',
+                avatar: Briefcase,
               },
             ].map((story, index) => (
               <ParallaxSection key={index} speed={index === 0 ? 0.2 : -0.2}>
@@ -330,18 +331,17 @@ export default function HomePage() {
                   >
                     <div className="flex items-center gap-4 mb-6">
                       <motion.div 
-                        className="text-4xl"
                         whileHover={{ scale: 1.3, rotate: -10 }}
                       >
-                        {story.avatar}
+                        <story.avatar className="w-8 h-8" strokeWidth={1.5} />
                       </motion.div>
                       <div>
-                        <p className="font-bold text-gray-900">{story.name}</p>
-                        <p className="text-sm text-gray-600">{story.role}</p>
+                        <p className="font-bold text-text-primary">{story.name}</p>
+                        <p className="text-sm text-text-secondary">{story.role}</p>
                         <p className="text-xs text-purple-600 font-medium mt-1">{story.mbti} 型</p>
                       </div>
                     </div>
-                    <p className="text-gray-600 leading-relaxed italic">"{story.story}"</p>
+                    <p className="text-text-secondary leading-relaxed italic">"{story.story}"</p>
                   </motion.div>
                 </FadeInOnScroll>
               </ParallaxSection>
@@ -368,7 +368,7 @@ export default function HomePage() {
           </FadeInOnScroll>
           
           <FadeInOnScroll delay={0.2}>
-            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-text-muted mb-10 max-w-2xl mx-auto">
               无论你是否有编程基础，我们都能帮助你找到适合的学习道路
             </p>
           </FadeInOnScroll>
@@ -383,7 +383,7 @@ export default function HomePage() {
                 to="/mbti-test"
                 size="lg"
                 radius="full"
-                className="bg-white text-black font-semibold px-10 py-6 text-lg hover:bg-gray-100"
+                className="bg-bg-secondary text-text-primary font-semibold px-10 py-6 text-lg hover:bg-bg-tertiary"
               >
                 立即开始 →
               </Button>

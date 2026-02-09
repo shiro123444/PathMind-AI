@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { premiumColors, premiumTypography, getGlowBoxShadow } from '../../theme/premium'
+import { premiumTypography } from '../../theme/premium'
 
 /**
  * LoadingExperience Component
@@ -162,7 +162,7 @@ const LoadingOverlay = styled.div<{ $isExiting: boolean }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: ${premiumColors.background.dark};
+  background: #000000;
   animation: ${props => props.$isExiting ? exitAnimation : 'none'} 400ms ease-out forwards;
 `
 
@@ -194,8 +194,8 @@ const ProgressBarContainer = styled.div`
  */
 const ProgressBarFill = styled.div`
   height: 100%;
-  background: ${premiumColors.glow.color};
-  box-shadow: ${getGlowBoxShadow(1)};
+  background: #ffffff;
+  box-shadow: 0 0 20px 0 #ffffff;
   border-radius: 1px;
   transition: width 16ms linear;
 `
@@ -208,7 +208,7 @@ const PercentageCounter = styled.span`
   font-family: ${premiumTypography.fontFamily.mono};
   font-size: 14px;
   font-weight: ${premiumTypography.fontWeight.normal};
-  color: ${premiumColors.glow.color};
+  color: #ffffff;
   letter-spacing: 0.1em;
   -webkit-font-smoothing: ${premiumTypography.fontSmoothing};
 `

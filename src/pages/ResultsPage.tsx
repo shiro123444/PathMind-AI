@@ -5,7 +5,8 @@ import {
 } from 'recharts'
 import { GlassCard } from '../components/ui'
 import { easings, durations } from '../theme/motion'
-import { primary, neutral } from '../theme/colors'
+import { primary } from '../theme/colors'
+import { Sparkles, Target, BookOpen, MessageSquare, RotateCcw } from 'lucide-react'
 
 const mbtiDescriptions: Record<string, { name: string; description: string; careers: string[]; strengths: string[] }> = {
   INTJ: {
@@ -91,7 +92,7 @@ export default function ResultsPage() {
   return (
     <div 
       className="min-h-screen py-12 px-4 overflow-y-auto"
-      style={{ background: `linear-gradient(180deg, ${neutral[50]} 0%, white 100%)` }}
+      style={{ background: 'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%)' }}
     >
       <div className="max-w-5xl mx-auto">
         {/* Hero Section */}
@@ -119,8 +120,7 @@ export default function ResultsPage() {
             initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             transition={{ delay: 0.4, ...smoothTransition }}
-            className="text-4xl md:text-5xl font-black mb-4"
-            style={{ color: neutral[900] }}
+            className="text-4xl md:text-5xl font-black mb-4 text-text-primary"
           >
             你是 "{typeInfo.name}" 型人格
           </motion.h1>
@@ -129,8 +129,7 @@ export default function ResultsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, ...smoothTransition }}
-            className="text-lg max-w-2xl mx-auto"
-            style={{ color: neutral[600] }}
+            className="text-lg max-w-2xl mx-auto text-text-secondary"
           >
             {typeInfo.description}
           </motion.p>
@@ -149,10 +148,9 @@ export default function ResultsPage() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.6 + index * 0.1 }}
-                className="text-sm font-medium"
-                style={{ color: neutral[700] }}
+                className="text-sm font-medium text-text-secondary"
               >
-                ✨ {strength}
+                <Sparkles className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} />{strength}
               </motion.span>
             </GlassCard>
           ))}
@@ -167,11 +165,11 @@ export default function ResultsPage() {
             transition={{ delay: 0.6 }}
           >
             <GlassCard variant="standard" color="white" className="p-6">
-              <h3 className="text-lg font-bold mb-4 text-center" style={{ color: neutral[900] }}>性格维度雷达图</h3>
+              <h3 className="text-lg font-bold mb-4 text-center text-text-primary">性格维度雷达图</h3>
               <ResponsiveContainer width="100%" height={280}>
                 <RadarChart data={dimensions}>
-                  <PolarGrid stroke={neutral[200]} />
-                  <PolarAngleAxis dataKey="name" tick={{ fill: neutral[600], fontSize: 12 }} />
+                  <PolarGrid stroke="var(--border-primary)" />
+                  <PolarAngleAxis dataKey="name" tick={{ fill: 'var(--text-secondary)', fontSize: 12 }} />
                   <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} />
                   <Radar name="维度" dataKey="value" stroke={primary[600]} fill={primary[500]} fillOpacity={0.3} />
                 </RadarChart>
@@ -186,15 +184,15 @@ export default function ResultsPage() {
             transition={{ delay: 0.7 }}
           >
             <GlassCard variant="standard" color="white" className="p-6">
-              <h3 className="text-lg font-bold mb-6 text-center" style={{ color: neutral[900] }}>维度分布</h3>
+              <h3 className="text-lg font-bold mb-6 text-center text-text-primary">维度分布</h3>
               <div className="space-y-6">
                 {dimensionBars.map((dim, index) => (
                   <div key={index}>
                     <div className="flex justify-between text-sm mb-2">
-                      <span style={{ fontWeight: dim.left.value > dim.right.value ? 'bold' : 'normal', color: dim.left.value > dim.right.value ? neutral[900] : neutral[500] }}>{dim.left.label}</span>
-                      <span style={{ fontWeight: dim.right.value > dim.left.value ? 'bold' : 'normal', color: dim.right.value > dim.left.value ? neutral[900] : neutral[500] }}>{dim.right.label}</span>
+                      <span style={{ fontWeight: dim.left.value > dim.right.value ? 'bold' : 'normal', color: dim.left.value > dim.right.value ? 'var(--text-primary)' : 'var(--text-muted)'  }}>{dim.left.label}</span>
+                      <span style={{ fontWeight: dim.right.value > dim.left.value ? 'bold' : 'normal', color: dim.right.value > dim.left.value ? 'var(--text-primary)' : 'var(--text-muted)'  }}>{dim.right.label}</span>
                     </div>
-                    <div className="h-3 rounded-full overflow-hidden flex" style={{ background: neutral[100] }}>
+                    <div className="h-3 rounded-full overflow-hidden flex" style={{ background: 'var(--bg-tertiary)' }}>
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${dim.left.value}%` }}
@@ -207,7 +205,7 @@ export default function ResultsPage() {
                         animate={{ width: `${dim.right.value}%` }}
                         transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
                         className="h-full rounded-r-full"
-                        style={{ background: neutral[300] }}
+                        style={{ background: 'var(--border-primary)' }}
                       />
                     </div>
                   </div>
@@ -229,7 +227,7 @@ export default function ResultsPage() {
             className="p-8 mb-8 text-white"
             style={{ background: `linear-gradient(135deg, ${primary[800]} 0%, ${primary[900]} 100%)` }}
           >
-            <h3 className="text-2xl font-bold mb-6">🎯 推荐 AI 职业方向</h3>
+            <h3 className="text-2xl font-bold mb-6"><Target className="w-5 h-5 inline-block mr-2 align-text-bottom" strokeWidth={1.5} />推荐 AI 职业方向</h3>
             <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
               {typeInfo.careers.map((career, index) => (
                 <motion.div
@@ -237,10 +235,9 @@ export default function ResultsPage() {
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 1 + index * 0.1 }}
-                  className="backdrop-blur rounded-2xl p-4 transition-colors"
+                  className="backdrop-blur rounded-2xl p-4 transition-colors hover:bg-bg-hover"
                   style={{ background: 'rgba(255,255,255,0.1)' }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
-                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+
                 >
                   <span className="font-medium">{career}</span>
                 </motion.div>
@@ -248,10 +245,9 @@ export default function ResultsPage() {
             </div>
             <Link
               to={`/careers?type=${mbtiType}`}
-              className="inline-flex items-center gap-2 mt-6 transition-colors"
+              className="inline-flex items-center gap-2 mt-6 transition-colors hover:text-white"
               style={{ color: 'rgba(255,255,255,0.8)' }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.8)'}
+
             >
               查看详细职业分析 →
             </Link>
@@ -270,21 +266,19 @@ export default function ResultsPage() {
             className="px-8 py-4 text-white rounded-full font-semibold transition-colors text-center"
             style={{ background: primary[800] }}
           >
-            📚 查看学习路径
+            <BookOpen className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 查看学习路径
           </Link>
           <Link
             to="/ai-advisor"
-            className="px-8 py-4 bg-white rounded-full font-semibold transition-all text-center"
-            style={{ border: `2px solid ${neutral[200]}`, color: neutral[900] }}
+            className="px-8 py-4 bg-bg-secondary rounded-full font-semibold transition-all text-center border-2 border-border-primary text-text-primary"
           >
-            💬 咨询 AI 助手
+            <MessageSquare className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 咨询 AI 助手
           </Link>
           <Link
             to="/mbti-test"
-            className="px-8 py-4 rounded-full font-semibold transition-colors text-center"
-            style={{ background: neutral[100], color: neutral[700] }}
+            className="px-8 py-4 rounded-full font-semibold transition-colors text-center bg-bg-tertiary text-text-secondary"
           >
-            🔄 重新测试
+            <RotateCcw className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 重新测试
           </Link>
         </motion.div>
       </div>

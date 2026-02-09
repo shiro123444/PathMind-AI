@@ -4,7 +4,7 @@
 
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { neutral, primary } from '../../theme/colors'
+import { primary } from '../../theme/colors'
 
 // 模拟学生数据
 const mockStudents = [
@@ -69,10 +69,10 @@ function StudentDetail({
         {/* 头部 */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold" style={{ color: neutral[900] }}>
+            <h2 className="text-xl font-bold text-text-primary">
               {student.name}
             </h2>
-            <p className="text-sm" style={{ color: neutral[500] }}>
+            <p className="text-sm text-text-muted">
               {student.completedAt} · {student.testType}
             </p>
           </div>
@@ -89,25 +89,24 @@ function StudentDetail({
 
         {/* MBTI 描述 */}
         <div 
-          className="p-4 rounded-xl mb-6"
-          style={{ background: neutral[50] }}
+          className="p-4 rounded-xl mb-6 bg-bg-primary"
         >
-          <p style={{ color: neutral[700] }}>
+          <p className="text-text-secondary">
             {mbtiDescriptions[student.mbtiCode] || '性格类型描述'}
           </p>
         </div>
 
         {/* 维度分析 */}
         <div className="space-y-4">
-          <h3 className="font-medium" style={{ color: neutral[700] }}>维度分析</h3>
+          <h3 className="font-medium text-text-secondary">维度分析</h3>
           
           {/* E/I */}
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span style={{ color: neutral[600] }}>外向 (E)</span>
-              <span style={{ color: neutral[600] }}>内向 (I)</span>
+              <span className="text-text-secondary">外向 (E)</span>
+              <span className="text-text-secondary">内向 (I)</span>
             </div>
-            <div className="h-3 rounded-full overflow-hidden flex" style={{ background: neutral[200] }}>
+            <div className="h-3 rounded-full overflow-hidden flex bg-border-primary">
               <div 
                 className="h-full rounded-l-full"
                 style={{ 
@@ -117,18 +116,18 @@ function StudentDetail({
               />
             </div>
             <div className="flex justify-between text-xs mt-1">
-              <span style={{ color: neutral[500] }}>{student.dimensions.E}%</span>
-              <span style={{ color: neutral[500] }}>{student.dimensions.I}%</span>
+              <span className="text-text-muted">{student.dimensions.E}%</span>
+              <span className="text-text-muted">{student.dimensions.I}%</span>
             </div>
           </div>
 
           {/* S/N */}
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span style={{ color: neutral[600] }}>感觉 (S)</span>
-              <span style={{ color: neutral[600] }}>直觉 (N)</span>
+              <span className="text-text-secondary">感觉 (S)</span>
+              <span className="text-text-secondary">直觉 (N)</span>
             </div>
-            <div className="h-3 rounded-full overflow-hidden flex" style={{ background: neutral[200] }}>
+            <div className="h-3 rounded-full overflow-hidden flex bg-border-primary">
               <div 
                 className="h-full rounded-l-full"
                 style={{ 
@@ -138,18 +137,18 @@ function StudentDetail({
               />
             </div>
             <div className="flex justify-between text-xs mt-1">
-              <span style={{ color: neutral[500] }}>{student.dimensions.S}%</span>
-              <span style={{ color: neutral[500] }}>{student.dimensions.N}%</span>
+              <span className="text-text-muted">{student.dimensions.S}%</span>
+              <span className="text-text-muted">{student.dimensions.N}%</span>
             </div>
           </div>
 
           {/* T/F */}
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span style={{ color: neutral[600] }}>思考 (T)</span>
-              <span style={{ color: neutral[600] }}>情感 (F)</span>
+              <span className="text-text-secondary">思考 (T)</span>
+              <span className="text-text-secondary">情感 (F)</span>
             </div>
-            <div className="h-3 rounded-full overflow-hidden flex" style={{ background: neutral[200] }}>
+            <div className="h-3 rounded-full overflow-hidden flex bg-border-primary">
               <div 
                 className="h-full rounded-l-full"
                 style={{ 
@@ -159,18 +158,18 @@ function StudentDetail({
               />
             </div>
             <div className="flex justify-between text-xs mt-1">
-              <span style={{ color: neutral[500] }}>{student.dimensions.T}%</span>
-              <span style={{ color: neutral[500] }}>{student.dimensions.F}%</span>
+              <span className="text-text-muted">{student.dimensions.T}%</span>
+              <span className="text-text-muted">{student.dimensions.F}%</span>
             </div>
           </div>
 
           {/* J/P */}
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span style={{ color: neutral[600] }}>判断 (J)</span>
-              <span style={{ color: neutral[600] }}>感知 (P)</span>
+              <span className="text-text-secondary">判断 (J)</span>
+              <span className="text-text-secondary">感知 (P)</span>
             </div>
-            <div className="h-3 rounded-full overflow-hidden flex" style={{ background: neutral[200] }}>
+            <div className="h-3 rounded-full overflow-hidden flex bg-border-primary">
               <div 
                 className="h-full rounded-l-full"
                 style={{ 
@@ -180,8 +179,8 @@ function StudentDetail({
               />
             </div>
             <div className="flex justify-between text-xs mt-1">
-              <span style={{ color: neutral[500] }}>{student.dimensions.J}%</span>
-              <span style={{ color: neutral[500] }}>{student.dimensions.P}%</span>
+              <span className="text-text-muted">{student.dimensions.J}%</span>
+              <span className="text-text-muted">{student.dimensions.P}%</span>
             </div>
           </div>
         </div>
@@ -189,11 +188,7 @@ function StudentDetail({
         {/* 关闭按钮 */}
         <button
           onClick={onClose}
-          className="w-full mt-6 py-3 rounded-xl font-medium transition-colors"
-          style={{ 
-            background: neutral[100],
-            color: neutral[700],
-          }}
+          className="w-full mt-6 py-3 rounded-xl font-medium transition-colors bg-bg-tertiary text-text-secondary"
         >
           关闭
         </button>
@@ -275,10 +270,10 @@ export default function AdminStudents() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-2xl md:text-3xl font-black mb-2" style={{ color: neutral[900] }}>
+        <h1 className="text-2xl md:text-3xl font-black mb-2 text-text-primary">
           学生数据
         </h1>
-        <p style={{ color: neutral[600] }}>
+        <p className="text-text-secondary">
           查看和分析学生测试结果
         </p>
       </motion.div>
@@ -291,33 +286,31 @@ export default function AdminStudents() {
         className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8"
       >
         <div 
-          className="p-4 rounded-xl"
+          className="p-4 rounded-xl border border-border-primary"
           style={{
             background: 'rgba(255,255,255,0.8)',
             backdropFilter: 'blur(12px)',
-            border: `1px solid ${neutral[200]}`,
           }}
         >
-          <p className="text-sm" style={{ color: neutral[500] }}>总人数</p>
-          <p className="text-2xl font-black" style={{ color: neutral[900] }}>{stats.total}</p>
+          <p className="text-sm text-text-muted">总人数</p>
+          <p className="text-2xl font-black text-text-primary">{stats.total}</p>
         </div>
         
         {stats.topTypes.map(([type, count], index) => (
           <div 
             key={type}
-            className="p-4 rounded-xl"
+            className="p-4 rounded-xl border border-border-primary"
             style={{
               background: 'rgba(255,255,255,0.8)',
               backdropFilter: 'blur(12px)',
-              border: `1px solid ${neutral[200]}`,
             }}
           >
-            <p className="text-sm" style={{ color: neutral[500] }}>
+            <p className="text-sm text-text-muted">
               {index === 0 ? '最多' : `第${index + 1}名`}
             </p>
             <p className="text-lg font-bold font-mono" style={{ color: primary[700] }}>
               {type}
-              <span className="text-sm font-normal ml-2" style={{ color: neutral[500] }}>
+              <span className="text-sm font-normal ml-2 text-text-muted">
                 {count}人
               </span>
             </p>
@@ -336,11 +329,10 @@ export default function AdminStudents() {
         <div className="flex-1 min-w-[200px]">
           <div className="relative">
             <svg 
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-muted"
               fill="none" 
               viewBox="0 0 24 24" 
               stroke="currentColor"
-              style={{ color: neutral[400] }}
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -349,11 +341,9 @@ export default function AdminStudents() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="搜索学生姓名..."
-              className="w-full pl-12 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
               style={{ 
                 background: 'rgba(255,255,255,0.8)',
-                borderColor: neutral[200],
-                color: neutral[900],
               }}
             />
           </div>
@@ -363,11 +353,9 @@ export default function AdminStudents() {
         <select
           value={filterMbti}
           onChange={(e) => setFilterMbti(e.target.value)}
-          className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
+          className="px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all border-border-primary text-text-primary"
           style={{ 
             background: 'rgba(255,255,255,0.8)',
-            borderColor: neutral[200],
-            color: neutral[900],
           }}
         >
           <option value="all">全部类型</option>
@@ -379,11 +367,9 @@ export default function AdminStudents() {
         {/* 导出按钮 */}
         <button
           onClick={handleExport}
-          className="px-6 py-3 rounded-xl font-medium transition-all hover:scale-105 flex items-center gap-2"
+          className="px-6 py-3 rounded-xl font-medium transition-all hover:scale-105 flex items-center gap-2 border border-border-primary text-text-secondary"
           style={{ 
             background: 'rgba(255,255,255,0.8)',
-            border: `1px solid ${neutral[200]}`,
-            color: neutral[700],
           }}
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -398,21 +384,15 @@ export default function AdminStudents() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="rounded-2xl overflow-hidden"
+        className="rounded-2xl overflow-hidden border border-border-primary"
         style={{
           background: 'rgba(255,255,255,0.8)',
           backdropFilter: 'blur(12px)',
-          border: `1px solid ${neutral[200]}`,
         }}
       >
         {/* 表头 */}
         <div 
-          className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-medium"
-          style={{ 
-            background: neutral[50],
-            color: neutral[600],
-            borderBottom: `1px solid ${neutral[200]}`,
-          }}
+          className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-medium bg-bg-primary text-text-secondary border-b border-border-primary"
         >
           <div className="col-span-3">姓名</div>
           <div className="col-span-2">MBTI 类型</div>
@@ -428,11 +408,10 @@ export default function AdminStudents() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.03 }}
-            className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-white/50 transition-colors cursor-pointer"
-            style={{ borderBottom: `1px solid ${neutral[100]}` }}
+            className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-bg-hover transition-colors cursor-pointer border-b border-border-primary"
             onClick={() => setSelectedStudent(student)}
           >
-            <div className="col-span-3 font-medium" style={{ color: neutral[800] }}>
+            <div className="col-span-3 font-medium text-text-primary">
               {student.name}
             </div>
             <div className="col-span-2">
@@ -446,16 +425,15 @@ export default function AdminStudents() {
                 {student.mbtiCode}
               </span>
             </div>
-            <div className="col-span-3" style={{ color: neutral[600] }}>
+            <div className="col-span-3 text-text-secondary">
               {student.testType}
             </div>
-            <div className="col-span-3 text-sm" style={{ color: neutral[500] }}>
+            <div className="col-span-3 text-sm text-text-muted">
               {student.completedAt}
             </div>
             <div className="col-span-1 flex justify-end">
               <button
-                className="p-2 rounded-lg transition-colors hover:bg-white"
-                style={{ color: neutral[500] }}
+                className="p-2 rounded-lg transition-colors hover:bg-bg-hover text-text-muted"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -467,7 +445,7 @@ export default function AdminStudents() {
 
         {/* 空状态 */}
         {filteredStudents.length === 0 && (
-          <div className="py-12 text-center" style={{ color: neutral[500] }}>
+          <div className="py-12 text-center text-text-muted">
             没有找到匹配的学生
           </div>
         )}

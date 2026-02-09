@@ -21,7 +21,7 @@ import {
   RankingQuestion,
   TestProgressSidebar,
 } from '../components/mbti'
-import { testCategories, getTestCategory } from '../data/testCategories'
+import { testCategories, getTestCategory, testCategoryIcons } from '../data/testCategories'
 import { getQuestionsByCategory } from '../data/questions'
 import type { 
   Question, 
@@ -34,7 +34,7 @@ import type {
   BinaryAnswer,
   MBTIValue,
 } from '../types/mbti'
-import { neutral, primary } from '../theme/colors'
+import { primary } from '../theme/colors'
 import { BreathingOrb } from '../components/animations'
 
 // localStorage key
@@ -324,7 +324,7 @@ export default function MBTITestPage() {
     <div 
       className="min-h-screen relative"
       style={{ 
-        background: `linear-gradient(135deg, ${neutral[50]} 0%, #F8FAFC 50%, rgba(241,245,249,0.5) 100%)` 
+        background: `linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFC 50%, rgba(241,245,249,0.5) 100%)` 
       }}
     >
       {/* 背景呼吸光晕 */}
@@ -375,19 +375,17 @@ export default function MBTITestPage() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="p-8 rounded-3xl"
+                className="p-8 rounded-3xl border border-border-primary"
                 style={{
                   background: 'rgba(255,255,255,0.8)',
                   backdropFilter: 'blur(20px)',
-                  border: `1px solid ${neutral[200]}`,
                   boxShadow: '0 25px 50px -12px rgba(0,0,0,0.08)',
                 }}
               >
                 {/* 返回按钮 */}
                 <button
                   onClick={() => setPhase('select')}
-                  className="flex items-center gap-2 mb-6 transition-colors"
-                  style={{ color: neutral[500] }}
+                  className="flex items-center gap-2 mb-6 transition-colors text-text-muted"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -404,19 +402,17 @@ export default function MBTITestPage() {
                       boxShadow: `0 8px 24px ${primary[500]}40`,
                     }}
                   >
-                    <span className="text-3xl">{category?.icon}</span>
+                    <span className="text-3xl">{(() => { const Icon = category ? testCategoryIcons[category.icon] : null; return Icon ? <Icon className="w-8 h-8 text-white" strokeWidth={1.5} /> : null })()}</span>
                   </div>
                 </div>
 
                 <h1 
-                  className="text-2xl font-black text-center mb-2"
-                  style={{ color: neutral[900] }}
+                  className="text-2xl font-black text-center mb-2 text-text-primary"
                 >
                   {category?.name}
                 </h1>
                 <p 
-                  className="text-center mb-8"
-                  style={{ color: neutral[600] }}
+                  className="text-center mb-8 text-text-secondary"
                 >
                   {category?.questionCount} 题 · 约 {category?.estimatedMinutes} 分钟
                 </p>
@@ -424,8 +420,7 @@ export default function MBTITestPage() {
                 <div className="space-y-6">
                   <div>
                     <label 
-                      className="block text-sm font-medium mb-2"
-                      style={{ color: neutral[600] }}
+                      className="block text-sm font-medium mb-2 text-text-secondary"
                     >
                       你的名字（可选）
                     </label>
@@ -434,12 +429,7 @@ export default function MBTITestPage() {
                       value={studentName}
                       onChange={(e) => setStudentName(e.target.value)}
                       placeholder="请输入你的名字"
-                      className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all"
-                      style={{ 
-                        background: neutral[50],
-                        borderColor: neutral[200],
-                        color: neutral[900],
-                      }}
+                      className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 transition-all bg-bg-primary border-border-primary text-text-primary"
                     />
                   </div>
 
@@ -474,8 +464,7 @@ export default function MBTITestPage() {
               <div className="flex items-center justify-between mb-6">
                 <Link 
                   to="/dashboard" 
-                  className="flex items-center gap-2 transition-colors"
-                  style={{ color: neutral[500] }}
+                  className="flex items-center gap-2 transition-colors text-text-muted"
                 >
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -483,8 +472,7 @@ export default function MBTITestPage() {
                   退出测试
                 </Link>
                 <span 
-                  className="text-sm font-medium"
-                  style={{ color: neutral[600] }}
+                  className="text-sm font-medium text-text-secondary"
                 >
                   {currentIndex + 1} / {questions.length}
                 </span>
@@ -492,8 +480,7 @@ export default function MBTITestPage() {
 
               {/* 进度条 */}
               <div 
-                className="h-1 rounded-full mb-8 overflow-hidden"
-                style={{ background: neutral[200] }}
+                className="h-1 rounded-full mb-8 overflow-hidden bg-border-primary"
               >
                 <motion.div
                   className="h-full rounded-full"
@@ -515,11 +502,10 @@ export default function MBTITestPage() {
                       animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                       exit={{ opacity: 0, x: -30, filter: 'blur(8px)' }}
                       transition={{ duration: 0.3 }}
-                      className="p-8 rounded-3xl"
+                      className="p-8 rounded-3xl border border-border-primary"
                       style={{
                         background: 'rgba(255,255,255,0.8)',
                         backdropFilter: 'blur(20px)',
-                        border: `1px solid ${neutral[200]}`,
                       }}
                     >
                       {/* 题目类型标签 */}
@@ -534,8 +520,7 @@ export default function MBTITestPage() {
                           问题 {currentIndex + 1}
                         </span>
                         <span 
-                          className="text-xs"
-                          style={{ color: neutral[400] }}
+                          className="text-xs text-text-muted"
                         >
                           {currentQuestion.dimension === 'EI' && '外向/内向'}
                           {currentQuestion.dimension === 'SN' && '感觉/直觉'}
@@ -548,12 +533,11 @@ export default function MBTITestPage() {
                       {renderQuestion(currentQuestion)}
 
                       {/* 导航按钮 */}
-                      <div className="flex justify-between items-center mt-8 pt-6 border-t" style={{ borderColor: neutral[200] }}>
+                      <div className="flex justify-between items-center mt-8 pt-6 border-t border-border-primary">
                         <button
                           disabled={currentIndex === 0}
                           onClick={handlePrev}
-                          className="px-4 py-2 rounded-xl font-medium transition-colors disabled:opacity-50"
-                          style={{ color: neutral[600] }}
+                          className="px-4 py-2 rounded-xl font-medium transition-colors disabled:opacity-50 text-text-secondary"
                         >
                           ← 上一题
                         </button>
@@ -573,8 +557,7 @@ export default function MBTITestPage() {
                           <button
                             disabled={!answers[currentQuestion.id]}
                             onClick={handleNext}
-                            className="px-4 py-2 rounded-xl font-medium transition-colors disabled:opacity-50"
-                            style={{ color: neutral[600] }}
+                            className="px-4 py-2 rounded-xl font-medium transition-colors disabled:opacity-50 text-text-secondary"
                           >
                             下一题 →
                           </button>
@@ -596,7 +579,7 @@ export default function MBTITestPage() {
                             ? primary[600]
                             : answers[questions[index].id] 
                               ? primary[300]
-                              : neutral[300],
+                              : 'var(--border-primary)',
                         }}
                       />
                     ))}

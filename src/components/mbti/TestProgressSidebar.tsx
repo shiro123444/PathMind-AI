@@ -6,7 +6,7 @@
 
 import { motion } from 'framer-motion'
 import type { Question, Answer } from '../../types/mbti'
-import { neutral, primary } from '../../theme/colors'
+import { primary } from '../../theme/colors'
 
 interface TestProgressSidebarProps {
   currentIndex: number
@@ -75,17 +75,15 @@ export default function TestProgressSidebar({
 
   return (
     <div 
-      className="p-6 rounded-2xl h-fit sticky top-6"
+      className="p-6 rounded-2xl h-fit sticky top-6 border border-border-primary"
       style={{
         background: 'rgba(255,255,255,0.8)',
         backdropFilter: 'blur(12px)',
-        border: `1px solid ${neutral[200]}`,
       }}
     >
       {/* 标题 */}
       <h3 
-        className="text-lg font-bold mb-6"
-        style={{ color: neutral[900] }}
+        className="text-lg font-bold mb-6 text-text-primary"
       >
         测试进度
       </h3>
@@ -93,14 +91,13 @@ export default function TestProgressSidebar({
       {/* 总进度条 */}
       <div className="mb-6">
         <div className="flex justify-between text-sm mb-2">
-          <span style={{ color: neutral[600] }}>完成进度</span>
+          <span className="text-text-secondary">完成进度</span>
           <span className="font-medium" style={{ color: primary[600] }}>
             {Math.round(progress)}%
           </span>
         </div>
         <div 
-          className="h-2 rounded-full overflow-hidden"
-          style={{ background: neutral[200] }}
+          className="h-2 rounded-full overflow-hidden bg-border-primary"
         >
           <motion.div
             className="h-full rounded-full"
@@ -115,33 +112,32 @@ export default function TestProgressSidebar({
       {/* 统计数据 */}
       <div className="space-y-4 mb-6">
         <div className="flex justify-between">
-          <span className="text-sm" style={{ color: neutral[500] }}>已完成</span>
-          <span className="text-sm font-medium" style={{ color: neutral[800] }}>
+          <span className="text-sm text-text-muted">已完成</span>
+          <span className="text-sm font-medium text-text-primary">
             {answeredCount} / {totalQuestions} 题
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-sm" style={{ color: neutral[500] }}>当前题目</span>
-          <span className="text-sm font-medium" style={{ color: neutral[800] }}>
+          <span className="text-sm text-text-muted">当前题目</span>
+          <span className="text-sm font-medium text-text-primary">
             第 {currentIndex + 1} 题
           </span>
         </div>
         <div className="flex justify-between">
-          <span className="text-sm" style={{ color: neutral[500] }}>预计剩余</span>
-          <span className="text-sm font-medium" style={{ color: neutral[800] }}>
+          <span className="text-sm text-text-muted">预计剩余</span>
+          <span className="text-sm font-medium text-text-primary">
             {formatTime(estimatedRemainingMinutes)}
           </span>
         </div>
       </div>
 
       {/* 分割线 */}
-      <div className="border-t my-6" style={{ borderColor: neutral[200] }} />
+      <div className="border-t my-6 border-border-primary" />
 
       {/* 维度进度 */}
       <div>
         <h4 
-          className="text-sm font-medium mb-4"
-          style={{ color: neutral[700] }}
+          className="text-sm font-medium mb-4 text-text-secondary"
         >
           维度进度
         </h4>
@@ -151,19 +147,18 @@ export default function TestProgressSidebar({
             return (
               <div key={key}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span style={{ color: neutral[600] }}>
+                  <span className="text-text-secondary">
                     {dimensionLabels[key].name}
-                    <span className="ml-1" style={{ color: neutral[400] }}>
+                    <span className="ml-1 text-text-muted">
                       {dimensionLabels[key].desc}
                     </span>
                   </span>
-                  <span style={{ color: neutral[500] }}>
+                  <span className="text-text-muted">
                     {value.answered}/{value.total}
                   </span>
                 </div>
                 <div 
-                  className="h-1.5 rounded-full overflow-hidden"
-                  style={{ background: neutral[200] }}
+                  className="h-1.5 rounded-full overflow-hidden bg-border-primary"
                 >
                   <motion.div
                     className="h-full rounded-full"

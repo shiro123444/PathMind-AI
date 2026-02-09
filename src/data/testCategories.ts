@@ -3,6 +3,8 @@
  */
 
 import type { TestCategory } from '../types/mbti'
+import { Zap, BarChart3, Brain } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 export const testCategories: TestCategory[] = [
   {
@@ -12,7 +14,7 @@ export const testCategories: TestCategory[] = [
     questionCount: 12,
     estimatedMinutes: 5,
     difficulty: 'easy',
-    icon: '⚡',
+    icon: 'zap',
     color: 'sky', // 天蓝色
   },
   {
@@ -22,7 +24,7 @@ export const testCategories: TestCategory[] = [
     questionCount: 48,
     estimatedMinutes: 20,
     difficulty: 'medium',
-    icon: '📊',
+    icon: 'bar-chart-3',
     color: 'teal', // 青色
   },
   {
@@ -32,7 +34,7 @@ export const testCategories: TestCategory[] = [
     questionCount: 93,
     estimatedMinutes: 40,
     difficulty: 'hard',
-    icon: '🔬',
+    icon: 'brain',
     color: 'indigo', // 靛蓝色
   },
 ]
@@ -54,4 +56,11 @@ export const difficultyColors: Record<string, string> = {
   easy: '#10B981', // 绿色
   medium: '#F59E0B', // 琥珀色
   hard: '#8B5CF6', // 紫色
+}
+
+// Icon component mapping for testCategory icons
+export const testCategoryIcons: Record<string, LucideIcon> = {
+  'zap': Zap,
+  'bar-chart-3': BarChart3,
+  'brain': Brain,
 }

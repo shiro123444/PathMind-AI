@@ -1,86 +1,4 @@
 /**
- * Premium Visual Experience Theme Configuration
- * Based on bpco.kr design analysis
- * 
- * Requirements: 2.1, 2.2, 2.3, 2.4, 2.5
- */
-
-/**
- * Premium Color System Interface
- */
-export interface PremiumColorSystem {
-  background: {
-    primary: string;      // linear-gradient(180deg, #e5e5e5, #f3f3f3 79.17%, #e2e2e2)
-    overlay: string;      // rgba(255, 255, 255, 0.3)
-    dark: string;         // #000 for loading screen
-  };
-  text: {
-    primary: string;      // #121212
-    secondary: string;    // #666666
-  };
-  accent: string;         // #fe4534
-  glow: {
-    color: string;        // #ffffff
-    blur: number;         // 20px
-  };
-}
-
-/**
- * Premium Colors Configuration
- * Validates: Requirements 2.1, 2.2, 2.3, 2.4, 2.5
- */
-export const premiumColors: PremiumColorSystem = {
-  background: {
-    // Requirement 2.1: Primary gradient background
-    primary: 'linear-gradient(180deg, #e5e5e5, #f3f3f3 79.17%, #e2e2e2)',
-    // Requirement 2.2: Semi-transparent white overlay
-    overlay: 'rgba(255, 255, 255, 0.3)',
-    // Dark background for loading screen
-    dark: '#000000',
-  },
-  text: {
-    // Requirement 2.3: Primary text color
-    primary: '#121212',
-    secondary: '#666666',
-  },
-  // Requirement 2.4: Accent color for interactive elements
-  accent: '#fe4534',
-  glow: {
-    // Requirement 2.5: Glow effect configuration
-    color: '#ffffff',
-    blur: 20,
-  },
-};
-
-/**
- * Get glow box-shadow CSS value
- * Requirement 2.5: White glow with 20px blur
- */
-export function getGlowBoxShadow(intensity: number = 1): string {
-  const blur = premiumColors.glow.blur * intensity;
-  return `0 0 ${blur}px 0 ${premiumColors.glow.color}`;
-}
-
-/**
- * Get background gradient CSS value
- * Requirement 2.1: Primary gradient
- */
-export function getBackgroundGradient(): string {
-  return premiumColors.background.primary;
-}
-
-/**
- * Get overlay background CSS value
- * Requirement 2.2: Semi-transparent overlay
- */
-export function getOverlayBackground(): string {
-  return premiumColors.background.overlay;
-}
-
-export default premiumColors;
-
-
-/**
  * Premium Typography System Interface
  * Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
  */
@@ -209,7 +127,7 @@ export interface PremiumAnimationConfig {
  * Validates: Requirements 6.1, 6.2, 6.3, 6.4, 6.5
  */
 export const premiumAnimations: PremiumAnimationConfig = {
-  // Requirement 6.1: show_up animation (translateY 100vh → 0)
+  // Requirement 6.1: show_up animation (translateY 100vh -> 0)
   showUp: {
     keyframes: [
       { transform: 'translateY(100vh)', opacity: 0 },
@@ -218,7 +136,7 @@ export const premiumAnimations: PremiumAnimationConfig = {
     duration: 400,
   },
   
-  // Requirement 6.2: opa_show_in animation (opacity 0 → 1)
+  // Requirement 6.2: opa_show_in animation (opacity 0 -> 1)
   opaShowIn: {
     keyframes: [
       { opacity: 0 },
@@ -227,7 +145,7 @@ export const premiumAnimations: PremiumAnimationConfig = {
     duration: 500,
   },
   
-  // Requirement 6.3: play_bt_hover animation (opacity cycling 0→1→0→1)
+  // Requirement 6.3: play_bt_hover animation (opacity cycling 0->1->0->1)
   playBtHover: {
     keyframes: [
       { opacity: 0, offset: 0 },

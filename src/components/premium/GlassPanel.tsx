@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { premiumColors, getDefaultTransition } from '../../theme/premium'
+import { getDefaultTransition } from '../../theme/premium'
 
 /**
  * GlassPanel Component
@@ -243,7 +243,7 @@ const GlassPanelContainer = styled.div<GlassPanelContainerProps>`
   position: relative;
   
   /* Requirement 9.5: Ensure text remains readable */
-  color: ${props => props.$highContrast ? '#000000' : premiumColors.text.primary};
+  color: ${props => props.$highContrast ? '#000000' : 'var(--text-primary)'};
   
   /* Smooth transitions */
   transition: ${getDefaultTransition('background')}, ${getDefaultTransition('border')};

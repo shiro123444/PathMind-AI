@@ -139,6 +139,56 @@ export const orbs = {
   sky: 'rgba(186, 230, 253, 0.15)',
 }
 
+// 语义色 - 亮色模式
+export const light = {
+  bg: {
+    primary: '#FAFAF9',
+    secondary: '#ffffff',
+    card: 'rgba(255,255,255,0.75)',
+    cardHover: 'rgba(255,255,255,0.85)',
+  },
+  text: {
+    primary: '#1C1917',
+    secondary: '#57534E',
+    muted: '#78716C',
+  },
+  border: {
+    primary: 'rgba(0,0,0,0.08)',
+    hover: 'rgba(0,0,0,0.12)',
+  },
+  glass: {
+    bg: 'rgba(255,255,255,0.8)',
+    border: 'rgba(255,255,255,0.3)',
+    shadow: '0 8px 32px rgba(0,0,0,0.08)',
+    blur: 'blur(12px)',
+  },
+}
+
+// 语义色 - 暗色模式（深黑 + 玻璃态）
+export const dark = {
+  bg: {
+    primary: '#0c0c0c',
+    secondary: '#141414',
+    card: 'rgba(255,255,255,0.05)',
+    cardHover: 'rgba(255,255,255,0.08)',
+  },
+  text: {
+    primary: '#ffffff',
+    secondary: '#9ca3af',
+    muted: '#6b7280',
+  },
+  border: {
+    primary: 'rgba(255,255,255,0.1)',
+    hover: 'rgba(255,255,255,0.2)',
+  },
+  glass: {
+    bg: 'rgba(255,255,255,0.05)',
+    border: 'rgba(255,255,255,0.1)',
+    shadow: '0 8px 32px rgba(0,0,0,0.3)',
+    blur: 'blur(12px)',
+  },
+}
+
 export default {
   neutral,
   primary,
@@ -150,4 +200,6 @@ export default {
   glass,
   gradients,
   orbs,
+  light,
+  dark,
 }

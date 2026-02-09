@@ -4,7 +4,8 @@ import { motion, useInView } from 'framer-motion'
 import type { Course } from '../types/student'
 import { GlassCard } from '../components/ui'
 import { easings, durations } from '../theme/motion'
-import { primary, neutral, secondary } from '../theme/colors'
+import { primary, secondary } from '../theme/colors'
+import { Settings, MessageSquare, Clock, BookOpen, Trophy, Target } from 'lucide-react'
 
 const courses: Course[] = [
   { id: 'python-basics', name: 'Python 编程基础', description: '学习 Python 基础语法、数据结构和面向对象编程', provider: 'Coursera', duration: '40小时', difficulty: 'beginner', skills: ['python-1'], prerequisites: [], rating: 4.8, tags: ['编程', '初级'], type: 'video' },
@@ -17,7 +18,7 @@ const courses: Course[] = [
 
 const learningPaths = [
   {
-    id: 'ml-engineer-path', name: 'AI 算法工程师路径', description: '成为能够开发和优化机器学习模型的工程师', estimatedDuration: '6-8个月', icon: '⚙️', color: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)`,
+    id: 'ml-engineer-path', name: 'AI 算法工程师路径', description: '成为能够开发和优化机器学习模型的工程师', estimatedDuration: '6-8个月', icon: Settings, color: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)`,
     courses: [
       { courseId: 'python-basics', order: 1, isOptional: false, estimatedWeeks: 4 },
       { courseId: 'math-linear-algebra', order: 2, isOptional: false, estimatedWeeks: 5 },
@@ -27,7 +28,7 @@ const learningPaths = [
     ],
   },
   {
-    id: 'nlp-specialist-path', name: 'NLP 工程师路径', description: '专注于自然语言处理领域的专家', estimatedDuration: '7-9个月', icon: '💬', color: `linear-gradient(135deg, ${secondary[500]} 0%, ${secondary[700]} 100%)`,
+    id: 'nlp-specialist-path', name: 'NLP 工程师路径', description: '专注于自然语言处理领域的专家', estimatedDuration: '7-9个月', icon: MessageSquare, color: `linear-gradient(135deg, ${secondary[500]} 0%, ${secondary[700]} 100%)`,
     courses: [
       { courseId: 'python-basics', order: 1, isOptional: false, estimatedWeeks: 4 },
       { courseId: 'math-linear-algebra', order: 2, isOptional: false, estimatedWeeks: 5 },
@@ -72,8 +73,7 @@ export default function LearningPathPage() {
   return (
     <div 
       ref={ref} 
-      className="min-h-screen py-8 px-4 md:px-8 overflow-y-auto"
-      style={{ background: neutral[50] }}
+      className="min-h-screen py-8 px-4 md:px-8 overflow-y-auto bg-bg-primary"
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -83,10 +83,10 @@ export default function LearningPathPage() {
           transition={smoothTransition}
           className="mb-12"
         >
-          <h1 className="text-4xl md:text-5xl font-black mb-4" style={{ color: neutral[900] }}>
+          <h1 className="text-4xl md:text-5xl font-black mb-4 text-text-primary">
             个性化学习路径
           </h1>
-          <p className="text-lg max-w-2xl" style={{ color: neutral[600] }}>
+          <p className="text-lg max-w-2xl text-text-secondary">
             根据你的职业目标，定制化的学习计划帮助你高效成长
           </p>
         </motion.div>
@@ -108,27 +108,27 @@ export default function LearningPathPage() {
                 transform: 'scale(1.02)',
               } : {
                 background: 'white',
-                border: `1px solid ${neutral[200]}`,
+                border: '1px solid var(--border-primary)',
               }}
             >
               <div className="flex items-start gap-4">
-                <span className="text-3xl">{path.icon}</span>
+                <path.icon className="w-8 h-8" strokeWidth={1.5} />
                 <div className="flex-1">
                   <h3 
                     className="font-bold text-lg mb-1"
-                    style={{ color: selectedPathId === path.id ? 'white' : neutral[900] }}
+                    style={{ color: selectedPathId === path.id ? 'white' : 'var(--text-primary)' }}
                   >
                     {path.name}
                   </h3>
                   <p 
                     className="text-sm mb-2"
-                    style={{ color: selectedPathId === path.id ? 'rgba(255,255,255,0.8)' : neutral[600] }}
+                    style={{ color: selectedPathId === path.id ? 'rgba(255,255,255,0.8)' : 'var(--text-secondary)' }}
                   >
                     {path.description}
                   </p>
                   <span 
                     className="text-xs font-medium"
-                    style={{ color: selectedPathId === path.id ? 'rgba(255,255,255,0.7)' : neutral[500] }}
+                    style={{ color: selectedPathId === path.id ? 'rgba(255,255,255,0.7)' : 'var(--text-muted)' }}
                   >
                     预计 {path.estimatedDuration}
                   </span>
@@ -147,19 +147,19 @@ export default function LearningPathPage() {
           <GlassCard variant="standard" color="white" className="p-8 mb-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div>
-                <h3 className="text-lg font-bold mb-2" style={{ color: neutral[900] }}>学习进度</h3>
-                <p style={{ color: neutral[600] }}>
+                <h3 className="text-lg font-bold mb-2 text-text-primary">学习进度</h3>
+                <p className="text-text-secondary">
                   已完成 {completedHours} / {totalHours} 小时
                 </p>
               </div>
               <div className="flex items-center gap-6">
                 <div className="text-right">
-                  <p className="text-4xl font-black" style={{ color: neutral[900] }}>{progress}%</p>
-                  <p className="text-sm" style={{ color: neutral[500] }}>完成度</p>
+                  <p className="text-4xl font-black text-text-primary">{progress}%</p>
+                  <p className="text-sm text-text-muted">完成度</p>
                 </div>
                 <div className="w-32 h-32 relative">
                   <svg className="w-full h-full transform -rotate-90">
-                    <circle cx="64" cy="64" r="56" stroke={neutral[200]} strokeWidth="8" fill="none" />
+                    <circle cx="64" cy="64" r="56" stroke="var(--border-primary)" strokeWidth="8" fill="none" />
                     <circle
                       cx="64" cy="64" r="56"
                       stroke="url(#progressGradient)"
@@ -202,7 +202,7 @@ export default function LearningPathPage() {
                     borderColor: secondary[200], 
                     background: `${secondary[50]}80` 
                   } : { 
-                    borderColor: neutral[100] 
+                    borderColor: 'var(--border-primary)' 
                   }}
                 >
                   <div className="flex items-start gap-6">
@@ -213,8 +213,8 @@ export default function LearningPathPage() {
                         background: secondary[500],
                         color: 'white',
                       } : {
-                        background: neutral[100],
-                        color: neutral[900],
+                        background: 'var(--bg-tertiary)',
+                        color: 'var(--text-primary)',
                       }}
                     >
                       {isCompleted ? '✓' : pathCourse.order}
@@ -224,27 +224,25 @@ export default function LearningPathPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-4 mb-2">
                         <div>
-                          <h4 className="text-lg font-bold" style={{ color: neutral[900] }}>{course.name}</h4>
-                          <p className="text-sm mt-1" style={{ color: neutral[600] }}>{course.description}</p>
+                          <h4 className="text-lg font-bold text-text-primary">{course.name}</h4>
+                          <p className="text-sm mt-1 text-text-secondary">{course.description}</p>
                         </div>
                       </div>
 
                       <div className="flex flex-wrap items-center gap-3 mt-4">
                         <span 
-                          className="text-sm px-3 py-1 rounded-full"
-                          style={{ background: neutral[100], color: neutral[700] }}
+                          className="text-sm px-3 py-1 rounded-full bg-bg-tertiary text-text-secondary"
                         >
-                          ⏱️ {course.duration}
+                          <Clock className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} />{course.duration}
                         </span>
                         <span 
-                          className="text-sm px-3 py-1 rounded-full"
-                          style={{ background: neutral[100], color: neutral[700] }}
+                          className="text-sm px-3 py-1 rounded-full bg-bg-tertiary text-text-secondary"
                         >
-                          📚 {course.provider}
+                          <BookOpen className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} />{course.provider}
                         </span>
                         <div className="flex items-center gap-1">
                           <span style={{ color: '#F59E0B' }}>★</span>
-                          <span className="text-sm font-semibold" style={{ color: neutral[700] }}>{course.rating}</span>
+                          <span className="text-sm font-semibold text-text-secondary">{course.rating}</span>
                         </div>
                         {pathCourse.isOptional && (
                           <span 
@@ -296,11 +294,11 @@ export default function LearningPathPage() {
               className="p-8 text-white text-center"
               style={{ background: `linear-gradient(135deg, ${primary[600]} 0%, ${primary[800]} 100%)` }}
             >
-              <span className="text-5xl mb-4 block">🎉</span>
+              <span className="mb-4 block flex justify-center"><Trophy className="w-10 h-10" strokeWidth={1.5} /></span>
               <h3 className="text-2xl font-bold mb-4">恭喜完成学习路径！</h3>
               <p className="mb-6" style={{ color: 'rgba(255,255,255,0.8)' }}>你已经掌握了成为 AI 工程师所需的核心技能</p>
               <button 
-                className="px-8 py-3 bg-white rounded-full font-semibold transition-colors"
+                className="px-8 py-3 bg-bg-secondary rounded-full font-semibold transition-colors"
                 style={{ color: primary[600] }}
               >
                 申请认证证书
@@ -321,14 +319,13 @@ export default function LearningPathPage() {
             className="px-8 py-4 text-white rounded-full font-semibold transition-colors text-center"
             style={{ background: primary[800] }}
           >
-            💬 咨询 AI 助手
+            <MessageSquare className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 咨询 AI 助手
           </Link>
           <Link
             to="/careers"
-            className="px-8 py-4 bg-white rounded-full font-semibold transition-all text-center"
-            style={{ border: `2px solid ${neutral[200]}`, color: neutral[900] }}
+            className="px-8 py-4 bg-bg-secondary rounded-full font-semibold transition-all text-center border-2 border-border-primary text-text-primary"
           >
-            🎯 查看职业推荐
+            <Target className="w-4 h-4 inline-block mr-1 align-text-bottom" strokeWidth={1.5} /> 查看职业推荐
           </Link>
         </motion.div>
       </div>

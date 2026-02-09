@@ -1,3 +1,5 @@
+import type React from 'react'
+
 // MBTI 类型定义
 export type MBTICode = 
   | 'INTJ' | 'INTP' | 'ENTJ' | 'ENTP'  // 分析师
@@ -31,7 +33,7 @@ export interface AICareer {
   id: string
   name: string
   description: string
-  icon: string
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
   category: 'research' | 'engineering' | 'product' | 'design' | 'business'
   requiredSkills: Skill[]
   suitableMBTI: MBTICode[]

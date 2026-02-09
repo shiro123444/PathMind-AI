@@ -27,7 +27,7 @@ export default function Layout() {
   const location = useLocation()
 
   return (
-    <div className="min-h-screen w-full bg-white text-gray-900 relative flex flex-col">
+    <div className="min-h-screen w-full bg-bg-primary text-text-primary relative flex flex-col">
       {/* Enhanced WebGL Background with Particles */}
       <EnhancedBackground 
         enableParticles={true}
