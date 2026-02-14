@@ -1,7 +1,7 @@
-@import "tailwindcss";
-
-/* 引入 Google Fonts - 思源宋体（中文衬线字体，类似 Claude 风格） */
+/* 引入 Google Fonts - 必须在最前面 */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap');
+
+@import "tailwindcss";
 
 /* Serifa 字体 - 英文衬线字体 */
 @font-face {

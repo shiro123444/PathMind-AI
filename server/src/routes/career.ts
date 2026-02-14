@@ -16,7 +16,7 @@ router.get('/recommend/:mbtiCode', async (req: Request, res: Response) => {
       ORDER BY c.growthPotential DESC
     `
 
-    const results = await runQuery<{ career: unknown; requiredSkills: unknown[] }>(
+    const results = await runQuery<{ career: Record<string, unknown>; requiredSkills: unknown[] }>(
       cypher, 
       { mbtiCode: mbtiCode.toUpperCase() }
     )
@@ -24,7 +24,7 @@ router.get('/recommend/:mbtiCode', async (req: Request, res: Response) => {
     res.json({ 
       success: true, 
       data: results.map(r => ({
-        ...r.career,
+        ...(r.career as object),
         requiredSkills: r.requiredSkills
       }))
     })
@@ -51,7 +51,7 @@ router.get('/:careerId', async (req: Request, res: Response) => {
     `
 
     const result = await runSingleQuery<{ 
-      career: unknown
+      career: Record<string, unknown>
       requiredSkills: unknown[]
       suitableMBTI: string[]
       learningPaths: unknown[]
@@ -64,7 +64,7 @@ router.get('/:careerId', async (req: Request, res: Response) => {
     res.json({ 
       success: true, 
       data: {
-        ...result.career,
+        ...(result.career as object),
         requiredSkills: result.requiredSkills,
         suitableMBTI: result.suitableMBTI,
         learningPaths: result.learningPaths
@@ -86,12 +86,12 @@ router.get('/', async (req: Request, res: Response) => {
       ORDER BY c.name
     `
 
-    const results = await runQuery<{ career: unknown; suitableMBTI: string[] }>(cypher)
+    const results = await runQuery<{ career: Record<string, unknown>; suitableMBTI: string[] }>(cypher)
 
     res.json({ 
       success: true, 
       data: results.map(r => ({
-        ...r.career,
+        ...(r.career as object),
         suitableMBTI: r.suitableMBTI
       }))
     })
